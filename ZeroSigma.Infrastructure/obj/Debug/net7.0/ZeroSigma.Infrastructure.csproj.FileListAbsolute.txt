@@ -1,0 +1,17 @@
+C:\projects\TDD_DDD_CleanArchitecture_ZeroSigmaServer\ZeroSigma.Infrastructure\bin\Debug\net7.0\ZeroSigma.Infrastructure.deps.json
+C:\projects\TDD_DDD_CleanArchitecture_ZeroSigmaServer\ZeroSigma.Infrastructure\bin\Debug\net7.0\ZeroSigma.Infrastructure.dll
+C:\projects\TDD_DDD_CleanArchitecture_ZeroSigmaServer\ZeroSigma.Infrastructure\bin\Debug\net7.0\ZeroSigma.Infrastructure.pdb
+C:\projects\TDD_DDD_CleanArchitecture_ZeroSigmaServer\ZeroSigma.Infrastructure\bin\Debug\net7.0\ZeroSigma.Application.dll
+C:\projects\TDD_DDD_CleanArchitecture_ZeroSigmaServer\ZeroSigma.Infrastructure\bin\Debug\net7.0\ZeroSigma.Domain.dll
+C:\projects\TDD_DDD_CleanArchitecture_ZeroSigmaServer\ZeroSigma.Infrastructure\bin\Debug\net7.0\ZeroSigma.Application.pdb
+C:\projects\TDD_DDD_CleanArchitecture_ZeroSigmaServer\ZeroSigma.Infrastructure\bin\Debug\net7.0\ZeroSigma.Domain.pdb
+C:\projects\TDD_DDD_CleanArchitecture_ZeroSigmaServer\ZeroSigma.Infrastructure\obj\Debug\net7.0\ZeroSigma.Infrastructure.csproj.AssemblyReference.cache
+C:\projects\TDD_DDD_CleanArchitecture_ZeroSigmaServer\ZeroSigma.Infrastructure\obj\Debug\net7.0\ZeroSigma.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+C:\projects\TDD_DDD_CleanArchitecture_ZeroSigmaServer\ZeroSigma.Infrastructure\obj\Debug\net7.0\ZeroSigma.Infrastructure.AssemblyInfoInputs.cache
+C:\projects\TDD_DDD_CleanArchitecture_ZeroSigmaServer\ZeroSigma.Infrastructure\obj\Debug\net7.0\ZeroSigma.Infrastructure.AssemblyInfo.cs
+C:\projects\TDD_DDD_CleanArchitecture_ZeroSigmaServer\ZeroSigma.Infrastructure\obj\Debug\net7.0\ZeroSigma.Infrastructure.csproj.CoreCompileInputs.cache
+C:\projects\TDD_DDD_CleanArchitecture_ZeroSigmaServer\ZeroSigma.Infrastructure\obj\Debug\net7.0\ZeroSigma.Infrastructure.csproj.CopyComplete
+C:\projects\TDD_DDD_CleanArchitecture_ZeroSigmaServer\ZeroSigma.Infrastructure\obj\Debug\net7.0\ZeroSigma.Infrastructure.dll
+C:\projects\TDD_DDD_CleanArchitecture_ZeroSigmaServer\ZeroSigma.Infrastructure\obj\Debug\net7.0\refint\ZeroSigma.Infrastructure.dll
+C:\projects\TDD_DDD_CleanArchitecture_ZeroSigmaServer\ZeroSigma.Infrastructure\obj\Debug\net7.0\ZeroSigma.Infrastructure.pdb
+C:\projects\TDD_DDD_CleanArchitecture_ZeroSigmaServer\ZeroSigma.Infrastructure\obj\Debug\net7.0\ref\ZeroSigma.Infrastructure.dll

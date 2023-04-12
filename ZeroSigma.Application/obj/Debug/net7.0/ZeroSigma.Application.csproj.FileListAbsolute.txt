@@ -1,0 +1,15 @@
+C:\projects\TDD_DDD_CleanArchitecture_ZeroSigmaServer\ZeroSigma.Application\bin\Debug\net7.0\ZeroSigma.Application.deps.json
+C:\projects\TDD_DDD_CleanArchitecture_ZeroSigmaServer\ZeroSigma.Application\bin\Debug\net7.0\ZeroSigma.Application.dll
+C:\projects\TDD_DDD_CleanArchitecture_ZeroSigmaServer\ZeroSigma.Application\bin\Debug\net7.0\ZeroSigma.Application.pdb
+C:\projects\TDD_DDD_CleanArchitecture_ZeroSigmaServer\ZeroSigma.Application\bin\Debug\net7.0\ZeroSigma.Domain.dll
+C:\projects\TDD_DDD_CleanArchitecture_ZeroSigmaServer\ZeroSigma.Application\bin\Debug\net7.0\ZeroSigma.Domain.pdb
+C:\projects\TDD_DDD_CleanArchitecture_ZeroSigmaServer\ZeroSigma.Application\obj\Debug\net7.0\ZeroSigma.Application.csproj.AssemblyReference.cache
+C:\projects\TDD_DDD_CleanArchitecture_ZeroSigmaServer\ZeroSigma.Application\obj\Debug\net7.0\ZeroSigma.Application.GeneratedMSBuildEditorConfig.editorconfig
+C:\projects\TDD_DDD_CleanArchitecture_ZeroSigmaServer\ZeroSigma.Application\obj\Debug\net7.0\ZeroSigma.Application.AssemblyInfoInputs.cache
+C:\projects\TDD_DDD_CleanArchitecture_ZeroSigmaServer\ZeroSigma.Application\obj\Debug\net7.0\ZeroSigma.Application.AssemblyInfo.cs
+C:\projects\TDD_DDD_CleanArchitecture_ZeroSigmaServer\ZeroSigma.Application\obj\Debug\net7.0\ZeroSigma.Application.csproj.CoreCompileInputs.cache
+C:\projects\TDD_DDD_CleanArchitecture_ZeroSigmaServer\ZeroSigma.Application\obj\Debug\net7.0\ZeroSigma.Application.csproj.CopyComplete
+C:\projects\TDD_DDD_CleanArchitecture_ZeroSigmaServer\ZeroSigma.Application\obj\Debug\net7.0\ZeroSigma.Application.dll
+C:\projects\TDD_DDD_CleanArchitecture_ZeroSigmaServer\ZeroSigma.Application\obj\Debug\net7.0\refint\ZeroSigma.Application.dll
+C:\projects\TDD_DDD_CleanArchitecture_ZeroSigmaServer\ZeroSigma.Application\obj\Debug\net7.0\ZeroSigma.Application.pdb
+C:\projects\TDD_DDD_CleanArchitecture_ZeroSigmaServer\ZeroSigma.Application\obj\Debug\net7.0\ref\ZeroSigma.Application.dll

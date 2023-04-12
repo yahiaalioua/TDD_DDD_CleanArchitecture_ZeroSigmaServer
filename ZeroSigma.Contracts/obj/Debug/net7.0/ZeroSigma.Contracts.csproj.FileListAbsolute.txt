@@ -1,0 +1,12 @@
+C:\projects\TDD_DDD_CleanArchitecture_ZeroSigmaServer\ZeroSigma.Contracts\bin\Debug\net7.0\ZeroSigma.Contracts.deps.json
+C:\projects\TDD_DDD_CleanArchitecture_ZeroSigmaServer\ZeroSigma.Contracts\bin\Debug\net7.0\ZeroSigma.Contracts.dll
+C:\projects\TDD_DDD_CleanArchitecture_ZeroSigmaServer\ZeroSigma.Contracts\bin\Debug\net7.0\ZeroSigma.Contracts.pdb
+C:\projects\TDD_DDD_CleanArchitecture_ZeroSigmaServer\ZeroSigma.Contracts\obj\Debug\net7.0\ZeroSigma.Contracts.csproj.AssemblyReference.cache
+C:\projects\TDD_DDD_CleanArchitecture_ZeroSigmaServer\ZeroSigma.Contracts\obj\Debug\net7.0\ZeroSigma.Contracts.GeneratedMSBuildEditorConfig.editorconfig
+C:\projects\TDD_DDD_CleanArchitecture_ZeroSigmaServer\ZeroSigma.Contracts\obj\Debug\net7.0\ZeroSigma.Contracts.AssemblyInfoInputs.cache
+C:\projects\TDD_DDD_CleanArchitecture_ZeroSigmaServer\ZeroSigma.Contracts\obj\Debug\net7.0\ZeroSigma.Contracts.AssemblyInfo.cs
+C:\projects\TDD_DDD_CleanArchitecture_ZeroSigmaServer\ZeroSigma.Contracts\obj\Debug\net7.0\ZeroSigma.Contracts.csproj.CoreCompileInputs.cache
+C:\projects\TDD_DDD_CleanArchitecture_ZeroSigmaServer\ZeroSigma.Contracts\obj\Debug\net7.0\ZeroSigma.Contracts.dll
+C:\projects\TDD_DDD_CleanArchitecture_ZeroSigmaServer\ZeroSigma.Contracts\obj\Debug\net7.0\refint\ZeroSigma.Contracts.dll
+C:\projects\TDD_DDD_CleanArchitecture_ZeroSigmaServer\ZeroSigma.Contracts\obj\Debug\net7.0\ZeroSigma.Contracts.pdb
+C:\projects\TDD_DDD_CleanArchitecture_ZeroSigmaServer\ZeroSigma.Contracts\obj\Debug\net7.0\ref\ZeroSigma.Contracts.dll

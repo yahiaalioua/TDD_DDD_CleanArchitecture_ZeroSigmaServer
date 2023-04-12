@@ -1,0 +1,6 @@
+C:\projects\TDD_DDD_CleanArchitecture_ZeroSigmaServer\ZeroSigma.Api\obj\Debug\net7.0\ZeroSigma.Api.csproj.AssemblyReference.cache
+C:\projects\TDD_DDD_CleanArchitecture_ZeroSigmaServer\ZeroSigma.Api\obj\Debug\net7.0\ZeroSigma.Api.GeneratedMSBuildEditorConfig.editorconfig
+C:\projects\TDD_DDD_CleanArchitecture_ZeroSigmaServer\ZeroSigma.Api\obj\Debug\net7.0\ZeroSigma.Api.AssemblyInfoInputs.cache
+C:\projects\TDD_DDD_CleanArchitecture_ZeroSigmaServer\ZeroSigma.Api\obj\Debug\net7.0\ZeroSigma.Api.AssemblyInfo.cs
+C:\projects\TDD_DDD_CleanArchitecture_ZeroSigmaServer\ZeroSigma.Api\obj\Debug\net7.0\ZeroSigma.Api.csproj.CoreCompileInputs.cache
+C:\projects\TDD_DDD_CleanArchitecture_ZeroSigmaServer\ZeroSigma.Api\obj\Debug\net7.0\ZeroSigma.Api.MvcApplicationPartsAssemblyInfo.cache
