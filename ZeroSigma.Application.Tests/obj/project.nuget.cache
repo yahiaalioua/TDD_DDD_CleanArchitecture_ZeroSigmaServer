@@ -1,12 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "aHvq3vOH35kc1ZO/xFfeF4la/JRnrvg0LoZADK6kwxcViJC4w4848JKfV1GPuCSxFH3cTEKrKFDsDJM99Z4HTQ==",
+  "dgSpecHash": "0CWOP/vTyoyy2NmeeqaSIY0ppENdnvYdG3uSfN6JkLYBaT1b85nEo0ee2s2VBM/GbeI+GU6x07rcnu4nOWoZrw==",
   "success": true,
   "projectFilePath": "C:\\projects\\TDD_DDD_CleanArchitecture_ZeroSigmaServer\\ZeroSigma.Application.Tests\\ZeroSigma.Application.Tests.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\yahia alioua\\.nuget\\packages\\coverlet.collector\\3.1.2\\coverlet.collector.3.1.2.nupkg.sha512",
     "C:\\Users\\yahia alioua\\.nuget\\packages\\microsoft.codecoverage\\17.3.2\\microsoft.codecoverage.17.3.2.nupkg.sha512",
     "C:\\Users\\yahia alioua\\.nuget\\packages\\microsoft.csharp\\4.0.1\\microsoft.csharp.4.0.1.nupkg.sha512",
+    "C:\\Users\\yahia alioua\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\7.0.0\\microsoft.extensions.dependencyinjection.abstractions.7.0.0.nupkg.sha512",
     "C:\\Users\\yahia alioua\\.nuget\\packages\\microsoft.net.test.sdk\\17.3.2\\microsoft.net.test.sdk.17.3.2.nupkg.sha512",
     "C:\\Users\\yahia alioua\\.nuget\\packages\\microsoft.netcore.platforms\\1.1.0\\microsoft.netcore.platforms.1.1.0.nupkg.sha512",
     "C:\\Users\\yahia alioua\\.nuget\\packages\\microsoft.netcore.targets\\1.1.0\\microsoft.netcore.targets.1.1.0.nupkg.sha512",

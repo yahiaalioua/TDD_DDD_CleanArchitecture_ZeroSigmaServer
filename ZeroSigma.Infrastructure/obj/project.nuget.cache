@@ -1,8 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "clwzdZGD4rlw1M86w0++bltSIiIrBAE2HD4SeBo4BC5FccelDxc6vuzHer/e8UBkTVeDJwphzk1l3vE4Kkv2oA==",
+  "dgSpecHash": "YBOHVaDF6GDfxtgXAxj1G5TzOBa/RMewFIhpHfVF7PI7OAPgJeuJpFkNZzEHPC7rxDpp8kh5yOsDJySntD66lQ==",
   "success": true,
   "projectFilePath": "C:\\projects\\TDD_DDD_CleanArchitecture_ZeroSigmaServer\\ZeroSigma.Infrastructure\\ZeroSigma.Infrastructure.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\yahia alioua\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\7.0.0\\microsoft.extensions.dependencyinjection.abstractions.7.0.0.nupkg.sha512"
+  ],
   "logs": []
 }
