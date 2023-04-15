@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "9DCDz9okJRw5a6DnK/vYg7qCBC6u5M0hiknvT9qSzyA=",
+  "Source": "ZeroSigma.Api",
+  "BasePath": "_content/ZeroSigma.Api",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}

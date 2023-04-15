@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\ZeroSigma.Api.props" />
+</Project>
