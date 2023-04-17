@@ -19,6 +19,7 @@ namespace ZeroSigma.Api.Controllers
         public IActionResult test()
         {
             var response = _refreshTokenProvider.GenerateRefreshToken(Guid.NewGuid(), "test@mail.com");
+            
             return Ok(response);
         }
     }
