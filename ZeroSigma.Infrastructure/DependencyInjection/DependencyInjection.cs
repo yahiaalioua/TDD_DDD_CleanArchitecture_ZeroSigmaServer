@@ -1,9 +1,11 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ZeroSigma.Application.Common.Authentication;
+using ZeroSigma.Application.Interfaces;
 using ZeroSigma.Infrastructure.Authentication;
 using ZeroSigma.Infrastructure.Authentication.AccessToken;
 using ZeroSigma.Infrastructure.Authentication.RefreshToken;
+using ZeroSigma.Infrastructure.Persistance;
 
 namespace ZeroSigma.Infrastructure.DependencyInjection
 {
@@ -16,6 +18,7 @@ namespace ZeroSigma.Infrastructure.DependencyInjection
             services.AddScoped<IAccessTokenProvider, AccessTokenProvider>();
             services.AddScoped<IRefreshTokenProvider,RefreshTokenProvider>();
             services.AddScoped<IJwtGenerator, JwtGenrator>();
+            services.AddScoped<IUserRepository,UserRepository>();
             return services;
             
         }

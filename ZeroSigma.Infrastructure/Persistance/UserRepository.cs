@@ -5,12 +5,7 @@ namespace ZeroSigma.Infrastructure.Persistance
 {
     public class UserRepository : IUserRepository
     {
-        private readonly List<User> _userDb;
-
-        public UserRepository(List<User> userDb)
-        {
-            _userDb = userDb;
-        }
+        public static List<User> _userDb=new();
 
         public void Add(User user)
         {

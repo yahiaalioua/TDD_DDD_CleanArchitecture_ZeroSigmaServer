@@ -1,11 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "N4d633XAydjItuZudHAhGUw2f8sYnD5CYPwJVCeepf5+/AXCQJo3fdwv+qUqzJGxSBFwFPL2+352fKebLZTc/A==",
+  "dgSpecHash": "HqkAg3g7dVzJZbwmiwv9R66LzCwbu930dNynqHp9VdiT9gDEBAXS12D+NS6CwCaG4f7pBQQXRa8XHNu0cLnlJQ==",
   "success": true,
   "projectFilePath": "C:\\projects\\TDD_DDD_CleanArchitecture_ZeroSigmaServer\\ZeroSigma.Application.Tests\\ZeroSigma.Application.Tests.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\yahia alioua\\.nuget\\packages\\castle.core\\5.1.1\\castle.core.5.1.1.nupkg.sha512",
     "C:\\Users\\yahia alioua\\.nuget\\packages\\coverlet.collector\\3.1.2\\coverlet.collector.3.1.2.nupkg.sha512",
+    "C:\\Users\\yahia alioua\\.nuget\\packages\\mediatr\\12.0.1\\mediatr.12.0.1.nupkg.sha512",
+    "C:\\Users\\yahia alioua\\.nuget\\packages\\mediatr.contracts\\2.0.1\\mediatr.contracts.2.0.1.nupkg.sha512",
     "C:\\Users\\yahia alioua\\.nuget\\packages\\microsoft.aspnetcore.authentication.abstractions\\2.2.0\\microsoft.aspnetcore.authentication.abstractions.2.2.0.nupkg.sha512",
     "C:\\Users\\yahia alioua\\.nuget\\packages\\microsoft.aspnetcore.authentication.core\\2.2.0\\microsoft.aspnetcore.authentication.core.2.2.0.nupkg.sha512",
     "C:\\Users\\yahia alioua\\.nuget\\packages\\microsoft.aspnetcore.authorization\\2.2.0\\microsoft.aspnetcore.authorization.2.2.0.nupkg.sha512",

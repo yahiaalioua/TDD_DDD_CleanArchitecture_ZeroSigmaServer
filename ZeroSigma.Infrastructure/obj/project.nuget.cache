@@ -1,9 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "8/MSgxhgUYjqSMHX/TjRocJ0TypmoxFbFHhi0Gh4uFSGubaKitTzFTRQyRcECw6xplmXpIPDhJ+a5WCmPN86JQ==",
+  "dgSpecHash": "1m/iFPbB/KjaMNDPhwfqDtZpybgizodtCm2gdTI1c9jx0Vcl4d07FBcrA86EQO2C1XxJXwdEOpFCE1J4Go6QMg==",
   "success": true,
   "projectFilePath": "C:\\projects\\TDD_DDD_CleanArchitecture_ZeroSigmaServer\\ZeroSigma.Infrastructure\\ZeroSigma.Infrastructure.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\yahia alioua\\.nuget\\packages\\mediatr\\12.0.1\\mediatr.12.0.1.nupkg.sha512",
+    "C:\\Users\\yahia alioua\\.nuget\\packages\\mediatr.contracts\\2.0.1\\mediatr.contracts.2.0.1.nupkg.sha512",
     "C:\\Users\\yahia alioua\\.nuget\\packages\\microsoft.aspnetcore.authentication.abstractions\\2.2.0\\microsoft.aspnetcore.authentication.abstractions.2.2.0.nupkg.sha512",
     "C:\\Users\\yahia alioua\\.nuget\\packages\\microsoft.aspnetcore.authentication.core\\2.2.0\\microsoft.aspnetcore.authentication.core.2.2.0.nupkg.sha512",
     "C:\\Users\\yahia alioua\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\7.0.5\\microsoft.aspnetcore.authentication.jwtbearer.7.0.5.nupkg.sha512",

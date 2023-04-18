@@ -26,6 +26,11 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ZeroSigma.Application\ZeroSigma.Application.csproj" />
+    <ProjectReference Include="..\ZeroSigma.Domain\ZeroSigma.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Authentication\Queries\" />
   </ItemGroup>
 
 </Project>

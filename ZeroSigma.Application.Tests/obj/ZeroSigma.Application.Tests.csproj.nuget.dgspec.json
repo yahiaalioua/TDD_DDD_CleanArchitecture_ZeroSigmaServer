@@ -30,6 +30,9 @@
             "projectReferences": {
               "C:\\projects\\TDD_DDD_CleanArchitecture_ZeroSigmaServer\\ZeroSigma.Application\\ZeroSigma.Application.csproj": {
                 "projectPath": "C:\\projects\\TDD_DDD_CleanArchitecture_ZeroSigmaServer\\ZeroSigma.Application\\ZeroSigma.Application.csproj"
+              },
+              "C:\\projects\\TDD_DDD_CleanArchitecture_ZeroSigmaServer\\ZeroSigma.Domain\\ZeroSigma.Domain.csproj": {
+                "projectPath": "C:\\projects\\TDD_DDD_CleanArchitecture_ZeroSigmaServer\\ZeroSigma.Domain\\ZeroSigma.Domain.csproj"
               }
             }
           }
@@ -129,6 +132,10 @@
         "net7.0": {
           "targetAlias": "net7.0",
           "dependencies": {
+            "MediatR": {
+              "target": "Package",
+              "version": "[12.0.1, )"
+            },
             "Microsoft.Extensions.DependencyInjection.Abstractions": {
               "target": "Package",
               "version": "[7.0.0, )"

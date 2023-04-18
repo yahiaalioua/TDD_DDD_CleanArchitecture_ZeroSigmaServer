@@ -1,9 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "pKutYYhCRPHx9FqWiyi0awV+b//RRA5//EE6TlyNwsw1f8ww0cuoZ99wS1uJdjoljLToFDtBPegjRijYvonh2A==",
+  "dgSpecHash": "4COckuPCiEymsleKMuIQDRU998rUzsL1z5jX6nOkNSKZRjj6JSvj2xRUz+rAYp0vDe3/PS02TzgjfLkOpPC3Sw==",
   "success": true,
   "projectFilePath": "C:\\projects\\TDD_DDD_CleanArchitecture_ZeroSigmaServer\\ZeroSigma.Application\\ZeroSigma.Application.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\yahia alioua\\.nuget\\packages\\mediatr\\12.0.1\\mediatr.12.0.1.nupkg.sha512",
+    "C:\\Users\\yahia alioua\\.nuget\\packages\\mediatr.contracts\\2.0.1\\mediatr.contracts.2.0.1.nupkg.sha512",
     "C:\\Users\\yahia alioua\\.nuget\\packages\\microsoft.aspnetcore.authentication.abstractions\\2.2.0\\microsoft.aspnetcore.authentication.abstractions.2.2.0.nupkg.sha512",
     "C:\\Users\\yahia alioua\\.nuget\\packages\\microsoft.aspnetcore.authentication.core\\2.2.0\\microsoft.aspnetcore.authentication.core.2.2.0.nupkg.sha512",
     "C:\\Users\\yahia alioua\\.nuget\\packages\\microsoft.aspnetcore.authorization\\2.2.0\\microsoft.aspnetcore.authorization.2.2.0.nupkg.sha512",

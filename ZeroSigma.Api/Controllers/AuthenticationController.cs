@@ -1,6 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using ZeroSigma.Application.Authentication.Commands;
 using ZeroSigma.Application.Common.Authentication;
+using ZeroSigma.Application.DTO.Authentication;
+using ZeroSigma.Domain.Common.Results;
 
 namespace ZeroSigma.Api.Controllers
 {
@@ -8,19 +12,19 @@ namespace ZeroSigma.Api.Controllers
     [ApiController]
     public class AuthenticationController : ControllerBase
     {
-        private readonly IRefreshTokenProvider _refreshTokenProvider;
+        private readonly IMediator _mediator;
 
-        public AuthenticationController(IRefreshTokenProvider refreshTokenProvider)
+        public AuthenticationController(IMediator mediator)
         {
-            _refreshTokenProvider = refreshTokenProvider;
+            _mediator = mediator;
         }
 
-        [HttpGet]
-        public IActionResult test()
+        [HttpPost]
+        public async Task<IActionResult> test(RegisterRequest request)
         {
-            var response = _refreshTokenProvider.GenerateRefreshToken(Guid.NewGuid(), "test@mail.com");
-            
-            return Ok(response);
+            var command = new RegisterCommand(request.FullName, request.Email, request.Password);
+            var response = await _mediator.Send(command);
+            return this.FromResult(response);
         }
     }
 }

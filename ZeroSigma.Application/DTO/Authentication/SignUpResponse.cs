@@ -9,7 +9,8 @@ namespace ZeroSigma.Application.DTO.Authentication
     public class SignUpResponse
     {
         public Guid UserId { get; set; }
-        public string Name { get; set; } = null!;
+        public string FullName { get; set; } = null!;
         public string Email { get; set; } = null!;
+        public string Message { get; set; }= null!;
     }
 }

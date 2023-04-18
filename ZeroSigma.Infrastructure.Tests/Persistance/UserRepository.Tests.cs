@@ -19,14 +19,14 @@ namespace ZeroSigma.Infrastructure.Persistance
             // arrange
             _user1 = new User()
             {
-                Name = "yahia",
+                FullName = "yahia",
                 Email = "test@mail.com",
                 Password = "dummmypass",
                 AccessToken = "dummyAccessToken",
                 RefreshToken = "dummyRefreshToken"
             };
             _userDb = new();
-            _userRepository = new UserRepository(_userDb);
+            _userRepository = new UserRepository();
         }
 
         [Fact]
@@ -53,7 +53,7 @@ namespace ZeroSigma.Infrastructure.Persistance
             User? result= _userRepository.GetByEmail(_user1.Email);
             //assert
             Assert.Equal(_user1, result);
-            Assert.Contains(_user1.Name, result?.Name);
+            Assert.Contains(_user1.FullName, result?.FullName);
         }
     }
 }

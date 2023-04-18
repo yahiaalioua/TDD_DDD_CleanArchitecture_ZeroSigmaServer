@@ -8,7 +8,7 @@ namespace ZeroSigma.Application.DTO.Authentication
 {
     public record RegisterRequest
     {
-        public string Name { get; set; } = null!;
+        public string FullName { get; set; } = null!;
         public string Email { get; set; } = null!;
         public string Password { get; set; } = null!;
     }

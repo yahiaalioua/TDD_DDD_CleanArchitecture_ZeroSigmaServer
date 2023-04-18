@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ZeroSigma.Domain.Errors;
+using ZeroSigma.Domain.Common.Errors;
 
 namespace ZeroSigma.Domain.Common.Results
 {
