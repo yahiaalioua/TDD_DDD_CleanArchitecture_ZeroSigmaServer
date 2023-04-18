@@ -41,9 +41,24 @@ namespace ZeroSigma.Application.Authentication.Command
             _userRepositoryMock.Verify(r=>r.Add(_mike), Times.Never);
             _userRepositoryMock.Verify(r=>r.GetByEmail(_mike.Email), Times.Once);
             Assert.True(result.CustomProblemDetails==SignUpStructuralValidationErrors.DuplicateEmailError);
+        }
 
+        [Fact]
+        public async Task Handle_ShouldReturnSuccessResultWhenUserEmailIsUnique()
+        {
+            // arrange
+            User? user = null;
+            var command = new RegisterCommand(_mike.FullName, _mike.Email, _mike.Password);
+            _userRepositoryMock.Setup(r => r.GetByEmail(_mike.Email)).Returns(user);
+            _userRepositoryMock.Setup(r => r.Add(_mike));
+            var handler = new RegisterCommandHandler(_userRepositoryMock.Object);
+            //act
+            Result<SignUpResponse> result = await handler.Handle(command, default);
+            //assert
+            _userRepositoryMock.Verify(r => r.GetByEmail(_mike.Email), Times.Once);
+            Assert.IsAssignableFrom<Result<SignUpResponse>>(result);
+            Assert.True(result.ResultType == ResultType.Ok);
             
-
         }
     }
 }

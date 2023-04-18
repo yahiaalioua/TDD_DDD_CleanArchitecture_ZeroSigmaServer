@@ -33,7 +33,10 @@ namespace ZeroSigma.Application.Authentication.Commands
                 CustomProblemDetails DuplicateEmailError = SignUpStructuralValidationErrors.DuplicateEmailError;
                 return new InvalidResult<SignUpResponse>(DuplicateEmailError);
             }
-            _userRepository.Add(user);
+            else
+            {
+                _userRepository.Add(user);
+            }
             SignUpResponse response = new() { UserId = user.Id,FullName=user.FullName, Email = user.Email, Message = "You successfully registered"};
             return new SuccessResult<SignUpResponse>(response);
             
