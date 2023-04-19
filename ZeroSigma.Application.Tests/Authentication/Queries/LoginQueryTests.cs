@@ -22,7 +22,6 @@ namespace ZeroSigma.Application.Authentication.Queries
     {
 
         private Mock<IUserRepository> _userRepositoryMock;
-        private Mock<ILoginValidationService> _loginValidationServiceMock;
         private Mock<IAccessTokenProvider> _accessTokenProviderMock;
         private Mock<IRefreshTokenProvider> _refreshTokenProviderMock;
         private readonly User _mike;
@@ -37,7 +36,6 @@ namespace ZeroSigma.Application.Authentication.Queries
                 AccessToken = "accessToken",
                 RefreshToken = "refreshToken"
             };
-            _loginValidationServiceMock = new Mock<ILoginValidationService>();
             _accessTokenProviderMock= new Mock<IAccessTokenProvider>();
             _refreshTokenProviderMock= new Mock<IRefreshTokenProvider>();
         }
@@ -50,19 +48,40 @@ namespace ZeroSigma.Application.Authentication.Queries
             User? user = null;
             Result<AuthenticationResponse> response = new NotFoundResults<AuthenticationResponse>(LoginLogicalValidationErrors.NonExistentEmailError);
             _userRepositoryMock.Setup(r => r.GetByEmail(query.Email)).Returns(user);
-            _loginValidationServiceMock.Setup(v => v.ValidateUser(user,_mike.Email, _mike.Password, "", "")).Returns(response);
+            ILoginValidationService loginValidationService = new LoginValidationService();
 
             var handler = new LoginQueryHandler(
                 _accessTokenProviderMock.Object,
                 _refreshTokenProviderMock.Object,
-                _loginValidationServiceMock.Object,
+                loginValidationService,
                 _userRepositoryMock.Object 
                 );
             //act
             Result<AuthenticationResponse> result = await handler.Handle(query, default);
             //assert
-            _userRepositoryMock.Verify(r=>r.GetByEmail(_mike.Email), Times.Once());
-            _loginValidationServiceMock.Verify(v=>v.ValidateUser(user,_mike.Email,_mike.Password,"",""), Times.Once());
+            _userRepositoryMock.Verify(r=>r.GetByEmail(query.Email), Times.Once());
+            Assert.True(result.CustomProblemDetails == response.CustomProblemDetails);
+        }
+        [Fact]
+        public async Task Handle_ShouldReturnInvalidPasswordErrorWhenPasswordIsWrong()
+        {
+            // arrange
+            var query = new LoginQuery(_mike.Email, "wrongPassword");
+            User user = _mike;
+            Result<AuthenticationResponse> response = new InvalidResult<AuthenticationResponse>(LoginLogicalValidationErrors.InvalidPasswordError);
+            _userRepositoryMock.Setup(r => r.GetByEmail(query.Email)).Returns(user);
+            ILoginValidationService loginValidationService = new LoginValidationService();
+
+            var handler = new LoginQueryHandler(
+                _accessTokenProviderMock.Object,
+                _refreshTokenProviderMock.Object,
+                loginValidationService,
+                _userRepositoryMock.Object
+                );
+            //act
+            Result<AuthenticationResponse> result = await handler.Handle(query, default);
+            //assert
+            _userRepositoryMock.Verify(r => r.GetByEmail(query.Email), Times.Once());            
             Assert.True(result.CustomProblemDetails == response.CustomProblemDetails);
         }
     }
