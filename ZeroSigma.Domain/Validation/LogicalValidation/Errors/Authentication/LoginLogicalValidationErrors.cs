@@ -26,6 +26,6 @@ namespace ZeroSigma.Domain.Validation.LogicalValidation.Errors.Authentication
             Detail = "Wrong password, make sure to type the correct password",
             Code = "002"
         };
-
+        public static CustomProblemDetails InvalidPasswordLengthError;
     }
 }

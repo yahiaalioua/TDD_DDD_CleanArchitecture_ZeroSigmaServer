@@ -14,7 +14,6 @@ using ZeroSigma.Domain.Common.Errors;
 using ZeroSigma.Domain.Common.Results;
 using ZeroSigma.Domain.Entities;
 using ZeroSigma.Domain.Validation.LogicalValidation.Errors.Authentication;
-using ZeroSigma.Domain.Validation.StructuralValidation.Errors.Authentication;
 
 namespace ZeroSigma.Application.Authentication.Queries
 {

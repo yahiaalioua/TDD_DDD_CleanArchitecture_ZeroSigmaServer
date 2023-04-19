@@ -5,11 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ZeroSigma.Application.Authentication.Commands;
+using ZeroSigma.Application.Authentication.Services.ValidationServices.SignUp;
 using ZeroSigma.Application.DTO.Authentication;
 using ZeroSigma.Application.Interfaces;
 using ZeroSigma.Domain.Common.Results;
 using ZeroSigma.Domain.Entities;
-using ZeroSigma.Domain.Validation.StructuralValidation.Errors.Authentication;
+using ZeroSigma.Domain.Validation.LogicalValidation.Errors.Authentication;
 
 namespace ZeroSigma.Application.Authentication.Command
 {
@@ -34,13 +35,14 @@ namespace ZeroSigma.Application.Authentication.Command
             // arrange
             var command = new RegisterCommand(_mike.FullName,_mike.Email,_mike.Password);
             _userRepositoryMock.Setup(r => r.GetByEmail(_mike.Email)).Returns(_mike);
-            var handler = new RegisterCommandHandler(_userRepositoryMock.Object);
+            ISignUpValidationService signUpValidationService=new SignUpValidationService();
+            var handler = new RegisterCommandHandler(_userRepositoryMock.Object,signUpValidationService);
             //act
             Result<SignUpResponse> result= await handler.Handle(command, default);
             //assert
             _userRepositoryMock.Verify(r=>r.Add(_mike), Times.Never);
             _userRepositoryMock.Verify(r=>r.GetByEmail(_mike.Email), Times.Once);
-            Assert.True(result.CustomProblemDetails==SignUpStructuralValidationErrors.DuplicateEmailError);
+            Assert.True(result.CustomProblemDetails==SignUpLogicalValidationErrors.DuplicateEmailError);
         }
 
         [Fact]
@@ -48,10 +50,11 @@ namespace ZeroSigma.Application.Authentication.Command
         {
             // arrange
             User? user = null;
-            var command = new RegisterCommand(_mike.FullName, _mike.Email, _mike.Password);
+            var command = new RegisterCommand(_mike.FullName, _mike.Email, "AllowedPassw0rd.");
             _userRepositoryMock.Setup(r => r.GetByEmail(_mike.Email)).Returns(user);
             _userRepositoryMock.Setup(r => r.Add(_mike));
-            var handler = new RegisterCommandHandler(_userRepositoryMock.Object);
+            ISignUpValidationService signUpValidationService = new SignUpValidationService();
+            var handler = new RegisterCommandHandler(_userRepositoryMock.Object, signUpValidationService);
             //act
             Result<SignUpResponse> result = await handler.Handle(command, default);
             //assert
