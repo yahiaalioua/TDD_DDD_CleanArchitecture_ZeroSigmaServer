@@ -18,6 +18,7 @@ namespace ZeroSigma.Application.Authentication.Command
     {
         private  Mock<IUserRepository> _userRepositoryMock;
         private readonly User _mike;
+        private readonly ISignUpValidationService _signUpValidationService;
         public RegisterUserCommandTest()
         {
             _userRepositoryMock = new Mock<IUserRepository>();
@@ -26,6 +27,7 @@ namespace ZeroSigma.Application.Authentication.Command
                 FullName="Mike", Email="mike@mail.com",Password="passRandom",
                 AccessToken="accessToken", RefreshToken="refreshToken"
             };
+            _signUpValidationService = new SignUpValidationService();
             
         }
 
@@ -35,8 +37,7 @@ namespace ZeroSigma.Application.Authentication.Command
             // arrange
             var command = new RegisterCommand(_mike.FullName,_mike.Email,_mike.Password);
             _userRepositoryMock.Setup(r => r.GetByEmail(_mike.Email)).Returns(_mike);
-            ISignUpValidationService signUpValidationService=new SignUpValidationService();
-            var handler = new RegisterCommandHandler(_userRepositoryMock.Object,signUpValidationService);
+            var handler = new RegisterCommandHandler(_userRepositoryMock.Object,_signUpValidationService);
             //act
             Result<SignUpResponse> result= await handler.Handle(command, default);
             //assert
@@ -53,8 +54,7 @@ namespace ZeroSigma.Application.Authentication.Command
             var command = new RegisterCommand(_mike.FullName, _mike.Email, "AllowedPassw0rd.");
             _userRepositoryMock.Setup(r => r.GetByEmail(_mike.Email)).Returns(user);
             _userRepositoryMock.Setup(r => r.Add(_mike));
-            ISignUpValidationService signUpValidationService = new SignUpValidationService();
-            var handler = new RegisterCommandHandler(_userRepositoryMock.Object, signUpValidationService);
+            var handler = new RegisterCommandHandler(_userRepositoryMock.Object,_signUpValidationService);
             //act
             Result<SignUpResponse> result = await handler.Handle(command, default);
             //assert
@@ -71,14 +71,30 @@ namespace ZeroSigma.Application.Authentication.Command
             var command = new RegisterCommand(_mike.FullName, _mike.Email, ">8char");
             _userRepositoryMock.Setup(r => r.GetByEmail(_mike.Email)).Returns(user);
             _userRepositoryMock.Setup(r => r.Add(_mike));
-            ISignUpValidationService signUpValidationService = new SignUpValidationService();
-            var handler = new RegisterCommandHandler(_userRepositoryMock.Object, signUpValidationService);
+            var handler = new RegisterCommandHandler(_userRepositoryMock.Object,_signUpValidationService);
             //act
             Result<SignUpResponse> result = await handler.Handle(command, default);
             //assert
             _userRepositoryMock.Verify(r => r.GetByEmail(_mike.Email), Times.Once);
             Assert.IsAssignableFrom<Result<SignUpResponse>>(result);
             Assert.True(result.CustomProblemDetails == SignUpStructuralValidationErrors.InvalidPasswordLengthError);
+
+        }
+        [Fact]
+        public async Task Handle_ShouldReturnInvalidPasswordErrorWhenPasswordItsNotSecureEnough()
+        {
+            // arrange
+            User? user = null;
+            var command = new RegisterCommand(_mike.FullName, _mike.Email, "eightCharsPassword");
+            _userRepositoryMock.Setup(r => r.GetByEmail(_mike.Email)).Returns(user);
+            _userRepositoryMock.Setup(r => r.Add(_mike));
+            var handler = new RegisterCommandHandler(_userRepositoryMock.Object,_signUpValidationService);
+            //act
+            Result<SignUpResponse> result = await handler.Handle(command, default);
+            //assert
+            _userRepositoryMock.Verify(r => r.GetByEmail(_mike.Email), Times.Once);
+            Assert.IsAssignableFrom<Result<SignUpResponse>>(result);
+            Assert.True(result.CustomProblemDetails == SignUpStructuralValidationErrors.InvalidPasswordError);
 
         }
     }
