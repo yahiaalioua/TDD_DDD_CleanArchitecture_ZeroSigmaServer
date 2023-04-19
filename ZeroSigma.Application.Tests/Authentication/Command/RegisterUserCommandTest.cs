@@ -63,5 +63,23 @@ namespace ZeroSigma.Application.Authentication.Command
             Assert.True(result.ResultType == ResultType.Ok);
             
         }
+        [Fact]
+        public async Task Handle_ShouldReturnInvalidPasswordLengthErrorWhenPasswordLengthIsLessThanEightCharacters()
+        {
+            // arrange
+            User? user = null;
+            var command = new RegisterCommand(_mike.FullName, _mike.Email, ">8char");
+            _userRepositoryMock.Setup(r => r.GetByEmail(_mike.Email)).Returns(user);
+            _userRepositoryMock.Setup(r => r.Add(_mike));
+            ISignUpValidationService signUpValidationService = new SignUpValidationService();
+            var handler = new RegisterCommandHandler(_userRepositoryMock.Object, signUpValidationService);
+            //act
+            Result<SignUpResponse> result = await handler.Handle(command, default);
+            //assert
+            _userRepositoryMock.Verify(r => r.GetByEmail(_mike.Email), Times.Once);
+            Assert.IsAssignableFrom<Result<SignUpResponse>>(result);
+            Assert.True(result.CustomProblemDetails == SignUpStructuralValidationErrors.InvalidPasswordLengthError);
+
+        }
     }
 }
