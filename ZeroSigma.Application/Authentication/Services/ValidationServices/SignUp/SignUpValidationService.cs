@@ -15,10 +15,16 @@ namespace ZeroSigma.Application.Authentication.Services.ValidationServices.SignU
 {
     public class SignUpValidationService : ISignUpValidationService
     {
+        private readonly IUserRepository _userRepository;
 
-        public Result<SignUpResponse> ValidateUser(User? user, string fullName, string email, string password,SignUpResponse signUpResponse)
+        public SignUpValidationService(IUserRepository userRepository)
         {
-            if (user != null)
+            _userRepository = userRepository;
+        }
+
+        public Result<SignUpResponse> ValidateUser(User user, string fullName, string email, string password,SignUpResponse signUpResponse)
+        {
+            if (_userRepository.GetByEmail(email) != null)
             {
                 return new InvalidResult<SignUpResponse>(SignUpLogicalValidationErrors.DuplicateEmailError);
             }
@@ -34,7 +40,8 @@ namespace ZeroSigma.Application.Authentication.Services.ValidationServices.SignU
             {
                 return new InvalidResult<SignUpResponse>(SignUpStructuralValidationErrors.MissingSpecialCharacterError);
             }
-      
+            _userRepository.Add(user);
+            
             return new SuccessResult<SignUpResponse>(signUpResponse);
 
         }

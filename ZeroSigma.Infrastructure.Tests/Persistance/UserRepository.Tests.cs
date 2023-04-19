@@ -12,7 +12,6 @@ namespace ZeroSigma.Infrastructure.Persistance
     public class UserPersistance
     {
         private User _user1 { get; set; }
-        private List<User> _userDb { get; set; }
         private UserRepository _userRepository { get; set; }
         public UserPersistance()
         {
@@ -25,7 +24,6 @@ namespace ZeroSigma.Infrastructure.Persistance
                 AccessToken = "dummyAccessToken",
                 RefreshToken = "dummyRefreshToken"
             };
-            _userDb = new();
             _userRepository = new UserRepository();
         }
 
@@ -37,10 +35,9 @@ namespace ZeroSigma.Infrastructure.Persistance
             
             //act
             _userRepository.Add(_user1);
-            var savedUser = _userDb.Single();
+            var savedUser = _userRepository.GetByEmail(_user1.Email);
             //assert
             Assert.Equal(savedUser, _user1);
-            Assert.Contains(_user1, _userDb);
         }
 
         [Fact]
