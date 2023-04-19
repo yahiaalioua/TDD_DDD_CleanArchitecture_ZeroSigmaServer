@@ -97,5 +97,23 @@ namespace ZeroSigma.Application.Authentication.Command
             Assert.True(result.CustomProblemDetails == SignUpStructuralValidationErrors.InvalidPasswordError);
 
         }
+
+        [Fact]
+        public async Task Handle_ShouldReturnMissingSpecialCharacterErrorWhenPasswordDoesNotContainsAtLeastOneSpecialCharacter()
+        {
+            // arrange
+            User? user = null;
+            var command = new RegisterCommand(_mike.FullName, _mike.Email, "eightCharsPassword12");
+            _userRepositoryMock.Setup(r => r.GetByEmail(_mike.Email)).Returns(user);
+            _userRepositoryMock.Setup(r => r.Add(_mike));
+            var handler = new RegisterCommandHandler(_userRepositoryMock.Object, _signUpValidationService);
+            //act
+            Result<SignUpResponse> result = await handler.Handle(command, default);
+            //assert
+            _userRepositoryMock.Verify(r => r.GetByEmail(_mike.Email), Times.Once);
+            Assert.IsAssignableFrom<Result<SignUpResponse>>(result);
+            Assert.True(result.CustomProblemDetails == SignUpStructuralValidationErrors.MissingSpecialCharacterError);
+
+        }
     }
 }
