@@ -46,7 +46,6 @@ namespace ZeroSigma.Application.Authentication.Queries
             // arrange
             var query = new LoginQuery(_mike.Email, _mike.Password);
             User? user = null;
-            Result<AuthenticationResponse> response = new NotFoundResults<AuthenticationResponse>(LoginLogicalValidationErrors.NonExistentEmailError);
             _userRepositoryMock.Setup(r => r.GetByEmail(query.Email)).Returns(user);
             ILoginValidationService loginValidationService = new LoginValidationService();
 
@@ -60,15 +59,14 @@ namespace ZeroSigma.Application.Authentication.Queries
             Result<AuthenticationResponse> result = await handler.Handle(query, default);
             //assert
             _userRepositoryMock.Verify(r=>r.GetByEmail(query.Email), Times.Once());
-            Assert.True(result.CustomProblemDetails == response.CustomProblemDetails);
+            Assert.True(result.CustomProblemDetails == LoginLogicalValidationErrors.NonExistentEmailError);
         }
         [Fact]
         public async Task Handle_ShouldReturnInvalidPasswordErrorWhenPasswordIsWrong()
         {
             // arrange
             var query = new LoginQuery(_mike.Email, "wrongPassword");
-            User user = _mike;
-            Result<AuthenticationResponse> response = new InvalidResult<AuthenticationResponse>(LoginLogicalValidationErrors.InvalidPasswordError);
+            User user = _mike;            
             _userRepositoryMock.Setup(r => r.GetByEmail(query.Email)).Returns(user);
             ILoginValidationService loginValidationService = new LoginValidationService();
 
@@ -82,7 +80,28 @@ namespace ZeroSigma.Application.Authentication.Queries
             Result<AuthenticationResponse> result = await handler.Handle(query, default);
             //assert
             _userRepositoryMock.Verify(r => r.GetByEmail(query.Email), Times.Once());            
-            Assert.True(result.CustomProblemDetails == response.CustomProblemDetails);
+            Assert.True(result.CustomProblemDetails == LoginLogicalValidationErrors.InvalidPasswordError);
+        }
+        [Fact]
+        public async Task Handle_ShouldReturnSuccessAuthenticationResponseWhenEmailAndPasswordIsCorrect()
+        {
+            // arrange
+            var query = new LoginQuery(_mike.Email,_mike.Password);
+            User user = _mike;
+            _userRepositoryMock.Setup(r => r.GetByEmail(query.Email)).Returns(user);
+            ILoginValidationService loginValidationService = new LoginValidationService();
+
+            var handler = new LoginQueryHandler(
+                _accessTokenProviderMock.Object,
+                _refreshTokenProviderMock.Object,
+                loginValidationService,
+                _userRepositoryMock.Object
+                );
+            //act
+            Result<AuthenticationResponse> result = await handler.Handle(query, default);
+            //assert
+            _userRepositoryMock.Verify(r => r.GetByEmail(query.Email), Times.Once());
+            Assert.True(result.ResultType == ResultType.Ok);            
         }
     }
 }
