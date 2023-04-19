@@ -31,4 +31,8 @@
     <ProjectReference Include="..\ZeroSigma.Infrastructure\ZeroSigma.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Persistance\" />
+  </ItemGroup>
+
 </Project>
