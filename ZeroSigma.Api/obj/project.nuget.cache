@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "HfIn3RhIICP1s9ke4tKa5YK5TrUsboUYL0ItqmaLrMp57dzYlaNr87LYRdNxt8/mGKB52lFM2aAQQl3SOhIB3Q==",
+  "dgSpecHash": "FrL2lDNiNRU8Wq7vkajrjnDEcSsvpS0ggQgO1vauQxaXv1qinmFmpTtxh/zs5/wZABphFkeJdR1p7IlFJJ/n9w==",
   "success": true,
   "projectFilePath": "C:\\projects\\TDD_DDD_CleanArchitecture_ZeroSigmaServer\\ZeroSigma.Api\\ZeroSigma.Api.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\yahia alioua\\.nuget\\packages\\bcrypt.net-next\\4.0.3\\bcrypt.net-next.4.0.3.nupkg.sha512",
     "C:\\Users\\yahia alioua\\.nuget\\packages\\mediatr\\12.0.1\\mediatr.12.0.1.nupkg.sha512",
     "C:\\Users\\yahia alioua\\.nuget\\packages\\mediatr.contracts\\2.0.1\\mediatr.contracts.2.0.1.nupkg.sha512",
     "C:\\Users\\yahia alioua\\.nuget\\packages\\microsoft.aspnetcore.authentication.abstractions\\2.2.0\\microsoft.aspnetcore.authentication.abstractions.2.2.0.nupkg.sha512",

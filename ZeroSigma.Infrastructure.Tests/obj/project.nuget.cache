@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "71GcOhz0Uak3KySDUdUm1EuMdB5ZDkJ3tk+/M//zYSMdN08KxQgoCSL678HVPwnFdY1UQ8MuLZjOG1h+Izifug==",
+  "dgSpecHash": "Kj1YQgUL3ZTfSbzCgVGbg1jgspwFowzkg8HijUUWHxtqIKM1L/yyYXa08q7s1Ks8uXjfaMF4rq4zwsnRO0W4bg==",
   "success": true,
   "projectFilePath": "C:\\projects\\TDD_DDD_CleanArchitecture_ZeroSigmaServer\\ZeroSigma.Infrastructure.Tests\\ZeroSigma.Infrastructure.Tests.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\yahia alioua\\.nuget\\packages\\bcrypt.net-next\\4.0.3\\bcrypt.net-next.4.0.3.nupkg.sha512",
     "C:\\Users\\yahia alioua\\.nuget\\packages\\castle.core\\5.1.1\\castle.core.5.1.1.nupkg.sha512",
     "C:\\Users\\yahia alioua\\.nuget\\packages\\coverlet.collector\\3.1.2\\coverlet.collector.3.1.2.nupkg.sha512",
     "C:\\Users\\yahia alioua\\.nuget\\packages\\mediatr\\12.0.1\\mediatr.12.0.1.nupkg.sha512",

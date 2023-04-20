@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using ZeroSigma.Application.Authentication.Services.Encryption;
 using ZeroSigma.Application.DTO.Authentication;
 using ZeroSigma.Application.Interfaces;
 using ZeroSigma.Domain.Common.Errors;
@@ -15,11 +16,16 @@ namespace ZeroSigma.Application.Authentication.Services.ValidationServices.SignU
 {
     public class SignUpValidationService : ISignUpValidationService
     {
+        private readonly IEncryptionService _encryptionService;
         private readonly IUserRepository _userRepository;
 
-        public SignUpValidationService(IUserRepository userRepository)
+        public SignUpValidationService(
+            IUserRepository userRepository,
+            IEncryptionService encryptionService
+            )
         {
             _userRepository = userRepository;
+            _encryptionService = encryptionService;
         }
         private bool IsValidEmail(string email)
         {
@@ -44,34 +50,35 @@ namespace ZeroSigma.Application.Authentication.Services.ValidationServices.SignU
 
             return false;
         }
-        public Result<SignUpResponse> ValidateUser(User? user, string fullName, string email, string password,SignUpResponse signUpResponse)
+        public Result<SignUpResponse> ValidateUser(User? user, SignUpResponse signUpResponse)
         {
-            if(!IsValidEmail(email))
+            if(!IsValidEmail(user.Email))
             {
                 return new InvalidResult<SignUpResponse>(SignUpStructuralValidationErrors.InvalidEmailAddressError);
             }
-            if (_userRepository.GetByEmail(email) != null)
+            if (_userRepository.GetByEmail(user.Email) != null)
             {
                 return new InvalidResult<SignUpResponse>(SignUpLogicalValidationErrors.DuplicateEmailError);
             }
-            if (password.Length < 9)
+            if (user.Password.Length < 9)
             {
                 return new InvalidResult<SignUpResponse>(SignUpStructuralValidationErrors.InvalidPasswordLengthError);
             }
-            if (password.Length > 9 && password.Length>70)
+            if (user.Password.Length > 9 && user.Password.Length>70)
             {
                 return new InvalidResult<SignUpResponse>(SignUpStructuralValidationErrors.InvalidPasswordLengthError);
             }
-            if (!(Regex.IsMatch(password, "[a-z]") && Regex.IsMatch(password, "[A-Z]") && Regex.IsMatch(password, "[0-9]")))
+            if (!(Regex.IsMatch(user.Password, "[a-z]") && Regex.IsMatch(user.Password, "[A-Z]") && Regex.IsMatch(user.Password, "[0-9]")))
             {
                 return new InvalidResult<SignUpResponse>(SignUpStructuralValidationErrors.InvalidPasswordError);
             }
-            if (!Regex.IsMatch(password, "[`,~,!,@,#,$,%,^,&,*,(,),_,-,+,=,{,[,},},|,\\,:,;,\",',<,,,>,.,?,/]"))
+            if (!Regex.IsMatch(user.Password, "[`,~,!,@,#,$,%,^,&,*,(,),_,-,+,=,{,[,},},|,\\,:,;,\",',<,,,>,.,?,/]"))
             {
                 return new InvalidResult<SignUpResponse>(SignUpStructuralValidationErrors.MissingSpecialCharacterError);
             }
             if(user != null)
             {
+                user.Password=_encryptionService.EncryptPassword(user.Password);
                 _userRepository.Add(user);
             }
             return new SuccessResult<SignUpResponse>(signUpResponse);

@@ -37,9 +37,7 @@ namespace ZeroSigma.Application.Authentication.Commands
                 Email = createdUser.Email, Message = "You successfully registered" 
             };
             
-            return _signUpValidationService.ValidateUser(createdUser, request.FullName, request.Email, request.Password,response);
-            
-
+            return _signUpValidationService.ValidateUser(createdUser,response);
         }
     }
 }

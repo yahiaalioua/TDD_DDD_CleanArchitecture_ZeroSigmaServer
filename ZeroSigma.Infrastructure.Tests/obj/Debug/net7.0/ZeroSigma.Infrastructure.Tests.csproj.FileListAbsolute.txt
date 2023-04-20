@@ -128,3 +128,4 @@ C:\projects\TDD_DDD_CleanArchitecture_ZeroSigmaServer\ZeroSigma.Infrastructure.T
 C:\projects\TDD_DDD_CleanArchitecture_ZeroSigmaServer\ZeroSigma.Infrastructure.Tests\bin\Debug\net7.0\MediatR.Contracts.dll
 C:\projects\TDD_DDD_CleanArchitecture_ZeroSigmaServer\ZeroSigma.Infrastructure.Tests\bin\Debug\net7.0\Microsoft.DotNet.PlatformAbstractions.dll
 C:\projects\TDD_DDD_CleanArchitecture_ZeroSigmaServer\ZeroSigma.Infrastructure.Tests\bin\Debug\net7.0\Microsoft.Extensions.DependencyModel.dll
+C:\projects\TDD_DDD_CleanArchitecture_ZeroSigmaServer\ZeroSigma.Infrastructure.Tests\bin\Debug\net7.0\BCrypt.Net-Next.dll

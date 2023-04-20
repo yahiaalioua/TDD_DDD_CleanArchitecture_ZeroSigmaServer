@@ -8,5 +8,7 @@ namespace ZeroSigma.Application.Authentication.Services.Encryption
 {
     public interface IEncryptionService
     {
+        public string EncryptPassword(string password);
+        public bool VerifyPassword(string password, string passwordHash);
     }
 }

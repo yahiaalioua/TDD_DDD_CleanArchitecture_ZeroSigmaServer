@@ -23,7 +23,7 @@ namespace ZeroSigma.Domain.Validation.LogicalValidation.Errors.Authentication
             Status = HttpStatusCode.BadRequest,
             Title = "Invalid Password",
             Type = "Invalid Error",
-            Detail = "Wrong password, make sure to type the correct password",
+            Detail = "You have entered an invalid username or password",
             Code = "002"
         };
     }

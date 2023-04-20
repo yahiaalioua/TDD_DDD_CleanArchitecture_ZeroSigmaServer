@@ -6,6 +6,6 @@ namespace ZeroSigma.Application.Authentication.Services.ValidationServices.SignU
 {
     public interface ISignUpValidationService
     {
-        Result<SignUpResponse> ValidateUser(User? user, string fullName, string email, string password,SignUpResponse signUpResponse);
+        Result<SignUpResponse> ValidateUser(User? user, SignUpResponse signUpResponse);
     }
 }

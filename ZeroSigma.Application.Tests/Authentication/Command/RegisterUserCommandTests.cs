@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ZeroSigma.Application.Authentication.Commands;
+using ZeroSigma.Application.Authentication.Services.Encryption;
 using ZeroSigma.Application.Authentication.Services.ValidationServices.SignUp;
 using ZeroSigma.Application.DTO.Authentication;
 using ZeroSigma.Application.Interfaces;
@@ -19,6 +20,7 @@ namespace ZeroSigma.Application.Authentication.Command
         private  Mock<IUserRepository> _userRepositoryMock;
         private readonly User _mike;
         private readonly ISignUpValidationService _signUpValidationService;
+        private Mock<IEncryptionService> _encryptionServiceMock;
         public RegisterUserCommandTests()
         {
             _userRepositoryMock = new Mock<IUserRepository>();
@@ -27,7 +29,10 @@ namespace ZeroSigma.Application.Authentication.Command
                 FullName="Mike", Email="mike@mail.com",Password="All0wedPassword1.",
                 AccessToken="accessToken", RefreshToken="refreshToken"
             };
-            _signUpValidationService = new SignUpValidationService(_userRepositoryMock.Object);
+            _encryptionServiceMock= new Mock<IEncryptionService>();
+            _signUpValidationService = new SignUpValidationService(
+                _userRepositoryMock.Object,_encryptionServiceMock.Object
+                );
             
         }
 

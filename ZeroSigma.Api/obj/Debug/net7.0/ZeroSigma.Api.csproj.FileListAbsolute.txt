@@ -62,3 +62,4 @@ C:\projects\TDD_DDD_CleanArchitecture_ZeroSigmaServer\ZeroSigma.Api\bin\Debug\ne
 C:\projects\TDD_DDD_CleanArchitecture_ZeroSigmaServer\ZeroSigma.Api\bin\Debug\net7.0\Microsoft.DotNet.PlatformAbstractions.dll
 C:\projects\TDD_DDD_CleanArchitecture_ZeroSigmaServer\ZeroSigma.Api\bin\Debug\net7.0\Microsoft.Extensions.DependencyModel.dll
 C:\projects\TDD_DDD_CleanArchitecture_ZeroSigmaServer\ZeroSigma.Api\bin\Debug\net7.0\Newtonsoft.Json.dll
+C:\projects\TDD_DDD_CleanArchitecture_ZeroSigmaServer\ZeroSigma.Api\bin\Debug\net7.0\BCrypt.Net-Next.dll
