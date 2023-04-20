@@ -10,13 +10,13 @@ namespace ZeroSigma.Domain.Validation.LogicalValidation.Errors.Authentication
 {
     public static class SignUpStructuralValidationErrors
     {
-        //strictural Login Validation error codes should start with 100 example 101,102,103....
+        //strictural SignUp Validation error codes should start with 100 example 101,102,103....
         public static readonly CustomProblemDetails InvalidPasswordLengthError = new()
         {
             Status = HttpStatusCode.BadRequest,
             Title = "Invalid Password Length",
             Type = "Invalid Error",
-            Detail = "Password length should be at least 8 characters",
+            Detail = "Password length should be at least 8 characters and no more than 70 characters",
             Code = "100"
         };
         public static readonly CustomProblemDetails InvalidPasswordError = new()

@@ -58,6 +58,10 @@ namespace ZeroSigma.Application.Authentication.Services.ValidationServices.SignU
             {
                 return new InvalidResult<SignUpResponse>(SignUpStructuralValidationErrors.InvalidPasswordLengthError);
             }
+            if (password.Length > 9 && password.Length>70)
+            {
+                return new InvalidResult<SignUpResponse>(SignUpStructuralValidationErrors.InvalidPasswordLengthError);
+            }
             if (!(Regex.IsMatch(password, "[a-z]") && Regex.IsMatch(password, "[A-Z]") && Regex.IsMatch(password, "[0-9]")))
             {
                 return new InvalidResult<SignUpResponse>(SignUpStructuralValidationErrors.InvalidPasswordError);
