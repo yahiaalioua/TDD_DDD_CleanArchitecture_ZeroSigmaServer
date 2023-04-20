@@ -21,9 +21,35 @@ namespace ZeroSigma.Application.Authentication.Services.ValidationServices.SignU
         {
             _userRepository = userRepository;
         }
+        private bool IsValidEmail(string email)
+        {
+            string emailTrimed = email.Trim();
 
+            if (!string.IsNullOrEmpty(emailTrimed))
+            {
+                bool hasWhitespace = emailTrimed.Contains(" ");
+
+                int indexOfAtSign = emailTrimed.LastIndexOf('@');
+
+                if (indexOfAtSign > 0 && !hasWhitespace)
+                {
+                    string afterAtSign = emailTrimed.Substring(indexOfAtSign + 1);
+
+                    int indexOfDotAfterAtSign = afterAtSign.LastIndexOf('.');
+
+                    if (indexOfDotAfterAtSign > 0 && afterAtSign.Substring(indexOfDotAfterAtSign).Length > 1)
+                        return true;
+                }
+            }
+
+            return false;
+        }
         public Result<SignUpResponse> ValidateUser(User user, string fullName, string email, string password,SignUpResponse signUpResponse)
         {
+            if(!IsValidEmail(email))
+            {
+                return new InvalidResult<SignUpResponse>(SignUpStructuralValidationErrors.InvalidEmailAddressError);
+            }
             if (_userRepository.GetByEmail(email) != null)
             {
                 return new InvalidResult<SignUpResponse>(SignUpLogicalValidationErrors.DuplicateEmailError);

@@ -35,5 +35,14 @@ namespace ZeroSigma.Domain.Validation.LogicalValidation.Errors.Authentication
             Detail = "Your password should contain at least one special character",
             Code = "102"
         };
+
+        public static CustomProblemDetails InvalidEmailAddressError = new()
+        {
+            Status = HttpStatusCode.BadRequest,
+            Title = "Invalid Email",
+            Type = "Invalid Error",
+            Detail = "The given email is invalid please use a valid email like example@mail.com",
+            Code = "103"
+        };
     }
 }

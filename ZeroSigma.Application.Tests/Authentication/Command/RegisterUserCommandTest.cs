@@ -115,5 +115,21 @@ namespace ZeroSigma.Application.Authentication.Command
             Assert.True(result.CustomProblemDetails == SignUpStructuralValidationErrors.MissingSpecialCharacterError);
 
         }
+
+        [Fact]
+        public async Task Handle_ShouldReturnInvalidEmailAddressErrorWhenEmailIsNotAValidEmail()
+        {
+            // arrange
+            User? user = null;
+            var command = new RegisterCommand(_mike.FullName,"invalidEmailAddress","TestPassword4444.");
+            _userRepositoryMock.Setup(r => r.GetByEmail("invalidEmailAddress")).Returns(user);
+            var handler = new RegisterCommandHandler(_signUpValidationService);
+            //act
+            Result<SignUpResponse> result = await handler.Handle(command, default);
+            //assert
+            _userRepositoryMock.Verify(r => r.GetByEmail("invalidEmailAddress"), Times.Never);
+            Assert.IsAssignableFrom<Result<SignUpResponse>>(result);
+            Assert.True(result.CustomProblemDetails == SignUpStructuralValidationErrors.InvalidEmailAddressError);
+        }
     }
 }
