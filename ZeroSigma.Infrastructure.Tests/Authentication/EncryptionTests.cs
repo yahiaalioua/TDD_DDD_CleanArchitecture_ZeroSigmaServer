@@ -34,5 +34,16 @@ namespace ZeroSigma.Infrastructure.Authentication
             //assert
             Assert.True(encryptionService.VerifyPassword(passwordToEncrypt,encryptedPassword));
         }
+        [Fact]
+        public void ShouldReturnFalseWhenPasswordIsNotSameAsHash()
+        {
+            //arrange
+            string passwordToEncrypt = "passwordToEncrypt";
+            EncryptionService encryptionService = new EncryptionService();
+            //act
+            string encryptedPassword = encryptionService.EncryptPassword(passwordToEncrypt);
+            //assert
+            Assert.False(encryptionService.VerifyPassword("WrongPassword", encryptedPassword));
+        }
     }
 }
