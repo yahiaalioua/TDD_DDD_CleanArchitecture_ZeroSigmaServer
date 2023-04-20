@@ -44,7 +44,7 @@ namespace ZeroSigma.Application.Authentication.Services.ValidationServices.SignU
 
             return false;
         }
-        public Result<SignUpResponse> ValidateUser(User user, string fullName, string email, string password,SignUpResponse signUpResponse)
+        public Result<SignUpResponse> ValidateUser(User? user, string fullName, string email, string password,SignUpResponse signUpResponse)
         {
             if(!IsValidEmail(email))
             {
@@ -66,8 +66,10 @@ namespace ZeroSigma.Application.Authentication.Services.ValidationServices.SignU
             {
                 return new InvalidResult<SignUpResponse>(SignUpStructuralValidationErrors.MissingSpecialCharacterError);
             }
-            _userRepository.Add(user);
-            
+            if(user != null)
+            {
+                _userRepository.Add(user);
+            }
             return new SuccessResult<SignUpResponse>(signUpResponse);
 
         }
