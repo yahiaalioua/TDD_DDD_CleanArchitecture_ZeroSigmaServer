@@ -32,16 +32,15 @@ namespace ZeroSigma.Application.Authentication.Services.ValidationServices.Login
             {
                 return new InvalidResult<AuthenticationResponse>(LoginLogicalValidationErrors.InvalidPasswordError);
             }
-            AuthenticationResponse response = new()
+            AuthenticationResponse authenticationResponse = new()
             {
                 Id = user.Id,
                 FullName = user.FullName,
                 Email = user.Email,
+                Message = "User Authenticated",
                 AccessToken = accessToken,
-                RefreshToken = refreshToken,
-                Message="User Authenticated"
             };
-            return new SuccessResult<AuthenticationResponse>(response);
+            return new SuccessResult<AuthenticationResponse>(authenticationResponse);
             
         }
     }

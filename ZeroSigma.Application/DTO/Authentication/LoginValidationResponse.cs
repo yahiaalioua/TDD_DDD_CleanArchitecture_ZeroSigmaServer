@@ -6,13 +6,9 @@ using System.Threading.Tasks;
 
 namespace ZeroSigma.Application.DTO.Authentication
 {
-    public record AuthenticationResponse
+    public record LoginValidationResponse
     {
-        public Guid Id { get; set; }
-        public string FullName { get; set; } = null!;
-        public string Email { get; set; } = null!;
-        public string Message { get; set; } = null!;
+        public AuthenticationResponse AuthenticationResponse { get; set; } = null!;
         public string AccessToken { get; set; } = null!;
-
     }
 }

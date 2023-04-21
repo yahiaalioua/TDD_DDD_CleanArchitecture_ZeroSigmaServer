@@ -38,10 +38,12 @@ namespace ZeroSigma.Api.Controllers
         {
             var command = new LoginQuery(request.Email, request.Password);
             var response = await _mediator.Send(command);
+            
             if(response.Data!= null)
             {
                 SetTokenCookie(response.Data.AccessToken);
             }
+            
             return this.FromResult(response);
         }
 
