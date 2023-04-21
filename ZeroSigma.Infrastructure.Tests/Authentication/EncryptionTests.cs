@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -44,6 +45,7 @@ namespace ZeroSigma.Infrastructure.Authentication
             string encryptedPassword = encryptionService.EncryptPassword(passwordToEncrypt);
             //assert
             Assert.False(encryptionService.VerifyPassword("WrongPassword", encryptedPassword));
+            
         }
     }
 }

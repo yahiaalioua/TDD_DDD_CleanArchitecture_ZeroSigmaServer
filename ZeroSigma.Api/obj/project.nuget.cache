@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "FrL2lDNiNRU8Wq7vkajrjnDEcSsvpS0ggQgO1vauQxaXv1qinmFmpTtxh/zs5/wZABphFkeJdR1p7IlFJJ/n9w==",
+  "dgSpecHash": "v/OQE8h8zX881/lV4kl24b9rMCnmOC9eWhJQwyyWL6e5lRCXEk3EyUrF/GiQb8mQNmu6WhvK11OlovusjW4LeQ==",
   "success": true,
   "projectFilePath": "C:\\projects\\TDD_DDD_CleanArchitecture_ZeroSigmaServer\\ZeroSigma.Api\\ZeroSigma.Api.csproj",
   "expectedPackageFiles": [
@@ -14,7 +14,7 @@
     "C:\\Users\\yahia alioua\\.nuget\\packages\\microsoft.aspnetcore.authorization.policy\\2.2.0\\microsoft.aspnetcore.authorization.policy.2.2.0.nupkg.sha512",
     "C:\\Users\\yahia alioua\\.nuget\\packages\\microsoft.aspnetcore.hosting.abstractions\\2.2.0\\microsoft.aspnetcore.hosting.abstractions.2.2.0.nupkg.sha512",
     "C:\\Users\\yahia alioua\\.nuget\\packages\\microsoft.aspnetcore.hosting.server.abstractions\\2.2.0\\microsoft.aspnetcore.hosting.server.abstractions.2.2.0.nupkg.sha512",
-    "C:\\Users\\yahia alioua\\.nuget\\packages\\microsoft.aspnetcore.http\\2.2.0\\microsoft.aspnetcore.http.2.2.0.nupkg.sha512",
+    "C:\\Users\\yahia alioua\\.nuget\\packages\\microsoft.aspnetcore.http\\2.2.2\\microsoft.aspnetcore.http.2.2.2.nupkg.sha512",
     "C:\\Users\\yahia alioua\\.nuget\\packages\\microsoft.aspnetcore.http.abstractions\\2.2.0\\microsoft.aspnetcore.http.abstractions.2.2.0.nupkg.sha512",
     "C:\\Users\\yahia alioua\\.nuget\\packages\\microsoft.aspnetcore.http.extensions\\2.2.0\\microsoft.aspnetcore.http.extensions.2.2.0.nupkg.sha512",
     "C:\\Users\\yahia alioua\\.nuget\\packages\\microsoft.aspnetcore.http.features\\2.2.0\\microsoft.aspnetcore.http.features.2.2.0.nupkg.sha512",
