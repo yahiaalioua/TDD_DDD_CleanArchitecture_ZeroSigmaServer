@@ -2,11 +2,12 @@
 using ZeroSigma.Domain.Common.Results;
 using ZeroSigma.Domain.Entities;
 using ZeroSigma.Domain.User.ValueObjects;
+using ZeroSigma.Domain.UserAggregate.ValueObjects;
 using ZeroSigma.Domain.Validation.StructuralValidation.DomainErrors;
 
 namespace ZeroSigma.Tests.Domain
 {
-    public class EntitiesTests
+    public class UserEntityTests
     {
         [Fact]
         public void ShouldReturnInvalidErrorWhenFullNameIsNullOrEmpty()
@@ -35,7 +36,7 @@ namespace ZeroSigma.Tests.Domain
             Assert.True(createdFullName.ResultType == ResultType.Invalid);
         }
         [Fact]
-        public void ShouldReturn()
+        public void ShouldReturnResultTypeOKWhenFullNameIsValid()
         {
             //arrange
             var fullName = "My Name";
@@ -47,6 +48,19 @@ namespace ZeroSigma.Tests.Domain
             Assert.Null(createdFullName.CustomProblemDetails);
             Assert.NotNull(createdFullName.Data);
             Assert.True(createdFullName.ResultType == ResultType.Ok);
+        }
+        [Fact]
+        public void ShouldReturnEmptyEmailErrorWhenEmailIsNullOrEmpty()
+        {
+            //arrange
+            var email = " ";
+
+            //act
+            var createdEmail = UserEmail.Create(email);
+            //assert
+            Assert.Equal(DomainErrors.EmptyEmailError, createdEmail.CustomProblemDetails);
+            Assert.Null(createdEmail.Data);
+            Assert.True(createdEmail.ResultType == ResultType.Invalid);
         }
     }
 }

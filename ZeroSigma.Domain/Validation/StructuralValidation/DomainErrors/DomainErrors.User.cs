@@ -25,7 +25,23 @@ namespace ZeroSigma.Domain.Validation.StructuralValidation.DomainErrors
             Title = "Invalid Full Name",
             Type = "Invalid Error",
             Detail = "Full name length should not be more than 50 characters",
-            Code = "300"
+            Code = "301"
+        };
+        public static readonly CustomProblemDetails EmptyEmailError = new CustomProblemDetails()
+        {
+            Status = HttpStatusCode.BadRequest,
+            Title = "Invalid Email",
+            Type = "Invalid Error",
+            Detail = "Email caanot be empty",
+            Code = "302"
+        };
+        public static CustomProblemDetails InvalidEmailAddressError = new()
+        {
+            Status = HttpStatusCode.BadRequest,
+            Title = "Invalid Email",
+            Type = "Invalid Error",
+            Detail = "The given email is invalid please use a valid email like example@mail.com",
+            Code = "303"
         };
     }
 }
