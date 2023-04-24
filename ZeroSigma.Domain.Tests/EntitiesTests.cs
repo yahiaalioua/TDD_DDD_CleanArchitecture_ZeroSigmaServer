@@ -9,7 +9,7 @@ namespace ZeroSigma.Tests.Domain
     public class EntitiesTests
     {
         [Fact]
-        public void ShouldReturnInvalidErrorWhenIsNullOrEmpty()
+        public void ShouldReturnInvalidErrorWhenFullNameIsNullOrEmpty()
         {
             //arrange
             var fullName = " ";
@@ -20,6 +20,19 @@ namespace ZeroSigma.Tests.Domain
             Assert.Equal(DomainErrors.EmptyFullNameError, createdFullName.CustomProblemDetails);
             Assert.Null(createdFullName.Data);
             Assert.True(createdFullName.ResultType==ResultType.Invalid);
+        }
+        [Fact]
+        public void ShouldReturnInvalidErrorWhenFullNameIsMoreThan50Characters()
+        {
+            //arrange
+            var fullName = "qgkxnoukmoumawcholewgfdtroefraevrtkirbrlvqwgjdnxpouczsq";
+
+            //act
+            var createdFullName = FullName.Create(fullName);
+            //assert
+            Assert.Equal(DomainErrors.InvalidFullNameLengthError, createdFullName.CustomProblemDetails);
+            Assert.Null(createdFullName.Data);
+            Assert.True(createdFullName.ResultType == ResultType.Invalid);
         }
     }
 }
