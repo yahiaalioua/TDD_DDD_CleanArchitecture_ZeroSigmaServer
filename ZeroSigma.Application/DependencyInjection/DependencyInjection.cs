@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using ZeroSigma.Application.Authentication.Services.Encryption;
+using ZeroSigma.Application.Authentication.Services.ProcessingServices;
 using ZeroSigma.Application.Authentication.Services.ValidationServices.Login;
 using ZeroSigma.Application.Authentication.Services.ValidationServices.SignUp;
 using ZeroSigma.Application.Common.Authentication;
@@ -12,7 +13,8 @@ namespace ZeroSigma.Application.DependencyInjection
         {
             services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly));
             services.AddScoped<ILoginValidationService, LoginValidationService>();
-            services.AddScoped<ISignUpValidationService, SignUpValidationService>();            
+            services.AddScoped<ISignUpValidationService, SignUpValidationService>();   
+            services.AddScoped<IUserProcessingService,UserProcessingService>();
             return services;
         }
     }

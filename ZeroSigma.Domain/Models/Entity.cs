@@ -6,69 +6,45 @@ using System.Threading.Tasks;
 
 namespace ZeroSigma.Domain.Models
 {
-    public abstract class Entity
+    public abstract class Entity<TId> : IEquatable<Entity<TId>>
+    where TId : notnull
     {
-        public virtual long Id { get; protected set; }
+        public TId Id { get; protected set; }
 
-        protected Entity()
-        {
-        }
-
-        protected Entity(long id)
+        protected Entity(TId id)
         {
             Id = id;
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
-            if (obj is not Entity other)
-                return false;
-
-            if (ReferenceEquals(this, other))
-                return true;
-
-            if (GetUnproxiedType(this) != GetUnproxiedType(other))
-                return false;
-
-            if (Id.Equals(default) || other.Id.Equals(default))
-                return false;
-
-            return Id.Equals(other.Id);
+            return obj is Entity<TId> entity && Id.Equals(entity.Id);
         }
 
-        public static bool operator ==(Entity a, Entity b)
+        public bool Equals(Entity<TId>? other)
         {
-            if (a is null && b is null)
-                return true;
-
-            if (a is null || b is null)
-                return false;
-
-            return a.Equals(b);
+            return Equals((object?)other);
         }
 
-        public static bool operator !=(Entity a, Entity b)
+        public static bool operator ==(Entity<TId> left, Entity<TId> right)
         {
-            return !(a == b);
+            return Equals(left, right);
+        }
+
+        public static bool operator !=(Entity<TId> left, Entity<TId> right)
+        {
+            return !Equals(left, right);
         }
 
         public override int GetHashCode()
         {
-            return (GetUnproxiedType(this).ToString() + Id).GetHashCode();
+            return Id.GetHashCode();
         }
 
-        internal static Type GetUnproxiedType(object obj)
-        {
-            const string EFCoreProxyPrefix = "Castle.Proxies.";
-            const string NHibernateProxyPostfix = "Proxy";
+#pragma warning disable CS8618
 
-            Type type = obj.GetType();
-            string typeString = type.ToString();
+        protected Entity() { }
 
-            if (typeString.Contains(EFCoreProxyPrefix) || typeString.EndsWith(NHibernateProxyPostfix))
-                return type.BaseType;
-
-            return type;
-        }
+#pragma warning restore CS8618
     }
 }

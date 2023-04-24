@@ -9,6 +9,7 @@ using ZeroSigma.Application.Interfaces;
 using ZeroSigma.Domain.Common.Errors;
 using ZeroSigma.Domain.Common.Results;
 using ZeroSigma.Domain.Entities;
+using ZeroSigma.Domain.User.ValueObjects;
 using ZeroSigma.Domain.Validation.LogicalValidation.Errors.Authentication;
 
 namespace ZeroSigma.Application.Authentication.Services.ValidationServices.Login
@@ -34,8 +35,8 @@ namespace ZeroSigma.Application.Authentication.Services.ValidationServices.Login
             }
             AuthenticationResponse authenticationResponse = new()
             {
-                Id = user.Id,
-                FullName = user.FullName,
+                Id = user.Id.Value,
+                FullName = user.FullName.Value,
                 Email = user.Email,
                 Message = "User Authenticated",
                 AccessToken = accessToken,

@@ -12,6 +12,7 @@ using ZeroSigma.Application.Interfaces;
 using ZeroSigma.Domain.Common.Errors;
 using ZeroSigma.Domain.Common.Results;
 using ZeroSigma.Domain.Entities;
+using ZeroSigma.Domain.User.ValueObjects;
 using ZeroSigma.Domain.Validation.LogicalValidation.Errors.Authentication;
 
 namespace ZeroSigma.Application.Authentication.Commands
@@ -30,14 +31,10 @@ namespace ZeroSigma.Application.Authentication.Commands
 
         public async Task<Result<SignUpResponse>> Handle(RegisterCommand request, CancellationToken cancellationToken)
         {
-            User createdUser = new() { FullName = request.FullName, Email = request.Email, Password = request.Password };
+          
+            RegisterRequest registerRequest= new() { FullName = request.FullName,Email=request.Email,Password=request.Password };
             
-            SignUpResponse response = new() {
-                UserId =createdUser.Id, FullName = createdUser.FullName,
-                Email = createdUser.Email, Message = "You successfully registered" 
-            };
-            
-            return _signUpValidationService.ValidateUser(createdUser,response);
+            return _signUpValidationService.ValidateUser(registerRequest);
         }
     }
 }

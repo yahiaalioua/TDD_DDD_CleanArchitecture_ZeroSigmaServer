@@ -5,11 +5,13 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using ZeroSigma.Application.Authentication.Services.Encryption;
+using ZeroSigma.Application.Authentication.Services.ProcessingServices;
 using ZeroSigma.Application.DTO.Authentication;
 using ZeroSigma.Application.Interfaces;
 using ZeroSigma.Domain.Common.Errors;
 using ZeroSigma.Domain.Common.Results;
 using ZeroSigma.Domain.Entities;
+using ZeroSigma.Domain.User.ValueObjects;
 using ZeroSigma.Domain.Validation.LogicalValidation.Errors.Authentication;
 
 namespace ZeroSigma.Application.Authentication.Services.ValidationServices.SignUp
@@ -18,14 +20,17 @@ namespace ZeroSigma.Application.Authentication.Services.ValidationServices.SignU
     {
         private readonly IEncryptionService _encryptionService;
         private readonly IUserRepository _userRepository;
+        private readonly IUserProcessingService _userProcessingService;
 
         public SignUpValidationService(
             IUserRepository userRepository,
             IEncryptionService encryptionService
-            )
+,
+            IUserProcessingService userProcessingService)
         {
             _userRepository = userRepository;
             _encryptionService = encryptionService;
+            _userProcessingService = userProcessingService;
         }
         private bool IsValidEmail(string email)
         {
@@ -50,38 +55,52 @@ namespace ZeroSigma.Application.Authentication.Services.ValidationServices.SignU
 
             return false;
         }
-        public Result<SignUpResponse> ValidateUser(User? user, SignUpResponse signUpResponse)
+        public Result<SignUpResponse> ValidateUser(RegisterRequest request)
         {
-            if(!IsValidEmail(user.Email))
+            var fullNameResult = FullName.Create(request.FullName);
+            if (fullNameResult.ResultType == ResultType.Invalid)
+            {
+                return new InvalidResult<SignUpResponse>(fullNameResult.CustomProblemDetails);
+            }
+            if (!IsValidEmail(request.Email))
             {
                 return new InvalidResult<SignUpResponse>(SignUpStructuralValidationErrors.InvalidEmailAddressError);
             }
-            if (_userRepository.GetByEmail(user.Email) != null)
+            if (_userRepository.GetByEmail(request.Email) is not null)
             {
                 return new InvalidResult<SignUpResponse>(SignUpLogicalValidationErrors.DuplicateEmailError);
             }
-            if (user.Password.Length < 9)
+            if (request.Password.Length < 9)
             {
                 return new InvalidResult<SignUpResponse>(SignUpStructuralValidationErrors.InvalidPasswordLengthError);
             }
-            if (user.Password.Length > 9 && user.Password.Length>70)
+            if (request.Password.Length > 9 && request.Password.Length>70)
             {
                 return new InvalidResult<SignUpResponse>(SignUpStructuralValidationErrors.InvalidPasswordLengthError);
             }
-            if (!(Regex.IsMatch(user.Password, "[a-z]") && Regex.IsMatch(user.Password, "[A-Z]") && Regex.IsMatch(user.Password, "[0-9]")))
+            if (!(Regex.IsMatch(request.Password, "[a-z]") && Regex.IsMatch(request.Password, "[A-Z]") && Regex.IsMatch(request.Password, "[0-9]")))
             {
                 return new InvalidResult<SignUpResponse>(SignUpStructuralValidationErrors.InvalidPasswordError);
             }
-            if (!Regex.IsMatch(user.Password, "[`,~,!,@,#,$,%,^,&,*,(,),_,-,+,=,{,[,},},|,\\,:,;,\",',<,,,>,.,?,/]"))
+            if (!Regex.IsMatch(request.Password, "[`,~,!,@,#,$,%,^,&,*,(,),_,-,+,=,{,[,},},|,\\,:,;,\",',<,,,>,.,?,/]"))
             {
                 return new InvalidResult<SignUpResponse>(SignUpStructuralValidationErrors.MissingSpecialCharacterError);
             }
-            if(user != null)
-            {
-                user.Password=_encryptionService.EncryptPassword(user.Password);
-                _userRepository.Add(user);
+            var validatedUser = _userProcessingService.CreateUser(fullNameResult.Data.Value, request.Email, request.Password, "", "");
+            if (validatedUser is not null)
+            {   
+                validatedUser.Password=_encryptionService.EncryptPassword(request.Password);
+                _userRepository.Add(validatedUser);
             }
-            return new SuccessResult<SignUpResponse>(signUpResponse);
+
+            SignUpResponse response = new()
+            {
+                UserId = validatedUser.Id.Value,
+                FullName = validatedUser.FullName.Value,
+                Email = validatedUser.Email,
+                Message = "You successfully registered"
+            };
+            return new SuccessResult<SignUpResponse>(response);
 
         }
     }

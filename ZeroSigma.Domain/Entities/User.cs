@@ -1,19 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ZeroSigma.Domain.Models;
+using ZeroSigma.Domain.User.ValueObjects;
 
 namespace ZeroSigma.Domain.Entities
 {
-    public record User
+    public sealed class User:Entity<UserID>
     {
-        public Guid Id { get; set; }= Guid.NewGuid();
-        public string FullName { get; set; } = null!;
+        public User(
+            UserID id, FullName fullName, string email,
+            string password, string accessToken,
+            string refreshToken) : base(id)
+        {
+            FullName = fullName;
+            Email = email;
+            Password = password;
+            AccessToken = accessToken;
+            RefreshToken = refreshToken;
+        }
+
+        public FullName FullName { get; set; }=null!;
         public string Email { get; set; }= null!;
         public string Password { get; set; }=null!;
-        public string AccessToken { get;set; }=null!;
+        public string ?AccessToken { get;set; }=null!;
         public string RefreshToken { get; set; } = null!;
 
+        public static User Create(FullName fullName,string email,string password,string accessToken,string refreshToken)
+        {
+            return new(UserID.CreateUnique(), fullName, email, password, accessToken, refreshToken);
+        }
     }
 }

@@ -10,6 +10,7 @@ using ZeroSigma.Application.DTO.Authentication;
 using ZeroSigma.Application.Interfaces;
 using ZeroSigma.Domain.Common.Errors;
 using ZeroSigma.Domain.Common.Results;
+using ZeroSigma.Domain.User.ValueObjects;
 
 namespace ZeroSigma.Application.Authentication.Queries
 {
@@ -40,8 +41,10 @@ namespace ZeroSigma.Application.Authentication.Queries
             var refreshToken = "";
             if (user != null)
             {
-                accessToken = _accessTokenProvider.GenerateAccessToken(user.Id, user.FullName, user.Email);
-                refreshToken = _refreshTokenProvider.GenerateRefreshToken(user.Id,user.Email);
+                var fullNameResult = FullName.Create(user.FullName.Value);
+                var userId = UserID.CreateUnique().Value;
+                accessToken = _accessTokenProvider.GenerateAccessToken(userId, fullNameResult.Data.Value, user.Email);
+                refreshToken = _refreshTokenProvider.GenerateRefreshToken(userId,user.Email);
             }
             return _loginValidationService.ValidateUser(user,request.Email, request.Password, accessToken, refreshToken);          
             

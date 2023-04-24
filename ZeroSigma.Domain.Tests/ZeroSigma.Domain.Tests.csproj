@@ -21,4 +21,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ZeroSigma.Domain\ZeroSigma.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
