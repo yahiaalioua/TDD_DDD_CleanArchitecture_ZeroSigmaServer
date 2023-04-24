@@ -62,5 +62,31 @@ namespace ZeroSigma.Tests.Domain
             Assert.Null(createdEmail.Data);
             Assert.True(createdEmail.ResultType == ResultType.Invalid);
         }
+        [Fact]
+        public void ShouldReturnInvalidEmailAddressErrorWhenEmailIsNotAValidEmail()
+        {
+            //arrange
+            var email = "invalidEmail@emailMissedValues";
+
+            //act
+            var createdEmail = UserEmail.Create(email);
+            //assert
+            Assert.Equal(DomainErrors.InvalidEmailAddressError, createdEmail.CustomProblemDetails);
+            Assert.Null(createdEmail.Data);
+            Assert.True(createdEmail.ResultType == ResultType.Invalid);
+        }
+        [Fact]
+        public void ShouldReturnSuccessResultWhenEmailIsValid()
+        {
+            //arrange
+            var email = "valid@mail.valid";
+
+            //act
+            var createdEmail = UserEmail.Create(email);
+            //assert
+            Assert.NotNull(createdEmail.Data);
+            Assert.True(createdEmail.ResultType == ResultType.Ok);
+            Assert.Equal(email, createdEmail.Data.Value);
+        }
     }
 }
