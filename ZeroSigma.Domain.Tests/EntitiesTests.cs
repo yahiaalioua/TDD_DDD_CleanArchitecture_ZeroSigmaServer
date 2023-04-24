@@ -34,5 +34,19 @@ namespace ZeroSigma.Tests.Domain
             Assert.Null(createdFullName.Data);
             Assert.True(createdFullName.ResultType == ResultType.Invalid);
         }
+        [Fact]
+        public void ShouldReturn()
+        {
+            //arrange
+            var fullName = "My Name";
+
+            //act
+            var createdFullName = FullName.Create(fullName);
+            //assert
+            Assert.Equal(fullName,createdFullName.Data.Value);
+            Assert.Null(createdFullName.CustomProblemDetails);
+            Assert.NotNull(createdFullName.Data);
+            Assert.True(createdFullName.ResultType == ResultType.Ok);
+        }
     }
 }
