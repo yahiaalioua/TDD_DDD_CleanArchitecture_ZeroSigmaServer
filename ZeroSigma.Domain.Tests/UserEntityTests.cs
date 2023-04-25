@@ -88,5 +88,19 @@ namespace ZeroSigma.Tests.Domain
             Assert.True(createdEmail.ResultType == ResultType.Ok);
             Assert.Equal(email, createdEmail.Data.Value);
         }
+        [Fact]
+        public void ShouldReturnInvalidErrorWhenPasswordIsNullOrEmpty()
+        {
+            //arrange
+            var password = "";
+
+            //act
+            var createdPassword = UserPassword.Create(password);
+            //assert
+            Assert.Equal(DomainErrors.EmptyPasswordError, createdPassword.CustomProblemDetails);
+            Assert.Null(createdPassword.Data);
+            Assert.True(createdPassword.ResultType == ResultType.Invalid);
+        }
+
     }
 }
