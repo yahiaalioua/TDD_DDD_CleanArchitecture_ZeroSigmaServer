@@ -127,5 +127,18 @@ namespace ZeroSigma.Tests.Domain
             Assert.Null(createdPassword.Data);
             Assert.True(createdPassword.ResultType == ResultType.Invalid);
         }
+        [Fact]
+        public void ShouldReturnMissingSpecialCharacterErrorWhenPasswordDoesNotContainAnySpecialCharacter()
+        {
+            //arrange
+            var password = "0ZeroSpecialCharacter";
+
+            //act
+            var createdPassword = UserPassword.Create(password);
+            //assert
+            Assert.Equal(DomainErrors.MissingSpecialCharacterError, createdPassword.CustomProblemDetails);
+            Assert.Null(createdPassword.Data);
+            Assert.True(createdPassword.ResultType == ResultType.Invalid);
+        }
     }
 }
