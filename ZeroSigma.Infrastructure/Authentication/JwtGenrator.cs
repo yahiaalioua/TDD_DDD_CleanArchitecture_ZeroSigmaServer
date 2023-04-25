@@ -1,8 +1,10 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.AspNetCore.DataProtection.KeyManagement;
+using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using ZeroSigma.Application.Common.Authentication;
+using ZeroSigma.Domain.Entities;
 
 namespace ZeroSigma.Infrastructure.Authentication
 {
@@ -13,7 +15,7 @@ namespace ZeroSigma.Infrastructure.Authentication
         {
             var SecretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
             var signinCredentials = new SigningCredentials(SecretKey, SecurityAlgorithms.HmacSha256);
-
+            
             JwtSecurityToken token = new JwtSecurityToken
                 (
                 issuer: issuer,

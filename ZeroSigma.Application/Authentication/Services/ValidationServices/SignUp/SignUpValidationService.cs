@@ -19,22 +19,18 @@ namespace ZeroSigma.Application.Authentication.Services.ValidationServices.SignU
 {
     public class SignUpValidationService : ISignUpValidationService
     {
-        private readonly IEncryptionService _encryptionService;
-        private readonly IUserRepository _userRepository;
         private readonly IUserProcessingService _userProcessingService;
+        private readonly IUserRepository _userRepository;
 
         public SignUpValidationService(
-            IUserRepository userRepository,
-            IEncryptionService encryptionService
-,
-            IUserProcessingService userProcessingService)
+            IUserProcessingService userProcessingService,
+            IUserRepository userRepository
+            )
         {
-            _userRepository = userRepository;
-            _encryptionService = encryptionService;
             _userProcessingService = userProcessingService;
+            _userRepository = userRepository;
         }
 
-        
         public Result<SignUpResponse> ValidateUser(RegisterRequest request)
         {
             var fullNameResult = FullName.Create(request.FullName);
@@ -56,14 +52,7 @@ namespace ZeroSigma.Application.Authentication.Services.ValidationServices.SignU
             {
                 return new InvalidResult<SignUpResponse>(SignUpLogicalValidationErrors.DuplicateEmailError);
             }
-            var validatedUser = _userProcessingService.CreateUser(fullNameResult.Data, userEmailResult.Data,userPassword.Data);
-            if (validatedUser is not null)
-            {   
-                string encryptedPassword=_encryptionService.EncryptPassword(userPassword.Data.Value);
-                validatedUser.Password = UserPassword.Create(encryptedPassword).Data;
-                _userRepository.Add(validatedUser);
-            }
-
+            var validatedUser=_userProcessingService.ProcessSignUpRequest(fullNameResult.Data, userEmailResult.Data, userPassword.Data);
             SignUpResponse response = new()
             {
                 UserId = validatedUser.Id.Value,

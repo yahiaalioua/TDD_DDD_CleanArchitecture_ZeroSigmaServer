@@ -1,10 +1,4 @@
-﻿using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities;
-using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Moq;
 using ZeroSigma.Application.Authentication.Commands;
 using ZeroSigma.Application.Authentication.Services.Encryption;
 using ZeroSigma.Application.Authentication.Services.ProcessingServices;
@@ -25,7 +19,6 @@ namespace ZeroSigma.Application.Authentication.Command
         private  Mock<IUserRepository> _userRepositoryMock;
         private readonly User _mike;
         private readonly ISignUpValidationService _signUpValidationService;
-        private Mock<IEncryptionService> _encryptionServiceMock;
         private readonly FullName _fullName;
         private readonly UserEmail _email;
         private readonly UserPassword _password;
@@ -38,9 +31,9 @@ namespace ZeroSigma.Application.Authentication.Command
             _userRepositoryMock = new Mock<IUserRepository>();
             _userProcessingserviceMock=new Mock<IUserProcessingService>();
             _mike = User.Create(_fullName, _email,_password);
-            _encryptionServiceMock= new Mock<IEncryptionService>();
             _signUpValidationService = new SignUpValidationService(
-                _userRepositoryMock.Object,_encryptionServiceMock.Object,_userProcessingserviceMock.Object
+                _userProcessingserviceMock.Object,
+                _userRepositoryMock.Object
                 );
             
         }
@@ -67,17 +60,16 @@ namespace ZeroSigma.Application.Authentication.Command
             User? NonExistingUser = null;
             var command = new RegisterCommand(_mike.FullName.Value,_mike.Email.Value,_mike.Password.Value);
             string successMessage = "You successfully registered";
-            _userRepositoryMock.Setup(r => r.GetByEmail(_mike.Email)).Returns(NonExistingUser);
+            _userRepositoryMock.Setup(r => r.GetByEmail(It.IsAny<UserEmail>())).Returns(NonExistingUser);
             _userProcessingserviceMock.Setup(x => x.CreateUser(It.IsAny<FullName>(), It.IsAny<UserEmail>(), It.IsAny<UserPassword>())).Returns(_mike);
-            _encryptionServiceMock.Setup(x => x.EncryptPassword(_mike.Password.Value)).Returns("encryptedPass");
-            _userRepositoryMock.Setup(r => r.Add(_mike));
+            _userProcessingserviceMock.Setup(x => x.ProcessSignUpRequest(It.IsAny<FullName>(), It.IsAny<UserEmail>(), It.IsAny<UserPassword>())).Returns(_mike);
+            
 
             var handler = new RegisterCommandHandler(_signUpValidationService);
             //act
             
             Result<SignUpResponse> result = await handler.Handle(command, default);
             //assert
-            _userRepositoryMock.Verify(r => r.Add(_mike), Times.Once);
             _userRepositoryMock.Verify(r => r.GetByEmail(It.IsAny<UserEmail>()), Times.Once);
             Assert.Equal(result.Data.Message, successMessage);
             Assert.True(result.ResultType==ResultType.Ok);

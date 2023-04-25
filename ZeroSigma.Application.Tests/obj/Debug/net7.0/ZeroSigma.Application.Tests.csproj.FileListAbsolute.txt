@@ -137,3 +137,7 @@ C:\projects\TDD_DDD_CleanArchitecture_ZeroSigmaServer\ZeroSigma.Application.Test
 C:\projects\TDD_DDD_CleanArchitecture_ZeroSigmaServer\ZeroSigma.Application.Tests\bin\Debug\net7.0\Microsoft.Extensions.Options.dll
 C:\projects\TDD_DDD_CleanArchitecture_ZeroSigmaServer\ZeroSigma.Application.Tests\bin\Debug\net7.0\Microsoft.Extensions.Primitives.dll
 C:\projects\TDD_DDD_CleanArchitecture_ZeroSigmaServer\ZeroSigma.Application.Tests\bin\Debug\net7.0\Microsoft.Net.Http.Headers.dll
+C:\projects\TDD_DDD_CleanArchitecture_ZeroSigmaServer\ZeroSigma.Application.Tests\bin\Debug\net7.0\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\projects\TDD_DDD_CleanArchitecture_ZeroSigmaServer\ZeroSigma.Application.Tests\bin\Debug\net7.0\Microsoft.IdentityModel.Logging.dll
+C:\projects\TDD_DDD_CleanArchitecture_ZeroSigmaServer\ZeroSigma.Application.Tests\bin\Debug\net7.0\Microsoft.IdentityModel.Tokens.dll
+C:\projects\TDD_DDD_CleanArchitecture_ZeroSigmaServer\ZeroSigma.Application.Tests\bin\Debug\net7.0\System.IdentityModel.Tokens.Jwt.dll
