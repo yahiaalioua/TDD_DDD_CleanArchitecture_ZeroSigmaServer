@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "v/OQE8h8zX881/lV4kl24b9rMCnmOC9eWhJQwyyWL6e5lRCXEk3EyUrF/GiQb8mQNmu6WhvK11OlovusjW4LeQ==",
+  "dgSpecHash": "za4LTSpt1towNO388KRzmsZd6ZBwbho33ZKbqjZNHe/moIMANN+x2ue/Gj62WnQ83M5c7b9ElUeU37rbYUJktQ==",
   "success": true,
   "projectFilePath": "C:\\projects\\TDD_DDD_CleanArchitecture_ZeroSigmaServer\\ZeroSigma.Api\\ZeroSigma.Api.csproj",
   "expectedPackageFiles": [

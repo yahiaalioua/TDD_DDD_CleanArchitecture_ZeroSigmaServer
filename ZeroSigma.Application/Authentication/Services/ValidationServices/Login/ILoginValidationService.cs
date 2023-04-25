@@ -12,9 +12,6 @@ namespace ZeroSigma.Application.Authentication.Services.ValidationServices.Login
     public interface ILoginValidationService
     {
         Result<AuthenticationResponse> ValidateUser(
-            User? user,
-            string email, string password,
-            string accessToken, string refreshToken
-            );
+            User? user, string password);
     }
 }

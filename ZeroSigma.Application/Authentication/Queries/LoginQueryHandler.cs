@@ -10,6 +10,7 @@ using ZeroSigma.Application.DTO.Authentication;
 using ZeroSigma.Application.Interfaces;
 using ZeroSigma.Domain.Common.Errors;
 using ZeroSigma.Domain.Common.Results;
+using ZeroSigma.Domain.Entities;
 using ZeroSigma.Domain.User.ValueObjects;
 using ZeroSigma.Domain.UserAggregate.ValueObjects;
 
@@ -17,39 +18,28 @@ namespace ZeroSigma.Application.Authentication.Queries
 {
     public class LoginQueryHandler : IRequestHandler<LoginQuery, Result<AuthenticationResponse>>
     {
-        private readonly IAccessTokenProvider _accessTokenProvider;
-        private readonly IRefreshTokenProvider _refreshTokenProvider;
-        private readonly ILoginValidationService _loginValidationService;
         private readonly IUserRepository _userRepository;
+        private readonly ILoginValidationService _loginValidationService;
 
         public LoginQueryHandler(
-            IAccessTokenProvider accessTokenProvider,
-            IRefreshTokenProvider refreshTokenProvider
-,
-            ILoginValidationService loginValidationService,
-            IUserRepository userRepository)
+            IUserRepository userRepository,
+            ILoginValidationService loginValidationService
+            )
         {
-            _accessTokenProvider = accessTokenProvider;
-            _refreshTokenProvider = refreshTokenProvider;
-            _loginValidationService = loginValidationService;
             _userRepository = userRepository;
+            _loginValidationService = loginValidationService;
         }
 
         public async Task<Result<AuthenticationResponse>> Handle(LoginQuery request, CancellationToken cancellationToken)
         {
             var email=UserEmail.Create(request.Email);
-            var user=_userRepository.GetByEmail(email.Data);
-            var accessToken = "";
-            var refreshToken = "";
-            if (user != null)
+            if (email.ResultType == ResultType.Invalid)
             {
-                var fullNameResult = FullName.Create(user.FullName.Value);
-                var userEmailResult = UserEmail.Create(user.Email.Value);
-                var userId = UserID.CreateUnique().Value;
-                accessToken = _accessTokenProvider.GenerateAccessToken(userId, fullNameResult.Data.Value, user.Email.Value);
-                refreshToken = _refreshTokenProvider.GenerateRefreshToken(userId,user.Email.Value);
+                return new InvalidResult<AuthenticationResponse>(email.CustomProblemDetails);
             }
-            return _loginValidationService.ValidateUser(user,request.Email, request.Password, accessToken, refreshToken);          
+            User? existingUser=_userRepository.GetByEmail(email.Data);
+            
+            return _loginValidationService.ValidateUser(existingUser,request.Password);          
             
         }
     }

@@ -19,7 +19,7 @@ namespace ZeroSigma.Infrastructure.Authentication
                 issuer: issuer,
                 audience: audience,
                 claims: claims,
-                expires: DateTime.Now.AddMinutes(expires),
+                expires: DateTime.UtcNow.AddMinutes(expires),
                 signingCredentials: signinCredentials
                 );
             string tokenValue = new JwtSecurityTokenHandler().WriteToken(token);
