@@ -101,6 +101,18 @@ namespace ZeroSigma.Tests.Domain
             Assert.Null(createdPassword.Data);
             Assert.True(createdPassword.ResultType == ResultType.Invalid);
         }
+        [Fact]
+        public void ShouldReturnInvalidPasswordLengthErrorWhenPasswordLengthIsLessThan8Characters()
+        {
+            //arrange
+            var password = "7charac";
 
+            //act
+            var createdPassword = UserPassword.Create(password);
+            //assert
+            Assert.Equal(DomainErrors.InvalidPasswordLengthError, createdPassword.CustomProblemDetails);
+            Assert.Null(createdPassword.Data);
+            Assert.True(createdPassword.ResultType == ResultType.Invalid);
+        }
     }
 }
