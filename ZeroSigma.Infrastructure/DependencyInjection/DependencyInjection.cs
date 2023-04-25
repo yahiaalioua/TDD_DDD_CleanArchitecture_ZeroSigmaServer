@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using ZeroSigma.Application.Authentication.Services.Encryption;
 using ZeroSigma.Application.Common.Authentication;
+using ZeroSigma.Application.Common.Interfaces;
 using ZeroSigma.Application.Interfaces;
 using ZeroSigma.Infrastructure.Authentication;
 using ZeroSigma.Infrastructure.Authentication.AccessToken;
@@ -22,6 +23,7 @@ namespace ZeroSigma.Infrastructure.DependencyInjection
             services.AddScoped<IJwtGenerator, JwtGenrator>();
             services.AddScoped<IUserRepository,UserRepository>();
             services.AddScoped<IEncryptionService,EncryptionService>();
+            services.AddScoped<IUserAccessRepository,UserAccessRepository>();
             return services;
             
         }
