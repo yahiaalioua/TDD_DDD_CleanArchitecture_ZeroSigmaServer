@@ -114,5 +114,18 @@ namespace ZeroSigma.Tests.Domain
             Assert.Null(createdPassword.Data);
             Assert.True(createdPassword.ResultType == ResultType.Invalid);
         }
+        [Fact]
+        public void ShouldReturnInvalidPasswordErrorWhenPasswordIsInvalid()
+        {
+            //arrange
+            var password = "invalidPassword";
+
+            //act
+            var createdPassword = UserPassword.Create(password);
+            //assert
+            Assert.Equal(DomainErrors.InvalidPasswordError, createdPassword.CustomProblemDetails);
+            Assert.Null(createdPassword.Data);
+            Assert.True(createdPassword.ResultType == ResultType.Invalid);
+        }
     }
 }
