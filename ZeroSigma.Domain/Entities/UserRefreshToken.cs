@@ -28,9 +28,14 @@ namespace ZeroSigma.Domain.Entities
 
         public static UserRefreshToken Create(
             string refreshToken, DateTime issuedDate,
-            DateTime expiryDate, string isExpired
+            DateTime expiryDate, string isExpired=null!
             )
         {
+            if (expiryDate > DateTime.UtcNow)
+            {
+                isExpired = "yes";
+            }
+            isExpired = "no";
             return new UserRefreshToken(RefreshTokenID.CreateUnique(), refreshToken, issuedDate, expiryDate, isExpired);
         }
     }

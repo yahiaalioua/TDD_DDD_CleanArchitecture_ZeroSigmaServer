@@ -38,14 +38,14 @@ namespace ZeroSigma.Application.Authentication.Services.ValidationServices.Login
             {
                 return new InvalidResult<AuthenticationResponse>(LoginLogicalValidationErrors.InvalidPasswordError);
             }
-            var accessToken=_loginProcessingService.ProcessAuthentication(user);
+            ProcessedAuthenticationResponse jwt=_loginProcessingService.ProcessAuthentication(user);
             AuthenticationResponse authenticationResponse = new()
             {
                 Id = user.Id.Value,
                 FullName = user.FullName.Value,
                 Email = user.Email.Value,
-                Message = "User Authenticated",
-                AccessToken = accessToken,
+                AccessToken = jwt.AccessToken,
+                RefreshToken=jwt.RefreshToken,
             };
             return new SuccessResult<AuthenticationResponse>(authenticationResponse);
             

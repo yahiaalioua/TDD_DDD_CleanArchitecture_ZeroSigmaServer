@@ -12,12 +12,12 @@ using ZeroSigma.Domain.UserAggregate.ValueObjects;
 
 namespace ZeroSigma.Application.Authentication.Services.ProcessingServices
 {
-    public class UserProcessingService:IUserProcessingService
+    public class SignUpProcessingService:ISignUpProcessingService
     {
         private readonly IEncryptionService _encryptionService;
         private readonly IUserRepository _userRepository;
 
-        public UserProcessingService(
+        public SignUpProcessingService(
             IEncryptionService encryptionService,
             IUserRepository userRepository
             )

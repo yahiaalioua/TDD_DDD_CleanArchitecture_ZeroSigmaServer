@@ -19,11 +19,11 @@ namespace ZeroSigma.Application.Authentication.Services.ValidationServices.SignU
 {
     public class SignUpValidationService : ISignUpValidationService
     {
-        private readonly IUserProcessingService _userProcessingService;
+        private readonly ISignUpProcessingService _userProcessingService;
         private readonly IUserRepository _userRepository;
 
         public SignUpValidationService(
-            IUserProcessingService userProcessingService,
+            ISignUpProcessingService userProcessingService,
             IUserRepository userRepository
             )
         {

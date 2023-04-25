@@ -30,9 +30,14 @@ namespace ZeroSigma.Domain.Entities
 
         public static UserAccessToken Create(
             string accessToken, DateTime issuedDate,
-            DateTime expiryDate, string isExpired)
+            DateTime expiryDate, string isExpired=null!)
         {
-            return new UserAccessToken(AccessTokenID.CreateUnique(), accessToken, issuedDate, expiryDate, isExpired);
+            if (expiryDate > DateTime.UtcNow)
+            {
+                isExpired = "yes";
+            }
+            isExpired = "no";
+            return new UserAccessToken(AccessTokenID.CreateUnique(), accessToken, issuedDate, expiryDate,isExpired);
         }
     }
 }

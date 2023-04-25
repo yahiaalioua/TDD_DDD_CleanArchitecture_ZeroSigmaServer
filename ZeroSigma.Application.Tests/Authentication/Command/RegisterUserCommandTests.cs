@@ -22,14 +22,14 @@ namespace ZeroSigma.Application.Authentication.Command
         private readonly FullName _fullName;
         private readonly UserEmail _email;
         private readonly UserPassword _password;
-        private Mock<IUserProcessingService> _userProcessingserviceMock;
+        private Mock<ISignUpProcessingService> _userProcessingserviceMock;
         public RegisterUserCommandTests()
         {
             _password = UserPassword.Create("UserPass2453..?").Data;
             _fullName = FullName.Create("mike").Data;
             _email = UserEmail.Create("mike@mail.com").Data;
             _userRepositoryMock = new Mock<IUserRepository>();
-            _userProcessingserviceMock=new Mock<IUserProcessingService>();
+            _userProcessingserviceMock=new Mock<ISignUpProcessingService>();
             _mike = User.Create(_fullName, _email,_password);
             _signUpValidationService = new SignUpValidationService(
                 _userProcessingserviceMock.Object,
