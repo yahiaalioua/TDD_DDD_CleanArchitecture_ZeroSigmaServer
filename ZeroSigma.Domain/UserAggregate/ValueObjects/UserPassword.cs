@@ -5,12 +5,13 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using ZeroSigma.Domain.Common.Results;
+using ZeroSigma.Domain.Models;
 using ZeroSigma.Domain.Validation.LogicalValidation.Errors.Authentication;
 using ZeroSigma.Domain.Validation.StructuralValidation.DomainErrors;
 
 namespace ZeroSigma.Domain.UserAggregate.ValueObjects
 {
-    public sealed class UserPassword
+    public sealed class UserPassword:ValueObject
     {
         public const int MinLength = 8;
         public string Value { get; }
@@ -19,7 +20,10 @@ namespace ZeroSigma.Domain.UserAggregate.ValueObjects
         {
             Value = value;
         }
-
+        protected override IEnumerable<object> GetEqualityComponents()
+        {
+            yield return Value;
+        }
         public static Result<UserPassword> Create(string password)
         {
             if (string.IsNullOrWhiteSpace(password))

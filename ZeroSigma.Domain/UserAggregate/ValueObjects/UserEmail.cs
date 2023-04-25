@@ -9,7 +9,7 @@ using ZeroSigma.Domain.Validation.StructuralValidation.DomainErrors;
 
 namespace ZeroSigma.Domain.UserAggregate.ValueObjects
 {
-    public sealed class UserEmail 
+    public sealed class UserEmail:ValueObject
     {
         public string Value { get; }
 
@@ -18,7 +18,10 @@ namespace ZeroSigma.Domain.UserAggregate.ValueObjects
             Value = value;
         }
 
-       
+        protected override IEnumerable<object> GetEqualityComponents()
+        {
+            yield return Value;
+        }
 
         private static bool IsValidEmail(string email)
         {

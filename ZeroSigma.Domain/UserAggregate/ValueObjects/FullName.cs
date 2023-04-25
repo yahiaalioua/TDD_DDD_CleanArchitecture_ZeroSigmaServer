@@ -4,12 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ZeroSigma.Domain.Common.Results;
+using ZeroSigma.Domain.Models;
 using ZeroSigma.Domain.Validation.LogicalValidation.Errors.Authentication;
 using ZeroSigma.Domain.Validation.StructuralValidation.DomainErrors;
 
 namespace ZeroSigma.Domain.User.ValueObjects
 {
-    public sealed class FullName
+    public sealed class FullName:ValueObject
     {
         public const int MaxLength = 50;
 
@@ -33,5 +34,9 @@ namespace ZeroSigma.Domain.User.ValueObjects
             return new SuccessResult<FullName>(new FullName(fullName));
         }
 
+        protected override IEnumerable<object> GetEqualityComponents()
+        {
+            yield return Value;
+        }
     }
 }
