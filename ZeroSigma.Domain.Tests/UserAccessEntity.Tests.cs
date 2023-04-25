@@ -11,10 +11,12 @@ namespace ZeroSigma.Domain.Tests
 {
     public class UserAccessEntity
     {
-        private readonly UserAccessToken _userAccessToken;
+        private readonly UserAccessToken _expiredUserAccessToken;
+        private readonly UserAccessToken _validUserAccessToken;
         public UserAccessEntity()
         {
-            _userAccessToken = UserAccessToken.Create("accessToken",new DateTime(2023,02,20), new DateTime(2023, 02, 22));
+            _expiredUserAccessToken = UserAccessToken.Create("accessToken",new DateTime(2023,02,20), new DateTime(2020, 02, 22));
+            _validUserAccessToken = UserAccessToken.Create("accessToken", new DateTime(2023, 04, 20), new DateTime(2023, 06, 12));
 
         }
 
@@ -24,7 +26,15 @@ namespace ZeroSigma.Domain.Tests
             //arrange
             //act
             //assert
-            Assert.Equal("yes",_userAccessToken.IsExpired);
+            Assert.Equal("yes",_expiredUserAccessToken.IsExpired);
+        }
+        [Fact]
+        public void IsExpiredShouldReturnNoWhenAccessTokenIsNotExpired()
+        {
+            //arrange
+            //act
+            //assert
+            Assert.Equal("no", _validUserAccessToken.IsExpired);
         }
     }
 }
