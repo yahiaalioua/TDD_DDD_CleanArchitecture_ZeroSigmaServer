@@ -61,7 +61,7 @@ namespace ZeroSigma.Application.Authentication.Services.ProcessingServices.Authe
             {
                 UserAccessToken userAccessToken = UserAccessToken.Create(accessToken, accesstokenIssuedDate,accesstokenExpirydate);
                 UserRefreshToken userRefreshToken=UserRefreshToken.Create(refreshToken, refreshTokenIssuedDate,refreshTokenExpirydate);
-                UserAccess userAccess = UserAccess.Create(user.Id, userAccessToken.Id);
+                UserAccess userAccess = UserAccess.Create(user.Id, userAccessToken.Id,userRefreshToken.Id);
                 _userAccessRepository.AddUserAccess(userAccess);
                 _userAccessRepository.AddUserAccessToken(userAccessToken);
                 _userRepository.Add(user);

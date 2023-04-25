@@ -32,11 +32,14 @@ namespace ZeroSigma.Domain.Entities
             string accessToken, DateTime issuedDate,
             DateTime expiryDate, string isExpired=null!)
         {
-            if (expiryDate > DateTime.UtcNow)
+            if (expiryDate < DateTime.UtcNow)
             {
                 isExpired = "yes";
             }
-            isExpired = "no";
+            else
+            {
+                isExpired = "no";
+            }
             return new UserAccessToken(AccessTokenID.CreateUnique(), accessToken, issuedDate, expiryDate,isExpired);
         }
     }

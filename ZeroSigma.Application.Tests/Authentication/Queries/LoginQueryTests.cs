@@ -95,6 +95,8 @@ namespace ZeroSigma.Application.Authentication.Queries
             Result<AuthenticationResponse> result = await handler.Handle(query, default);
             //assert
             _userRepositoryMock.Verify(r => r.GetByEmail(_mike.Email), Times.Once());
+            _loginProcessingServiceMock.Verify(x => x.ProcessAuthentication(_mike));
+            _encryptionServiceMock.Verify(x => x.VerifyPassword(query.Password, _mike.Password.Value));
             Assert.True(result.ResultType == ResultType.Ok);            
         }
     }

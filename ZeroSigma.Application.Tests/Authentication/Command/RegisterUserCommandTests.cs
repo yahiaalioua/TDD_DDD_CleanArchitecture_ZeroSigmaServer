@@ -1,7 +1,7 @@
 ﻿using Moq;
 using ZeroSigma.Application.Authentication.Commands;
 using ZeroSigma.Application.Authentication.Services.Encryption;
-using ZeroSigma.Application.Authentication.Services.ProcessingServices;
+using ZeroSigma.Application.Authentication.Services.ProcessingServices.SignUpProcessingServices;
 using ZeroSigma.Application.Authentication.Services.ValidationServices.SignUp;
 using ZeroSigma.Application.DTO.Authentication;
 using ZeroSigma.Application.Interfaces;

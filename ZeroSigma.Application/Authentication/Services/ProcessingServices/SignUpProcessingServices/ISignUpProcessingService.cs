@@ -7,7 +7,7 @@ using ZeroSigma.Domain.Entities;
 using ZeroSigma.Domain.User.ValueObjects;
 using ZeroSigma.Domain.UserAggregate.ValueObjects;
 
-namespace ZeroSigma.Application.Authentication.Services.ProcessingServices
+namespace ZeroSigma.Application.Authentication.Services.ProcessingServices.SignUpProcessingServices
 {
     public interface ISignUpProcessingService
     {

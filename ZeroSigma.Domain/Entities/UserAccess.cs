@@ -12,7 +12,7 @@ namespace ZeroSigma.Domain.Entities
     public sealed class UserAccess : Entity<UserAccessID>
     {
         public UserAccess(UserAccessID id, UserID userID,
-            AccessTokenID accessTokenID, RefreshTokenID refreshTokenID=null!) : base(id)
+            AccessTokenID accessTokenID, RefreshTokenID refreshTokenID) : base(id)
         {
             UserID = userID;
             AccessTokenID = accessTokenID;
@@ -24,7 +24,7 @@ namespace ZeroSigma.Domain.Entities
 
         public static UserAccess Create(
             UserID userId, AccessTokenID accessTokenID,
-            RefreshTokenID refreshTokenID=null!
+            RefreshTokenID refreshTokenID
             )
         {
             return new UserAccess( UserAccessID.CreateUnique(), userId, accessTokenID, refreshTokenID );

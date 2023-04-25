@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using ZeroSigma.Application.Authentication.Services.Encryption;
-using ZeroSigma.Application.Authentication.Services.ProcessingServices;
 using ZeroSigma.Application.Authentication.Services.ProcessingServices.AuthenticationProcessingServices;
+using ZeroSigma.Application.Authentication.Services.ProcessingServices.SignUpProcessingServices;
 using ZeroSigma.Application.Authentication.Services.ValidationServices.Login;
 using ZeroSigma.Application.Authentication.Services.ValidationServices.SignUp;
 using ZeroSigma.Application.Common.Authentication;

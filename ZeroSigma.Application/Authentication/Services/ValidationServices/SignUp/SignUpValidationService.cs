@@ -5,7 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using ZeroSigma.Application.Authentication.Services.Encryption;
-using ZeroSigma.Application.Authentication.Services.ProcessingServices;
+using ZeroSigma.Application.Authentication.Services.ProcessingServices.SignUpProcessingServices;
 using ZeroSigma.Application.DTO.Authentication;
 using ZeroSigma.Application.Interfaces;
 using ZeroSigma.Domain.Common.Errors;

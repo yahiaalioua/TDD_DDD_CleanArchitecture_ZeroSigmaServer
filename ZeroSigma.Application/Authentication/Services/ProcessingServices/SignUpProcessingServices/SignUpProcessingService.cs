@@ -10,9 +10,9 @@ using ZeroSigma.Domain.Entities;
 using ZeroSigma.Domain.User.ValueObjects;
 using ZeroSigma.Domain.UserAggregate.ValueObjects;
 
-namespace ZeroSigma.Application.Authentication.Services.ProcessingServices
+namespace ZeroSigma.Application.Authentication.Services.ProcessingServices.SignUpProcessingServices
 {
-    public class SignUpProcessingService:ISignUpProcessingService
+    public class SignUpProcessingService : ISignUpProcessingService
     {
         private readonly IEncryptionService _encryptionService;
         private readonly IUserRepository _userRepository;
@@ -26,14 +26,14 @@ namespace ZeroSigma.Application.Authentication.Services.ProcessingServices
             _userRepository = userRepository;
         }
 
-        public User CreateUser(FullName fullname,UserEmail email,UserPassword password)
+        public User CreateUser(FullName fullname, UserEmail email, UserPassword password)
         {
-            User createdUser = User.Create(fullname,email,password);
+            User createdUser = User.Create(fullname, email, password);
             return createdUser;
         }
         public User? ProcessSignUpRequest(FullName fullname, UserEmail email, UserPassword password)
         {
-            var user = CreateUser(fullname,email,password);
+            var user = CreateUser(fullname, email, password);
             if (user is not null)
             {
                 string encryptedPassword = _encryptionService.EncryptPassword(user.Password.Value);
