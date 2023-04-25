@@ -1,5 +1,6 @@
 ﻿using ZeroSigma.Application.Interfaces;
 using ZeroSigma.Domain.Entities;
+using ZeroSigma.Domain.UserAggregate.ValueObjects;
 
 namespace ZeroSigma.Infrastructure.Persistance
 {
@@ -13,7 +14,7 @@ namespace ZeroSigma.Infrastructure.Persistance
             
         }
 
-        public User? GetByEmail(string email)
+        public User? GetByEmail(UserEmail email)
         {
             var user = _userDb.SingleOrDefault(x => x.Email == email);
             return user;

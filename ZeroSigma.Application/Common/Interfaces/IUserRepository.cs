@@ -1,11 +1,12 @@
 ﻿using ZeroSigma.Domain.Entities;
+using ZeroSigma.Domain.UserAggregate.ValueObjects;
 
 namespace ZeroSigma.Application.Interfaces
 {
     public interface IUserRepository
     {
         void Add(User user);
-        User? GetByEmail(string email);
+        User? GetByEmail(UserEmail email);
 
     }
 }

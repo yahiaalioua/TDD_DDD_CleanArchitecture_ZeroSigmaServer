@@ -4,11 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ZeroSigma.Domain.Entities;
+using ZeroSigma.Domain.User.ValueObjects;
+using ZeroSigma.Domain.UserAggregate.ValueObjects;
 
 namespace ZeroSigma.Application.Authentication.Services.ProcessingServices
 {
     public interface IUserProcessingService
     {
-        User CreateUser(string fullname, string email, string password, string accessToken, string refreshToken);
+        User CreateUser(FullName fullname, UserEmail email, UserPassword password);
     }
 }

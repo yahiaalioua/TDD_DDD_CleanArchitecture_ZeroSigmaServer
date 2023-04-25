@@ -6,15 +6,15 @@ using System.Text;
 using System.Threading.Tasks;
 using ZeroSigma.Domain.Entities;
 using ZeroSigma.Domain.User.ValueObjects;
+using ZeroSigma.Domain.UserAggregate.ValueObjects;
 
 namespace ZeroSigma.Application.Authentication.Services.ProcessingServices
 {
     public class UserProcessingService:IUserProcessingService
     {
-        public User CreateUser(string fullname,string email,string password, string accessToken, string refreshToken)
+        public User CreateUser(FullName fullname,UserEmail email,UserPassword password)
         {
-            var fullName=FullName.Create(fullname);
-            User createdUser = User.Create(fullName.Data, email, password, accessToken, refreshToken);
+            User createdUser = User.Create(fullname,email,password);
             return createdUser;
 
         }

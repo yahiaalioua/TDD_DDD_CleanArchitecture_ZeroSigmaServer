@@ -1,31 +1,27 @@
 ﻿using ZeroSigma.Domain.Models;
 using ZeroSigma.Domain.User.ValueObjects;
+using ZeroSigma.Domain.UserAggregate.ValueObjects;
 
 namespace ZeroSigma.Domain.Entities
 {
     public sealed class User:Entity<UserID>
     {
         public User(
-            UserID id, FullName fullName, string email,
-            string password, string accessToken,
-            string refreshToken) : base(id)
+            UserID id, FullName fullName, UserEmail email,
+            UserPassword password) : base(id)
         {
             FullName = fullName;
             Email = email;
             Password = password;
-            AccessToken = accessToken;
-            RefreshToken = refreshToken;
         }
 
         public FullName FullName { get; set; }=null!;
-        public string Email { get; set; }= null!;
-        public string Password { get; set; }=null!;
-        public string ?AccessToken { get;set; }=null!;
-        public string RefreshToken { get; set; } = null!;
+        public UserEmail Email { get; set; }= null!;
+        public UserPassword Password { get; set; }=null!;
 
-        public static User Create(FullName fullName,string email,string password,string accessToken,string refreshToken)
+        public static User Create(FullName fullName,UserEmail email,UserPassword password)
         {
-            return new(UserID.CreateUnique(), fullName, email, password, accessToken, refreshToken);
+            return new(UserID.CreateUnique(), fullName, email, password);
         }
     }
 }

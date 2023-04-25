@@ -29,7 +29,7 @@ namespace ZeroSigma.Application.Authentication.Services.ValidationServices.Login
             {
                 return new NotFoundResults<AuthenticationResponse>(LoginLogicalValidationErrors.NonExistentEmailError);
             }
-            if(!_encryptionService.VerifyPassword(password,user.Password))
+            if(!_encryptionService.VerifyPassword(password,user.Password.Value))
             {
                 return new InvalidResult<AuthenticationResponse>(LoginLogicalValidationErrors.InvalidPasswordError);
             }
@@ -37,7 +37,7 @@ namespace ZeroSigma.Application.Authentication.Services.ValidationServices.Login
             {
                 Id = user.Id.Value,
                 FullName = user.FullName.Value,
-                Email = user.Email,
+                Email = user.Email.Value,
                 Message = "User Authenticated",
                 AccessToken = accessToken,
             };

@@ -1,4 +1,5 @@
-﻿using Moq;
+﻿using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities;
+using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,12 +7,16 @@ using System.Text;
 using System.Threading.Tasks;
 using ZeroSigma.Application.Authentication.Commands;
 using ZeroSigma.Application.Authentication.Services.Encryption;
+using ZeroSigma.Application.Authentication.Services.ProcessingServices;
 using ZeroSigma.Application.Authentication.Services.ValidationServices.SignUp;
 using ZeroSigma.Application.DTO.Authentication;
 using ZeroSigma.Application.Interfaces;
 using ZeroSigma.Domain.Common.Results;
 using ZeroSigma.Domain.Entities;
+using ZeroSigma.Domain.User.ValueObjects;
+using ZeroSigma.Domain.UserAggregate.ValueObjects;
 using ZeroSigma.Domain.Validation.LogicalValidation.Errors.Authentication;
+using ZeroSigma.Domain.Validation.StructuralValidation.DomainErrors;
 
 namespace ZeroSigma.Application.Authentication.Command
 {
@@ -21,17 +26,21 @@ namespace ZeroSigma.Application.Authentication.Command
         private readonly User _mike;
         private readonly ISignUpValidationService _signUpValidationService;
         private Mock<IEncryptionService> _encryptionServiceMock;
+        private readonly FullName _fullName;
+        private readonly UserEmail _email;
+        private readonly UserPassword _password;
+        private Mock<IUserProcessingService> _userProcessingserviceMock;
         public RegisterUserCommandTests()
         {
+            _password = UserPassword.Create("UserPass2453..?").Data;
+            _fullName = FullName.Create("mike").Data;
+            _email = UserEmail.Create("mike@mail.com").Data;
             _userRepositoryMock = new Mock<IUserRepository>();
-            _mike = new User()
-            {
-                FullName="Mike", Email="mike@mail.com",Password="All0wedPassword1.",
-                AccessToken="accessToken", RefreshToken="refreshToken"
-            };
+            _userProcessingserviceMock=new Mock<IUserProcessingService>();
+            _mike = User.Create(_fullName, _email,_password);
             _encryptionServiceMock= new Mock<IEncryptionService>();
             _signUpValidationService = new SignUpValidationService(
-                _userRepositoryMock.Object,_encryptionServiceMock.Object
+                _userRepositoryMock.Object,_encryptionServiceMock.Object,_userProcessingserviceMock.Object
                 );
             
         }
@@ -40,14 +49,14 @@ namespace ZeroSigma.Application.Authentication.Command
         public async Task Handle_ShouldReturnDuplicateEmailProblemDetailWhenUserEmailIsNotUnique()
         {
             // arrange
-            var command = new RegisterCommand(_mike.FullName,_mike.Email,_mike.Password);
-            _userRepositoryMock.Setup(r => r.GetByEmail(_mike.Email)).Returns(_mike);
+            var command = new RegisterCommand(_mike.FullName.Value,_mike.Email.Value,_mike.Password.Value);
+            _userRepositoryMock.Setup(r => r.GetByEmail(It.IsAny<UserEmail>())).Returns(_mike);
             var handler = new RegisterCommandHandler(_signUpValidationService);
             //act
             Result<SignUpResponse> result= await handler.Handle(command, default);
             //assert
             _userRepositoryMock.Verify(r=>r.Add(_mike), Times.Never);
-            _userRepositoryMock.Verify(r=>r.GetByEmail(_mike.Email), Times.Once);
+            _userRepositoryMock.Verify(r=>r.GetByEmail(It.IsAny<UserEmail>()), Times.Once);
             Assert.True(result.CustomProblemDetails==SignUpLogicalValidationErrors.DuplicateEmailError);
         }
 
@@ -56,54 +65,54 @@ namespace ZeroSigma.Application.Authentication.Command
         {
             // arrange
             User? NonExistingUser = null;
-            var command = new RegisterCommand(_mike.FullName, _mike.Email,_mike.Password);
+            var command = new RegisterCommand(_mike.FullName.Value,_mike.Email.Value,_mike.Password.Value);
+            string successMessage = "You successfully registered";
             _userRepositoryMock.Setup(r => r.GetByEmail(_mike.Email)).Returns(NonExistingUser);
+            _userProcessingserviceMock.Setup(x => x.CreateUser(It.IsAny<FullName>(), It.IsAny<UserEmail>(), It.IsAny<UserPassword>())).Returns(_mike);
+            _encryptionServiceMock.Setup(x => x.EncryptPassword(_mike.Password.Value)).Returns("encryptedPass");
             _userRepositoryMock.Setup(r => r.Add(_mike));
+
             var handler = new RegisterCommandHandler(_signUpValidationService);
             //act
+            
             Result<SignUpResponse> result = await handler.Handle(command, default);
             //assert
-            _userRepositoryMock.Verify(x => x.Add(It.IsAny<User>()), Times.Once);
-            _userRepositoryMock.Verify(r => r.GetByEmail(_mike.Email), Times.Once);
-            
-            Assert.IsAssignableFrom<Result<SignUpResponse>>(result);
-            Assert.True(result.ResultType == ResultType.Ok);
+            _userRepositoryMock.Verify(r => r.Add(_mike), Times.Once);
+            _userRepositoryMock.Verify(r => r.GetByEmail(It.IsAny<UserEmail>()), Times.Once);
+            Assert.Equal(result.Data.Message, successMessage);
+            Assert.True(result.ResultType==ResultType.Ok);
             
         }
         [Fact]
         public async Task Handle_ShouldReturnInvalidPasswordLengthErrorWhenPasswordLengthIsLessThanEightCharacters()
         {
             // arrange
-            User? user = null;
-            var command = new RegisterCommand(_mike.FullName, _mike.Email, ">8char");
-            _userRepositoryMock.Setup(r => r.GetByEmail(_mike.Email)).Returns(user);
-            _userRepositoryMock.Setup(r => r.Add(_mike));
+            string lessThan8charsPassword = ">8char";
+            var command = new RegisterCommand("username", "email@valid.com", lessThan8charsPassword);
+            _userRepositoryMock.Setup(r => r.Add(It.IsAny<User>()));
             var handler = new RegisterCommandHandler(_signUpValidationService);
             //act
             Result<SignUpResponse> result = await handler.Handle(command, default);
             //assert
-            _userRepositoryMock.Verify(r => r.GetByEmail(_mike.Email), Times.Once);
             _userRepositoryMock.Verify(r => r.Add(It.IsAny<User>()), Times.Never);
             Assert.IsAssignableFrom<Result<SignUpResponse>>(result);
-            Assert.True(result.CustomProblemDetails == SignUpStructuralValidationErrors.InvalidPasswordLengthError);
+            Assert.True(result.CustomProblemDetails == DomainErrors.InvalidPasswordLengthError);
 
         }
         [Fact]
         public async Task Handle_ShouldReturnInvalidPasswordErrorWhenPasswordItsNotSecureEnough()
         {
             // arrange
-            User? user = null;
-            var command = new RegisterCommand(_mike.FullName, _mike.Email, "eightCharsPassword");
-            _userRepositoryMock.Setup(r => r.GetByEmail(_mike.Email)).Returns(user);
-            _userRepositoryMock.Setup(r => r.Add(_mike));
+            string notSecurePassword = "eightCharsPassword";
+            var command = new RegisterCommand("username","email@valid.com",notSecurePassword);
+            _userRepositoryMock.Setup(r => r.Add(It.IsAny<User>()));
             var handler = new RegisterCommandHandler(_signUpValidationService);
             //act
             Result<SignUpResponse> result = await handler.Handle(command, default);
             //assert
-            _userRepositoryMock.Verify(r => r.GetByEmail(_mike.Email), Times.Once);
             _userRepositoryMock.Verify(r => r.Add(It.IsAny<User>()), Times.Never);
             Assert.IsAssignableFrom<Result<SignUpResponse>>(result);
-            Assert.True(result.CustomProblemDetails == SignUpStructuralValidationErrors.InvalidPasswordError);
+            Assert.True(result.CustomProblemDetails == DomainErrors.InvalidPasswordError);
 
         }
 
@@ -111,18 +120,16 @@ namespace ZeroSigma.Application.Authentication.Command
         public async Task Handle_ShouldReturnMissingSpecialCharacterErrorWhenPasswordDoesNotContainsAtLeastOneSpecialCharacter()
         {
             // arrange
-            User? user = null;
-            var command = new RegisterCommand(_mike.FullName, _mike.Email, "eightCharsPassword12");
-            _userRepositoryMock.Setup(r => r.GetByEmail(_mike.Email)).Returns(user);
-            _userRepositoryMock.Setup(r => r.Add(_mike));
+            string passwordWithoutSpecialChar = "missingSpecialchars0";
+            var command = new RegisterCommand("username", "email@valid.com", passwordWithoutSpecialChar);
             var handler = new RegisterCommandHandler(_signUpValidationService);
             //act
+            _userRepositoryMock.Setup(r => r.Add(It.IsAny<User>()));
             Result<SignUpResponse> result = await handler.Handle(command, default);
             //assert
-            _userRepositoryMock.Verify(r => r.GetByEmail(_mike.Email), Times.Once);
             _userRepositoryMock.Verify(r => r.Add(It.IsAny<User>()), Times.Never);
             Assert.IsAssignableFrom<Result<SignUpResponse>>(result);
-            Assert.True(result.CustomProblemDetails == SignUpStructuralValidationErrors.MissingSpecialCharacterError);
+            Assert.True(result.CustomProblemDetails == DomainErrors.MissingSpecialCharacterError);
 
         }
 
@@ -130,17 +137,19 @@ namespace ZeroSigma.Application.Authentication.Command
         public async Task Handle_ShouldReturnInvalidEmailAddressErrorWhenEmailIsNotAValidEmail()
         {
             // arrange
+            string invalidEmail = "mail@invalid";
             User? user = null;
-            var command = new RegisterCommand(_mike.FullName,"invalidEmailAddress","TestPassword4444.");
-            _userRepositoryMock.Setup(r => r.GetByEmail("invalidEmailAddress")).Returns(user);
+            var command = new RegisterCommand("userName",invalidEmail,"TestPassword4444.");
             var handler = new RegisterCommandHandler(_signUpValidationService);
             //act
+            _userRepositoryMock.Setup(r => r.GetByEmail(It.IsAny<UserEmail>())).Returns(user);
+            _userRepositoryMock.Setup(r => r.Add(It.IsAny<User>()));
             Result<SignUpResponse> result = await handler.Handle(command, default);
             //assert
-            _userRepositoryMock.Verify(r => r.GetByEmail("invalidEmailAddress"), Times.Never);
+            _userRepositoryMock.Verify(r => r.GetByEmail(It.IsAny<UserEmail>()), Times.Never);
             _userRepositoryMock.Verify(r => r.Add(It.IsAny<User>()), Times.Never);
             Assert.IsAssignableFrom<Result<SignUpResponse>>(result);
-            Assert.True(result.CustomProblemDetails == SignUpStructuralValidationErrors.InvalidEmailAddressError);
+            Assert.Equal(DomainErrors.InvalidEmailAddressError,result.CustomProblemDetails);
         }
     }
 }
