@@ -7,10 +7,9 @@ using ZeroSigma.Application.DTO.Authentication;
 using ZeroSigma.Application.Interfaces;
 using ZeroSigma.Domain.Common.Results;
 using ZeroSigma.Domain.Entities;
-using ZeroSigma.Domain.User.ValueObjects;
-using ZeroSigma.Domain.UserAggregate.ValueObjects;
 using ZeroSigma.Domain.Validation.LogicalValidation.Errors.Authentication;
 using ZeroSigma.Domain.Validation.StructuralValidation.DomainErrors;
+using ZeroSigma.Domain.ValueObjects.User;
 
 namespace ZeroSigma.Application.Authentication.Command
 {

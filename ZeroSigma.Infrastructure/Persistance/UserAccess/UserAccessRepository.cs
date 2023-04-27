@@ -1,8 +1,7 @@
-﻿using ZeroSigma.Application.Common.Interfaces;
-using ZeroSigma.Application.Interfaces;
+﻿using System.IdentityModel.Tokens.Jwt;
+using ZeroSigma.Application.Common.Interfaces;
 using ZeroSigma.Domain.Entities;
-using ZeroSigma.Domain.User.ValueObjects;
-using ZeroSigma.Domain.UserAggregate.ValueObjects;
+using ZeroSigma.Domain.ValueObjects.User;
 
 namespace ZeroSigma.Infrastructure.Persistance
 {
@@ -27,6 +26,10 @@ namespace ZeroSigma.Infrastructure.Persistance
         public void AddUserRefreshToken(UserRefreshToken userRefreshToken)
         {
             _userRefreshToken.Add(userRefreshToken);
+        }
+        public UserRefreshToken? GetUserRefreshToken(string refreshToken)
+        {
+            return _userRefreshToken.FirstOrDefault(x=>x.RefreshToken == refreshToken);
         }
     }
 }

@@ -7,9 +7,9 @@ using ZeroSigma.Domain.Common.Results;
 using ZeroSigma.Domain.Models;
 using ZeroSigma.Domain.Validation.StructuralValidation.DomainErrors;
 
-namespace ZeroSigma.Domain.UserAggregate.ValueObjects
+namespace ZeroSigma.Domain.ValueObjects.User
 {
-    public sealed class UserEmail:ValueObject
+    public sealed class UserEmail : ValueObject
     {
         public string Value { get; }
 

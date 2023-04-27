@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ZeroSigma.Domain.Models;
-using ZeroSigma.Domain.UserAccessAggregate.ValueObjects;
+using ZeroSigma.Domain.ValueObjects.UserRefreshToken;
 
 namespace ZeroSigma.Domain.Entities
 {

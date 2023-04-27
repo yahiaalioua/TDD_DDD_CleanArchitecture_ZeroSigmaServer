@@ -2459,7 +2459,8 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v7.0",
         "dependencies": {
-          "Microsoft.AspNetCore.Mvc.Core": "2.2.5"
+          "Microsoft.AspNetCore.Mvc.Core": "2.2.5",
+          "System.IdentityModel.Tokens.Jwt": "6.15.1"
         },
         "compile": {
           "bin/placeholder/ZeroSigma.Domain.dll": {}

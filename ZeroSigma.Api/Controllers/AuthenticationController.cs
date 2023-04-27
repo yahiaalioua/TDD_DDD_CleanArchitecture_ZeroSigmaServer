@@ -3,8 +3,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.Net.Http.Headers;
+using System.IdentityModel.Tokens.Jwt;
 using ZeroSigma.Application.Authentication.Commands;
 using ZeroSigma.Application.Authentication.Queries;
+using ZeroSigma.Application.Authentication.Queries.NewSession;
+using ZeroSigma.Application.Authentication.Services.ProcessingServices.NewSessionProcessingServices;
 using ZeroSigma.Application.Common.Authentication;
 using ZeroSigma.Application.DTO.Authentication;
 using ZeroSigma.Domain.Common.Results;
@@ -18,11 +21,16 @@ namespace ZeroSigma.Api.Controllers
     {
         private readonly IMediator _mediator;
         private readonly AccessTokenOptions _accessTokenOptions;
+        private readonly INewSessionProcessingService _sessionProcessingService;
 
-        public AuthenticationController(IMediator mediator, IOptions<AccessTokenOptions> options)
+        public AuthenticationController(
+            IMediator mediator, IOptions<AccessTokenOptions> options,
+            INewSessionProcessingService sessionProcessingService
+            )
         {
             _mediator = mediator;
             _accessTokenOptions = options.Value;
+            _sessionProcessingService = sessionProcessingService;
         }
 
         [HttpPost("users")]
@@ -46,7 +54,13 @@ namespace ZeroSigma.Api.Controllers
             
             return this.FromResult(response);
         }
-
+        [HttpPost("session/new")]
+        public async Task<IActionResult> RefreshToken(NewSessionRequest request)
+        {
+            var query = new NewSessionQuery(request.accessToken, request.refreshToken);
+            var response= await _mediator.Send(query);
+            return this.FromResult(response);
+        }
         private void SetTokenCookie(string token)
         {
             // append cookie with access token to the http response

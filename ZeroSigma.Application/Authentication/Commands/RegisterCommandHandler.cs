@@ -1,19 +1,7 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.AccessControl;
-using System.Text;
-using System.Threading.Tasks;
 using ZeroSigma.Application.Authentication.Services.ValidationServices.SignUp;
 using ZeroSigma.Application.DTO.Authentication;
-using ZeroSigma.Application.Interfaces;
-using ZeroSigma.Domain.Common.Errors;
 using ZeroSigma.Domain.Common.Results;
-using ZeroSigma.Domain.Entities;
-using ZeroSigma.Domain.User.ValueObjects;
-using ZeroSigma.Domain.Validation.LogicalValidation.Errors.Authentication;
 
 namespace ZeroSigma.Application.Authentication.Commands
 {

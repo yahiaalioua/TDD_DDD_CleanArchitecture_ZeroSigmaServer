@@ -5,13 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using ZeroSigma.Domain.Models;
 
-namespace ZeroSigma.Domain.UserAccessAggregate.ValueObjects
+namespace ZeroSigma.Domain.ValueObjects.UserAccessToken
 {
     public sealed class AccessTokenID : ValueObject
     {
         public Guid Value { get; }
 
-        private AccessTokenID (Guid value)
+        private AccessTokenID(Guid value)
         {
             Value = value;
         }

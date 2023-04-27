@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.JsonWebTokens;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,7 +26,8 @@ namespace ZeroSigma.Infrastructure.Authentication.RefreshToken
             List<Claim> claims = new List<Claim>()
             {
                 new Claim(ClaimTypes.Email, email),
-                new Claim(ClaimTypes.NameIdentifier,id.ToString())
+                new Claim(ClaimTypes.NameIdentifier,id.ToString()),
+                new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString())
             };
             var RefreshToken = _jwtGenerator.GenerateJwt(
                 _refreshTokenOptions.RefreshTokenSecretKey,

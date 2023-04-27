@@ -8,9 +8,9 @@ using ZeroSigma.Domain.Models;
 using ZeroSigma.Domain.Validation.LogicalValidation.Errors.Authentication;
 using ZeroSigma.Domain.Validation.StructuralValidation.DomainErrors;
 
-namespace ZeroSigma.Domain.User.ValueObjects
+namespace ZeroSigma.Domain.ValueObjects.User
 {
-    public sealed class FullName:ValueObject
+    public sealed class FullName : ValueObject
     {
         public const int MaxLength = 50;
 
@@ -19,7 +19,7 @@ namespace ZeroSigma.Domain.User.ValueObjects
             Value = value;
         }
 
-        public string Value { get; } 
+        public string Value { get; }
 
         public static Result<FullName> Create(string fullName)
         {

@@ -1,10 +1,10 @@
 ﻿using ZeroSigma.Domain.Models;
 
-namespace ZeroSigma.Domain.UserAccessAggregate.ValueObjects
+namespace ZeroSigma.Domain.ValueObjects.UserAccess
 {
     public sealed class UserAccessID : ValueObject
     {
-        public Guid Value { get;}
+        public Guid Value { get; }
 
         private UserAccessID(Guid value)
         {
@@ -13,7 +13,7 @@ namespace ZeroSigma.Domain.UserAccessAggregate.ValueObjects
 
         public static UserAccessID CreateUnique()
         {
-            return new (Guid.NewGuid());
+            return new(Guid.NewGuid());
         }
 
         protected override IEnumerable<object> GetEqualityComponents()

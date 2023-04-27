@@ -24,7 +24,7 @@ namespace ZeroSigma.Infrastructure.Authentication
                 expires: DateTime.UtcNow.AddMinutes(expires),
                 signingCredentials: signinCredentials
                 );
-            string tokenValue = new JwtSecurityTokenHandler().WriteToken(token);
+            var tokenValue = new JwtSecurityTokenHandler().WriteToken(token);
             return tokenValue;
         }
     }

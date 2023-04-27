@@ -4,8 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ZeroSigma.Domain.Entities;
-using ZeroSigma.Domain.User.ValueObjects;
-using ZeroSigma.Domain.UserAggregate.ValueObjects;
+using ZeroSigma.Domain.ValueObjects.User;
 
 namespace ZeroSigma.Application.Authentication.Services.ProcessingServices.SignUpProcessingServices
 {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ZeroSigma.Domain.Models;
-using ZeroSigma.Domain.UserAccessAggregate.ValueObjects;
+using ZeroSigma.Domain.ValueObjects.UserAccessToken;
 
 namespace ZeroSigma.Domain.Entities
 {
@@ -21,8 +21,6 @@ namespace ZeroSigma.Domain.Entities
             ExpiryDate = expiryDate;
             IsExpired = isExpired;
         }
-
-        
         public string AccessToken { get; set; } = null!;
         public DateTime IssuedDate { get; set; }
         public DateTime ExpiryDate { get; set;}

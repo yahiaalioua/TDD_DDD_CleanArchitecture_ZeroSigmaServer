@@ -1,5 +1,8 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 using ZeroSigma.Application.Authentication.Services.Encryption;
 using ZeroSigma.Application.Common.Authentication;
 using ZeroSigma.Application.Common.Interfaces;
@@ -24,6 +27,24 @@ namespace ZeroSigma.Infrastructure.DependencyInjection
             services.AddScoped<IUserRepository,UserRepository>();
             services.AddScoped<IEncryptionService,EncryptionService>();
             services.AddScoped<IUserAccessRepository,UserAccessRepository>();
+            services.AddScoped<IRefreshTokenProcessingService,RefreshTokenProcessingService>();
+            services.AddScoped<IRefreshTokenValidation, RefreshTokenValidation>();
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options => {
+
+                options.TokenValidationParameters = new TokenValidationParameters()
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidAudience = "https://localhost:5001",
+                    ValidIssuer = "https://localhost:5001",
+                    IssuerSigningKey = new SymmetricSecurityKey(
+                        Encoding.UTF8.GetBytes("superSecretKey@345")
+                    ),
+                    ClockSkew = TimeSpan.Zero
+                };
+            });
             return services;
             
         }

@@ -1,18 +1,10 @@
 ﻿using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ZeroSigma.Application.Authentication.Services.ValidationServices.Login;
-using ZeroSigma.Application.Common.Authentication;
 using ZeroSigma.Application.DTO.Authentication;
 using ZeroSigma.Application.Interfaces;
-using ZeroSigma.Domain.Common.Errors;
 using ZeroSigma.Domain.Common.Results;
 using ZeroSigma.Domain.Entities;
-using ZeroSigma.Domain.User.ValueObjects;
-using ZeroSigma.Domain.UserAggregate.ValueObjects;
+using ZeroSigma.Domain.ValueObjects.User;
 
 namespace ZeroSigma.Application.Authentication.Queries
 {

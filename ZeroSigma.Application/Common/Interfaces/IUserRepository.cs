@@ -1,5 +1,5 @@
 ﻿using ZeroSigma.Domain.Entities;
-using ZeroSigma.Domain.UserAggregate.ValueObjects;
+using ZeroSigma.Domain.ValueObjects.User;
 
 namespace ZeroSigma.Application.Interfaces
 {

@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+﻿using System.Text.RegularExpressions;
 using ZeroSigma.Domain.Common.Results;
 using ZeroSigma.Domain.Models;
-using ZeroSigma.Domain.Validation.LogicalValidation.Errors.Authentication;
 using ZeroSigma.Domain.Validation.StructuralValidation.DomainErrors;
 
-namespace ZeroSigma.Domain.UserAggregate.ValueObjects
+namespace ZeroSigma.Domain.ValueObjects.User
 {
-    public sealed class UserPassword:ValueObject
+    public sealed class UserPassword : ValueObject
     {
         public const int MinLength = 8;
         public string Value { get; }

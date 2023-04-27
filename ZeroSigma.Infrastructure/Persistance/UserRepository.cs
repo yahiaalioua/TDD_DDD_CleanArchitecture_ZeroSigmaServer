@@ -1,7 +1,6 @@
 ﻿using ZeroSigma.Application.Interfaces;
 using ZeroSigma.Domain.Entities;
-using ZeroSigma.Domain.User.ValueObjects;
-using ZeroSigma.Domain.UserAggregate.ValueObjects;
+using ZeroSigma.Domain.ValueObjects.User;
 
 namespace ZeroSigma.Infrastructure.Persistance
 {
