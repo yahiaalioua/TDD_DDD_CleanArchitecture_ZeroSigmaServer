@@ -10,11 +10,11 @@ using ZeroSigma.Infrastructure.Authentication.AccessToken;
 
 namespace ZeroSigma.Infrastructure.Authentication.RefreshToken
 {
-    public class RefreshTokenValidation : IRefreshTokenValidation
+    public class JwtTokenValidationService : IJwtTokenValidation
     {
         private readonly AccessTokenOptions _options;
 
-        public RefreshTokenValidation(IOptions<AccessTokenOptions> options)
+        public JwtTokenValidationService(IOptions<AccessTokenOptions> options)
         {
             _options = options.Value;
         }

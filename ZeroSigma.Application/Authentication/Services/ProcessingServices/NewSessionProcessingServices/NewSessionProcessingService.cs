@@ -15,12 +15,12 @@ namespace ZeroSigma.Application.Authentication.Services.ProcessingServices.NewSe
 {
     public class NewSessionProcessingService : INewSessionProcessingService
     {
-        private readonly IRefreshTokenProcessingService _refreshTokenProcessingService;
+        private readonly IJwtTokenProcessingService _refreshTokenProcessingService;
         private readonly IUserAccessRepository _userAccessRepository;
         private readonly IAccessTokenProvider _accessTokenProvider;
 
         public NewSessionProcessingService(
-            IRefreshTokenProcessingService refreshTokenProcessingService,
+            IJwtTokenProcessingService refreshTokenProcessingService,
             IUserAccessRepository userAccessRepository,
             IAccessTokenProvider accessTokenProvider)
         {

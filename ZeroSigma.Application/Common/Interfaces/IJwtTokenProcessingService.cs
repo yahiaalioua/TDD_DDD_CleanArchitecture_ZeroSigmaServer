@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ZeroSigma.Application.Common.Interfaces
 {
-    public interface IRefreshTokenProcessingService
+    public interface IJwtTokenProcessingService
     {
         public ClaimsPrincipal Validate(string refreshToken);
     }

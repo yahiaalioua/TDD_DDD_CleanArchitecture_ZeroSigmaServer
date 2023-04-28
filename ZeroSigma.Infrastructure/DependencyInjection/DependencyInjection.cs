@@ -27,8 +27,8 @@ namespace ZeroSigma.Infrastructure.DependencyInjection
             services.AddScoped<IUserRepository,UserRepository>();
             services.AddScoped<IEncryptionService,EncryptionService>();
             services.AddScoped<IUserAccessRepository,UserAccessRepository>();
-            services.AddScoped<IRefreshTokenProcessingService,RefreshTokenProcessingService>();
-            services.AddScoped<IRefreshTokenValidation, RefreshTokenValidation>();
+            services.AddScoped<IJwtTokenProcessingService,JwtTokenProcessingService>();
+            services.AddScoped<IJwtTokenValidation, RefreshTokenValidation>();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options => {
 
                 options.TokenValidationParameters = new TokenValidationParameters()

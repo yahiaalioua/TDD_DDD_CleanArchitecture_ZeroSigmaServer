@@ -7,11 +7,11 @@ using ZeroSigma.Application.Common.Interfaces;
 
 namespace ZeroSigma.Infrastructure.Authentication.RefreshToken
 {
-    public class RefreshTokenProcessingService: IRefreshTokenProcessingService
+    public class JwtTokenProcessingService: IJwtTokenProcessingService
     {
-        private readonly IRefreshTokenValidation _tokenValidation;
+        private readonly IJwtTokenValidation _tokenValidation;
 
-        public RefreshTokenProcessingService(IRefreshTokenValidation parameters)
+        public JwtTokenProcessingService(IJwtTokenValidation parameters)
         {
             _tokenValidation = parameters;
         }

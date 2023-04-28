@@ -43,7 +43,7 @@ namespace ZeroSigma.Application.Authentication.Queries
         public async Task Handle_ShouldReturnNonExistantEmailErrorWhenEmailIsNotFoundInDb()
         {
             // arrange
-            var query = new NewSessionQuery(_mike.Email.Value, _mike.Password.Value);
+            var query = new LoginQuery(_mike.Email.Value, _mike.Password.Value);
             User? user = null;
             _userRepositoryMock.Setup(r => r.GetByEmail(It.IsAny<UserEmail>())).Returns(user);
            
@@ -61,7 +61,7 @@ namespace ZeroSigma.Application.Authentication.Queries
         public async Task Handle_ShouldReturnInvalidPasswordErrorWhenPasswordIsWrong()
         {
             // arrange
-            var query = new NewSessionQuery(_mike.Email.Value, "wrongPassword");
+            var query = new LoginQuery(_mike.Email.Value, "wrongPassword");
             User user = _mike;            
             _userRepositoryMock.Setup(r => r.GetByEmail(_mike.Email)).Returns(user);
             var handler = new LoginQueryHandler(
@@ -81,7 +81,7 @@ namespace ZeroSigma.Application.Authentication.Queries
             var processedAuthResponse = new ProcessedAuthenticationResponse() {
                 AccessToken = "accessToken", RefreshToken = "refreshToken" 
             };
-            var query = new NewSessionQuery(_mike.Email.Value,_mike.Password.Value);
+            var query = new LoginQuery(_mike.Email.Value,_mike.Password.Value);
             User user = _mike;
             _userRepositoryMock.Setup(r => r.GetByEmail(_mike.Email)).Returns(user);
             _loginProcessingServiceMock.Setup(x => x.ProcessAuthentication(_mike)).Returns(processedAuthResponse);
