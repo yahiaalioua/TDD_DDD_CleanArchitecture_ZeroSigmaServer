@@ -92,6 +92,32 @@ namespace ZeroSigma.Application.Authentication.Queries
             _userAccessRepositoryMock.Verify(x => x.GetUserRefreshToken(It.IsAny<string>()), Times.Once());
             Assert.Equal(result.CustomProblemDetails, NewSessionLogicalValidationErrors.TokenNotFoundError);
         }
+        [Fact]
+        public async Task ShouldReturnTokenExpiredErrorWhenStoredRefreshTokenExpiryDateIsLessThanCurrentDate()
+        {
+            //arrange
+            var accessToken = "FakeAccessToken836sgsra62,s.nxcbz5a3%4fs";
+            var refreshToken = "FakeRefreshToken836sgsra62,s.nxcbz5a3%4fs";
+            DateTime refreshTokenIssueDate = new DateTime(2023, 02, 10);
+            DateTime refreshTokenExpiryDate = new DateTime(2023, 02, 16);
+            var query = new NewSessionQuery(accessToken, refreshToken);
+            NewSessionRequest newSessionRequest = new(accessToken, refreshToken);
+            var handler = new NewSessionQueryHandler(_sessionProcessingService);
+            UserRefreshToken userRefreshToken = UserRefreshToken.Create(refreshToken,refreshTokenIssueDate,refreshTokenExpiryDate);
+            _jwtTokenProcessingServiceMock.Setup(x => x.Validate(It.IsAny<string>())).Returns(_claimsPrincipal);
+            _accessTokenProviderMock.Setup(x => x.GenerateAccessToken(It.IsAny<Guid>(), It.IsAny<string>(),
+                It.IsAny<string>())).Returns(It.IsAny<string>());
+            _userAccessRepositoryMock.Setup(x => x.GetUserRefreshToken(It.IsAny<string>())).Returns(userRefreshToken);
+
+            //act
+            Result<string> result = await handler.Handle(query, default);
+            //assert
+            _jwtTokenProcessingServiceMock.Verify(x => x.Validate(It.IsAny<string>()), Times.Once());
+            _accessTokenProviderMock.Verify(x => x.GenerateAccessToken(It.IsAny<Guid>(), It.IsAny<string>(),
+                It.IsAny<string>()), Times.Never());
+            _userAccessRepositoryMock.Verify(x => x.GetUserRefreshToken(It.IsAny<string>()), Times.Once());
+            Assert.Equal(result.CustomProblemDetails, NewSessionLogicalValidationErrors.TokenExpiredError);
+        }
     }
 
 }
