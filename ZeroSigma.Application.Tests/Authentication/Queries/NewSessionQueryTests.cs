@@ -38,7 +38,7 @@ namespace ZeroSigma.Application.Authentication.Queries
             _claims = new List<Claim>()
             {
                 new Claim(ClaimTypes.Name, "username"),
-                new Claim(ClaimTypes.NameIdentifier, "userId"),
+                new Claim(ClaimTypes.NameIdentifier, "49580553-60f4-4a58-87da-da874643cdf5"),
                 new Claim("name", "John Doe"),
 
             };
@@ -144,6 +144,35 @@ namespace ZeroSigma.Application.Authentication.Queries
                 It.IsAny<string>()), Times.Never());
             _userAccessRepositoryMock.Verify(x => x.GetUserRefreshToken(It.IsAny<string>()), Times.Once());
             Assert.Equal(result.CustomProblemDetails, NewSessionLogicalValidationErrors.InvalidTokenError);
+        }
+        [Fact]
+        public async Task ShouldReturnSuccessResultWhenNewSessionRequestIsSuccessful()
+        {
+
+            //arrange
+            var accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoic3RyaW5nIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZWlkZW50aWZpZXIiOiI0OTU4MDU1My02MGY0LTRhNTgtODdkYS1kYTg3NDY0M2NkZjUiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJ0ZXN0MUBnbWFpbC5jb20iLCJqdGkiOiIxZTkwZTNhYS1jZWY3LTRmNDYtOGE2Mi1lYjdlNWFjOWMyYjEiLCJleHAiOjE2ODI2NzM0MjEsImlzcyI6Imh0dHBzOi8vbG9jYWxob3N0OjUwMDEiLCJhdWQiOiJodHRwczovL2xvY2FsaG9zdDo1MDAxIn0.rPBnHb_BROshOykqeThL5a_4bpTke8zYIMN6rAqst8A";
+            var refreshToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJ0ZXN0MUBnbWFpbC5jb20iLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjQ5NTgwNTUzLTYwZjQtNGE1OC04N2RhLWRhODc0NjQzY2RmNSIsImp0aSI6IjdmMjViOWQ2LTk5YzctNGRlMS04NzVhLTRlYmIzZGM2OWRiZiIsImV4cCI6MTY4MjY3NDMyMSwiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NTAwMSIsImF1ZCI6Imh0dHBzOi8vbG9jYWxob3N0OjUwMDEifQ.blko_hnNJ5q99MveBtmjl2YaOhtEvV5t2DLVf02vwME";
+            DateTime refreshTokenIssueDate = new DateTime(2023, 04, 10);
+            DateTime refreshTokenExpiryDate = new DateTime(2023, 08, 16);
+            var query = new NewSessionQuery(accessToken, refreshToken);
+            NewSessionRequest newSessionRequest = new(accessToken, refreshToken);
+            var handler = new NewSessionQueryHandler(_sessionProcessingService);
+            UserRefreshToken userRefreshToken = UserRefreshToken.Create(refreshToken, refreshTokenIssueDate, refreshTokenExpiryDate);
+            _jwtTokenProcessingServiceMock.Setup(x => x.Validate(It.IsAny<string>())).Returns(_claimsPrincipal);
+            _accessTokenProviderMock.Setup(x => x.GenerateAccessToken(It.IsAny<Guid>(), It.IsAny<string>(),
+                It.IsAny<string>())).Returns("newAccessToken");
+            _userAccessRepositoryMock.Setup(x => x.GetUserRefreshToken(It.IsAny<string>())).Returns(userRefreshToken);
+
+            //act
+            Result<string> result = await handler.Handle(query, default);
+            //assert
+            _jwtTokenProcessingServiceMock.Verify(x => x.Validate(It.IsAny<string>()), Times.Once());
+            _accessTokenProviderMock.Verify(x => x.GenerateAccessToken(It.IsAny<Guid>(), It.IsAny<string>(),
+                It.IsAny<string>()), Times.Once());
+            _userAccessRepositoryMock.Verify(x => x.GetUserRefreshToken(It.IsAny<string>()), Times.Once());
+            Assert.Equal(ResultType.Ok,result.ResultType);
+            Assert.Equal("newAccessToken", result.Data);
+
         }
     }
 
