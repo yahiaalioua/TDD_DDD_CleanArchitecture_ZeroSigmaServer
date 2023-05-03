@@ -17,12 +17,14 @@ namespace ZeroSigma.Infrastructure.Persistance
         private readonly ApplicationDbContext _context;
         private readonly UserAccess _userAccess;
         private readonly TestData _testData;
+        private readonly UnitOfWork _unitOfWork;
 
         public IdentityAccessRepositoryTests()
         {
             _context = DbContext;
             _testData= new TestData();
             _userAccess = UserAccess.Create(_testData._user.Id,_testData._userAccessToken.Id,_testData._userRefreshToken.Id);
+            _unitOfWork = new UnitOfWork(_context);
         }
 
         [Fact] 
@@ -35,8 +37,9 @@ namespace ZeroSigma.Infrastructure.Persistance
             await _context.Users.AddAsync(_testData._user);
             await _context.UsersAccessToken.AddAsync(_testData._userAccessToken);
             await _context.UsersRefreshToken.AddAsync(_testData._userRefreshToken);
-            await _context.SaveChangesAsync();
+            await _unitOfWork.SaveChangesAsync();
             await repository.AddUserAccessAsync(_userAccess);
+            await _unitOfWork.SaveChangesAsync();
             var data=await _context.UsersAccess.ToListAsync();
             //assert
             Assert.Contains(_userAccess,data);
@@ -53,7 +56,7 @@ namespace ZeroSigma.Infrastructure.Persistance
             await _context.UsersAccessToken.AddAsync(_testData._userAccessToken);
             await _context.UsersRefreshToken.AddAsync(_testData._userRefreshToken);
             await _context.UsersAccess.AddAsync(_userAccess);
-            await _context.SaveChangesAsync();
+            await _unitOfWork.SaveChangesAsync();
             var data=await repository.GetUserAccessByUserId(_testData._user.Id);
             //assert
             Assert.Equal(_userAccess, data);
@@ -67,8 +70,8 @@ namespace ZeroSigma.Infrastructure.Persistance
             var repository = new IdentityAccessRepository(_context);
             //act
             await repository.AddUserAccessTokenAsync(_testData._userAccessToken);
+            await _unitOfWork.SaveChangesAsync();
             var data = await _context.UsersAccessToken.ToListAsync();
-            await _context.SaveChangesAsync();
             //assert
             Assert.Contains(_testData._userAccessToken, data);
         }
@@ -81,6 +84,7 @@ namespace ZeroSigma.Infrastructure.Persistance
             var repository = new IdentityAccessRepository(_context);
             //act
             await repository.AddUserAccessTokenAsync(_testData._userAccessToken);
+            await _unitOfWork.SaveChangesAsync();
             var data = await repository.GetUserAccessTokenByIdAsync(_testData._userAccessToken.Id);            
             //assert
             Assert.Equal(_testData._userAccessToken, data);
@@ -94,8 +98,8 @@ namespace ZeroSigma.Infrastructure.Persistance
             var repository = new IdentityAccessRepository(_context);
             //act
             await repository.AddUserRefreshTokenAsync(_testData._userRefreshToken);
-            var data = await _context.UsersRefreshToken.ToListAsync();
-            await _context.SaveChangesAsync();
+            await _unitOfWork.SaveChangesAsync();
+            var data = await _context.UsersRefreshToken.ToListAsync();            
             //assert
             Assert.Contains(_testData._userRefreshToken, data);
         }
@@ -107,6 +111,7 @@ namespace ZeroSigma.Infrastructure.Persistance
             var repository = new IdentityAccessRepository(_context);
             //act
             await repository.AddUserRefreshTokenAsync(_testData._userRefreshToken);
+            await _unitOfWork.SaveChangesAsync();
             var data = await repository.GetUserRefreshTokenByIdAsync(_testData._userRefreshToken.Id);
             //assert
             Assert.Equal(_testData._userRefreshToken, data);
@@ -121,8 +126,8 @@ namespace ZeroSigma.Infrastructure.Persistance
             //act
             await repository.AddUserRefreshTokenAsync(_testData._userRefreshToken);
             await repository.AddUserAccessBlacklistAsync(_testData._accessBlackList);
+            await _unitOfWork.SaveChangesAsync();
             var data = await _context.UsersAccessBlackLists.ToListAsync();
-            await _context.SaveChangesAsync();
             //assert
             Assert.Contains(_testData._accessBlackList, data);
         }
@@ -135,6 +140,7 @@ namespace ZeroSigma.Infrastructure.Persistance
             //act
             await repository.AddUserRefreshTokenAsync(_testData._userRefreshToken);
             await repository.AddUserAccessBlacklistAsync(_testData._accessBlackList);
+            await _unitOfWork.SaveChangesAsync();
             var data = await repository.GetUserAccessBlacklistAsync(_testData._userRefreshToken.Id);
             //assert
             Assert.Equal(_testData._accessBlackList, data);

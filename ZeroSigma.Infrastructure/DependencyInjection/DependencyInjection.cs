@@ -28,6 +28,7 @@ namespace ZeroSigma.Infrastructure.DependencyInjection
             services.AddScoped<IRefreshTokenProvider,RefreshTokenProvider>();
             services.AddScoped<IJwtGenerator, JwtGenrator>();
             services.AddScoped<IUserRepository,UserRepository>();
+            services.AddScoped<IUnitOfWork ,UnitOfWork>();
             services.AddScoped<IEncryptionService,EncryptionService>();
             services.AddScoped<IIdentityAccessRepository,IdentityAccessRepository>();
             services.AddScoped<IJwtTokenProcessingService,JwtTokenProcessingService>();

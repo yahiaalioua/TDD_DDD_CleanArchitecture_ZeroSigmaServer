@@ -15,16 +15,19 @@ namespace ZeroSigma.Application.Authentication.Services.ProcessingServices.Authe
         private readonly IIdentityAccessRepository _identityAccessRepository;
         private readonly IAccessTokenProvider _accessTokenProvider;
         private readonly IRefreshTokenProvider _refreshTokenProvider;
+        private readonly IUnitOfWork _unitOfWork;
 
         public LoginProcessingService(
             IAccessTokenProvider accessTokenProvider,
             IRefreshTokenProvider refreshTokenProvider,
-            IIdentityAccessRepository identityAccessRepository)
+            IIdentityAccessRepository identityAccessRepository,
+            IUnitOfWork unitOfWork)
 
         {
             _accessTokenProvider = accessTokenProvider;
             _refreshTokenProvider = refreshTokenProvider;
             _identityAccessRepository = identityAccessRepository;
+            _unitOfWork = unitOfWork;
         }
         public JwtSecurityToken DecodeJwt(string token)
         {
@@ -51,12 +54,14 @@ namespace ZeroSigma.Application.Authentication.Services.ProcessingServices.Authe
                 await _identityAccessRepository.AddUserRefreshTokenAsync(userRefreshToken);
                 await _identityAccessRepository.AddUserAccessBlacklistAsync(userAccessBlackList);
                 await _identityAccessRepository.AddUserAccessAsync(userAccess);
+                await _unitOfWork.SaveChangesAsync();
 
             }
             if (await _identityAccessRepository.GetUserAccessByUserId(user.Id) is not null)
             {
                 await _identityAccessRepository.UpdateUserAccessToken(userAccessToken);
                 await _identityAccessRepository.UpdateUserRefreshToken(userRefreshToken);
+                await _unitOfWork.SaveChangesAsync();
 
             }
         }

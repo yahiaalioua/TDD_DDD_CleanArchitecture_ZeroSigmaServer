@@ -1,4 +1,5 @@
 ﻿using ZeroSigma.Application.Authentication.Services.Encryption;
+using ZeroSigma.Application.Common.Interfaces;
 using ZeroSigma.Application.Interfaces;
 using ZeroSigma.Domain.Entities;
 using ZeroSigma.Domain.ValueObjects.User;
@@ -9,14 +10,17 @@ namespace ZeroSigma.Application.Authentication.Services.ProcessingServices.SignU
     {
         private readonly IEncryptionService _encryptionService;
         private readonly IUserRepository _userRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
         public SignUpProcessingService(
             IEncryptionService encryptionService,
             IUserRepository userRepository
-            )
+,
+            IUnitOfWork unitOfWork)
         {
             _encryptionService = encryptionService;
             _userRepository = userRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public User CreateUser(FullName fullname, UserEmail email, UserPassword password)
@@ -31,6 +35,7 @@ namespace ZeroSigma.Application.Authentication.Services.ProcessingServices.SignU
             if (user is not null)
             {
                 await _userRepository.AddUserAsync(user);
+                await _unitOfWork.SaveChangesAsync();
             }
             return user;
         }

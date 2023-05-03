@@ -30,7 +30,6 @@ namespace ZeroSigma.Infrastructure.Persistance.Repositories.Users
         public async Task AddUserAsync(User user)
         {
             await _ctx.Users.AddAsync(user);
-            _ctx.SaveChanges();
         }
     }
 }
