@@ -15,3 +15,5 @@ C:\projects\TDD_DDD_CleanArchitecture_ZeroSigmaServer\ZeroSigma.Infrastructure\o
 C:\projects\TDD_DDD_CleanArchitecture_ZeroSigmaServer\ZeroSigma.Infrastructure\obj\Debug\net7.0\refint\ZeroSigma.Infrastructure.dll
 C:\projects\TDD_DDD_CleanArchitecture_ZeroSigmaServer\ZeroSigma.Infrastructure\obj\Debug\net7.0\ZeroSigma.Infrastructure.pdb
 C:\projects\TDD_DDD_CleanArchitecture_ZeroSigmaServer\ZeroSigma.Infrastructure\obj\Debug\net7.0\ref\ZeroSigma.Infrastructure.dll
+C:\projects\TDD_DDD_CleanArchitecture_ZeroSigmaServer\ZeroSigma.Infrastructure\bin\Debug\net7.0\ZeroSigma.Infrastructure.runtimeconfig.json
+C:\projects\TDD_DDD_CleanArchitecture_ZeroSigmaServer\ZeroSigma.Infrastructure\obj\Debug\net7.0\ZeroSigma.Infrastructure.genruntimeconfig.cache

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -12,6 +13,7 @@ using ZeroSigma.Infrastructure.Authentication.AccessToken;
 using ZeroSigma.Infrastructure.Authentication.Encryption;
 using ZeroSigma.Infrastructure.Authentication.RefreshToken;
 using ZeroSigma.Infrastructure.Persistance;
+using ZeroSigma.Infrastructure.Persistance.Repositories.Users;
 
 namespace ZeroSigma.Infrastructure.DependencyInjection
 {
@@ -45,6 +47,8 @@ namespace ZeroSigma.Infrastructure.DependencyInjection
                     ClockSkew = TimeSpan.Zero
                 };
             });
+            services.AddDbContext<ApplicationDbContext>(options => options.UseMySQL(configuration.GetConnectionString("ZeroSigmaMySqlDb")!));
+            
             return services;
             
         }

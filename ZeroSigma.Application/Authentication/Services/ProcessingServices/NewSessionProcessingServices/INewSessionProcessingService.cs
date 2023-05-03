@@ -1,11 +1,19 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using ZeroSigma.Application.DTO.Authentication;
 using ZeroSigma.Domain.Common.Results;
+using ZeroSigma.Domain.Entities;
 
 namespace ZeroSigma.Application.Authentication.Services.ProcessingServices.NewSessionProcessingServices
 {
     public interface INewSessionProcessingService
     {
-        Result<string> ProcessNewSession(NewSessionRequest request);
+        void RevokeRefreshTokenAndAddToBlackList(UserRefreshToken storedRefreshToken, UserAccessBlackList userAccessBlackList);
+        string RevokeAndRotateRefreshToken(UserRefreshToken storedRefreshToken, Guid id, string email, UserAccessBlackList userAccessBlackList);
+        void RemoveOldRefreshToken(UserAccessBlackList userAccessBlackList);
+        Result<NewSessionResponse> ProcessNewSession(NewSessionRequest request);
+
+
+
     }
 }

@@ -20,7 +20,7 @@ namespace ZeroSigma.Application.Authentication.Services.ValidationServices.Login
             _loginProcessingService = loginProcessingService;
         }
 
-        public Result<AuthenticationResponse> ValidateUser(User? user, string password)
+        public async Task<Result<AuthenticationResponse>> ValidateUser(User? user, string password)
         {
             if(user is null)
             {
@@ -30,7 +30,7 @@ namespace ZeroSigma.Application.Authentication.Services.ValidationServices.Login
             {
                 return new InvalidResult<AuthenticationResponse>(LoginLogicalValidationErrors.InvalidPasswordError);
             }
-            ProcessedAuthenticationResponse jwt=_loginProcessingService.ProcessAuthentication(user);
+            ProcessedAuthenticationResponse jwt=await _loginProcessingService.ProcessAuthentication(user);
             AuthenticationResponse authenticationResponse = new()
             {
                 Id = user.Id.Value,

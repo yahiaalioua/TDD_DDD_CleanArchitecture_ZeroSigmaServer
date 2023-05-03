@@ -5,8 +5,8 @@ namespace ZeroSigma.Application.Interfaces
 {
     public interface IUserRepository
     {
-        void Add(User user);
-        User? GetByEmail(UserEmail email);
-
+        Task<User?> GetByIdAsync(UserID id);
+        Task<User?> GetByEmailAsync(UserEmail email);
+        Task AddUserAsync(User user);
     }
 }

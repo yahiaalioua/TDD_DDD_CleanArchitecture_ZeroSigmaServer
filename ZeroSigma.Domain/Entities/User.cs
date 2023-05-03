@@ -3,7 +3,7 @@ using ZeroSigma.Domain.ValueObjects.User;
 
 namespace ZeroSigma.Domain.Entities
 {
-    public sealed class User:AggregateRoot<UserID>
+    public sealed class User:Entity<UserID>
     {
         private readonly List<UserAccess> _userAccess = new();
         public User(
@@ -18,7 +18,6 @@ namespace ZeroSigma.Domain.Entities
         public FullName FullName { get; set; }=null!;
         public UserEmail Email { get; set; }= null!;
         public UserPassword Password { get; set; }=null!;
-        public IReadOnlyList<UserAccess> UserAccess=>_userAccess.ToList();
 
         public static User Create(FullName fullName,UserEmail email,UserPassword password)
         {

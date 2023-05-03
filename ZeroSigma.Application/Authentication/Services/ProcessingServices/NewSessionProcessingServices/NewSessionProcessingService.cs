@@ -1,65 +1,100 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Security.Claims;
+﻿using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using ZeroSigma.Application.Common.Authentication;
 using ZeroSigma.Application.Common.Interfaces;
 using ZeroSigma.Application.DTO.Authentication;
 using ZeroSigma.Domain.Common.Results;
+using ZeroSigma.Domain.Entities;
 using ZeroSigma.Domain.Validation.LogicalValidation.Errors.Authentication;
 
 namespace ZeroSigma.Application.Authentication.Services.ProcessingServices.NewSessionProcessingServices
 {
     public class NewSessionProcessingService : INewSessionProcessingService
     {
-        private readonly IJwtTokenProcessingService _refreshTokenProcessingService;
+        private readonly IJwtTokenProcessingService _JwtTokenProcessingService;
         private readonly IUserAccessRepository _userAccessRepository;
         private readonly IAccessTokenProvider _accessTokenProvider;
-
+        private readonly IRefreshTokenProvider _refreshTokenProvider;
         public NewSessionProcessingService(
-            IJwtTokenProcessingService refreshTokenProcessingService,
+            IJwtTokenProcessingService JwtTokenProcessingService,
             IUserAccessRepository userAccessRepository,
-            IAccessTokenProvider accessTokenProvider)
+            IAccessTokenProvider accessTokenProvider,
+            IRefreshTokenProvider refreshTokenProvider
+            )
         {
-            _refreshTokenProcessingService = refreshTokenProcessingService;
+            _JwtTokenProcessingService = JwtTokenProcessingService;
             _userAccessRepository = userAccessRepository;
             _accessTokenProvider = accessTokenProvider;
+            _refreshTokenProvider = refreshTokenProvider;
         }
-        public JwtSecurityToken DecodeJwt(string token)
+
+        public void RevokeRefreshTokenAndAddToBlackList(UserRefreshToken storedRefreshToken,UserAccessBlackList userAccessBlackList)
         {
-            var handler = new JwtSecurityTokenHandler();
-            var decodedJwt = handler.ReadJwtToken(token);
-            return decodedJwt;
+             userAccessBlackList.RevokedRefreshTokens.Add(storedRefreshToken.RefreshToken);
+            _userAccessRepository.AddUserAccessBlacklist(userAccessBlackList);
         }
-        public Result<string> ProcessNewSession(NewSessionRequest request)
+
+        public void RemoveOldRefreshToken(UserAccessBlackList userAccessBlackList)
         {
-            var validatedToken = _refreshTokenProcessingService.Validate(request.accessToken);
-            if (validatedToken == null)
+            if (userAccessBlackList.RevokedRefreshTokens.Count > 30)
             {
-                return new InvalidResult<string>(NewSessionLogicalValidationErrors.InvalidTokenError);
+                userAccessBlackList.RevokedRefreshTokens.RemoveAt(-1);
+            }
+        }
+        public string RevokeAndRotateRefreshToken(UserRefreshToken storedRefreshToken,Guid id,string email, UserAccessBlackList userAccessBlackList)
+        {
+            RevokeRefreshTokenAndAddToBlackList(storedRefreshToken,userAccessBlackList);
+            RemoveOldRefreshToken(userAccessBlackList);
+            var newRefreshToken = _refreshTokenProvider.GenerateRefreshToken(id, email);
+            _userAccessRepository.DeleteRefreshToken(storedRefreshToken.Id);
+            var newUserSession = UserRefreshToken.Create(storedRefreshToken.userID, newRefreshToken, _JwtTokenProcessingService.DecodeJwt(newRefreshToken).ValidFrom, _JwtTokenProcessingService.DecodeJwt(newRefreshToken).ValidTo);
+            _userAccessRepository.AddUserRefreshToken(newUserSession);
+            return newRefreshToken;
+        }
+        public Result<NewSessionResponse> ProcessSuccessNewSessionValidation(UserRefreshToken userRefreshToken,ClaimsPrincipal validatedToken,UserAccessBlackList userAccessBlackList)
+        {
+            Guid userId = Guid.Parse(_JwtTokenProcessingService.DecodeJwt(userRefreshToken.RefreshToken).Claims.Single(x => x.Type == ClaimTypes.NameIdentifier).Value);
+            string userEmail = _JwtTokenProcessingService.DecodeJwt(userRefreshToken.RefreshToken).Claims.Single(x => x.Type == ClaimTypes.Email).Value;
+            string userFullName = validatedToken.Claims.Single(x => x.Type == ClaimTypes.Name).Value;
+            var newRefreshToken=RevokeAndRotateRefreshToken(userRefreshToken, userId, userEmail,userAccessBlackList);
+            var newAccessToken = _accessTokenProvider.GenerateAccessToken(userId, userFullName, userEmail);
+            NewSessionResponse response = new(newAccessToken, newRefreshToken);
+
+            return new SuccessResult<NewSessionResponse>(response);
+        }
+        public Result<NewSessionResponse> ProcessNewSession(NewSessionRequest request)
+        {           
+            Guid userId = Guid.Parse(_JwtTokenProcessingService.DecodeJwt(request.refreshToken).Claims.Single(x => x.Type == ClaimTypes.NameIdentifier).Value);
+            var storedNewSessionAccess= _userAccessRepository.GetUserRefreshTokenByUserID(userId);
+            var userAccessBlackList = _userAccessRepository.GetUserAccessBlackList(storedNewSessionAccess.Id);
+            if (userAccessBlackList is not null)
+            {
+                if (userAccessBlackList.RevokedRefreshTokens.Contains(request.refreshToken))
+                {
+                    return new InvalidResult<NewSessionResponse>(NewSessionLogicalValidationErrors.TokenReusedError);
+                };
+            }
+            var validatedToken = _JwtTokenProcessingService.Validate(request.accessToken);
+            if (validatedToken is null)
+            {
+                return new InvalidResult<NewSessionResponse>(NewSessionLogicalValidationErrors.InvalidTokenError);
             }
             var userIdFromAccessToken = validatedToken.Claims.Single(x => x.Type == ClaimTypes.NameIdentifier).Value;
-            var storedRefreshToken = _userAccessRepository.GetUserRefreshToken(request.refreshToken);
-            if (storedRefreshToken == null)
+            if (storedNewSessionAccess is null)
             {
-                return new NotFoundResults<string>(NewSessionLogicalValidationErrors.TokenNotFoundError);
+                return new NotFoundResults<NewSessionResponse>(NewSessionLogicalValidationErrors.TokenNotFoundError);
             }
-            if (storedRefreshToken.ExpiryDate < DateTime.UtcNow)
+            if (storedNewSessionAccess.ExpiryDate < DateTime.UtcNow)
             {
-                return new InvalidResult<string>(NewSessionLogicalValidationErrors.TokenExpiredError);
+                return new InvalidResult<NewSessionResponse>(NewSessionLogicalValidationErrors.TokenExpiredError);
             }
-            var userIdFromRefreshToken = DecodeJwt(storedRefreshToken.RefreshToken).Claims.Single(x => x.Type == ClaimTypes.NameIdentifier).Value;
+            var userIdFromRefreshToken = _JwtTokenProcessingService.DecodeJwt(storedNewSessionAccess.RefreshToken).Claims.Single(x => x.Type == ClaimTypes.NameIdentifier).Value;
             if (userIdFromRefreshToken != userIdFromAccessToken)
             {
-                return new InvalidResult<string>(NewSessionLogicalValidationErrors.InvalidTokenError);
+                return new InvalidResult<NewSessionResponse>(NewSessionLogicalValidationErrors.InvalidTokenError);
             }
-            Guid userId = Guid.Parse(DecodeJwt(storedRefreshToken.RefreshToken).Claims.Single(x => x.Type == ClaimTypes.NameIdentifier).Value);
-            string userEmail = DecodeJwt(storedRefreshToken.RefreshToken).Claims.Single(x => x.Type == ClaimTypes.Email).Value;
-            string userFullName = validatedToken.Claims.Single(x => x.Type == ClaimTypes.Name).Value;
-            return new SuccessResult<string>(_accessTokenProvider.GenerateAccessToken(userId, userFullName,userEmail));
+            return ProcessSuccessNewSessionValidation(storedNewSessionAccess, validatedToken, userAccessBlackList!);
 
         }
     }

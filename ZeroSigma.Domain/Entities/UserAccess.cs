@@ -13,8 +13,6 @@ namespace ZeroSigma.Domain.Entities
 {
     public sealed class UserAccess : AggregateRoot<UserAccessID>
     {
-        private readonly List<UserAccessToken> _userAccessToken = new();
-        private readonly List<UserRefreshToken> _userRefreshToken = new();
         public UserAccess(UserAccessID id, UserID userID,
             AccessTokenID accessTokenID, RefreshTokenID refreshTokenID) : base(id)
         {
@@ -23,10 +21,8 @@ namespace ZeroSigma.Domain.Entities
             RefreshTokenID = refreshTokenID;
         }
         public UserID UserID { get; set; }
-        public AccessTokenID AccessTokenID { get; set; }
-        public RefreshTokenID RefreshTokenID { get; set; }
-        public IReadOnlyList<UserAccessToken> UserAccessToken=>_userAccessToken.ToList();
-        public IReadOnlyList<UserRefreshToken> UserRefreshToken => _userRefreshToken.ToList();
+        public AccessTokenID AccessTokenID { get;  set; }
+        public RefreshTokenID RefreshTokenID { get;  set; }
 
         public static UserAccess Create(
             UserID userId, AccessTokenID accessTokenID,

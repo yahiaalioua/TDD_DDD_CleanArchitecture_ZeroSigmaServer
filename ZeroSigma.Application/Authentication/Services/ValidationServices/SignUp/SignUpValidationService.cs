@@ -30,7 +30,7 @@ namespace ZeroSigma.Application.Authentication.Services.ValidationServices.SignU
             _userRepository = userRepository;
         }
 
-        public Result<SignUpResponse> ValidateUser(RegisterRequest request)
+        public async Task<Result<SignUpResponse>> ValidateUser(RegisterRequest request)
         {
             var fullNameResult = FullName.Create(request.FullName);
             var userEmailResult = UserEmail.Create(request.Email);
@@ -47,11 +47,11 @@ namespace ZeroSigma.Application.Authentication.Services.ValidationServices.SignU
             {
                 return new InvalidResult<SignUpResponse>(userPassword.CustomProblemDetails);
             }
-            if (_userRepository.GetByEmail(userEmailResult.Data) is not null)
+            if (await _userRepository.GetByEmailAsync(userEmailResult.Data) is not null)
             {
                 return new InvalidResult<SignUpResponse>(SignUpLogicalValidationErrors.DuplicateEmailError);
             }
-            var validatedUser=_userProcessingService.ProcessSignUpRequest(fullNameResult.Data, userEmailResult.Data, userPassword.Data);
+            var validatedUser=await _userProcessingService.ProcessSignUpRequest(fullNameResult.Data, userEmailResult.Data, userPassword.Data);
             SignUpResponse response = new()
             {
                 UserId = validatedUser.Id.Value,

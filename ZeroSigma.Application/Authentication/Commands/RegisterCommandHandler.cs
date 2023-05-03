@@ -22,7 +22,7 @@ namespace ZeroSigma.Application.Authentication.Commands
           
             RegisterRequest registerRequest= new() { FullName = request.FullName,Email=request.Email,Password=request.Password };
             
-            return _signUpValidationService.ValidateUser(registerRequest);
+            return await _signUpValidationService.ValidateUser(registerRequest);
         }
     }
 }

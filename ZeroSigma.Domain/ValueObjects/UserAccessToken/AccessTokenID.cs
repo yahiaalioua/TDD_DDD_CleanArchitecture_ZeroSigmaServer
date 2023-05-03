@@ -21,6 +21,11 @@ namespace ZeroSigma.Domain.ValueObjects.UserAccessToken
             return new(Guid.NewGuid());
         }
 
+        public static AccessTokenID Create(Guid value)
+        {
+            return new AccessTokenID(value);
+        }
+
         protected override IEnumerable<object> GetEqualityComponents()
         {
             yield return Value;

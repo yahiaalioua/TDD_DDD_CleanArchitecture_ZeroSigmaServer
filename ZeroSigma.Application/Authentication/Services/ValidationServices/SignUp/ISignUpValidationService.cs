@@ -6,6 +6,6 @@ namespace ZeroSigma.Application.Authentication.Services.ValidationServices.SignU
 {
     public interface ISignUpValidationService
     {
-        Result<SignUpResponse> ValidateUser(RegisterRequest request);
+        Task<Result<SignUpResponse>> ValidateUser(RegisterRequest request);
     }
 }

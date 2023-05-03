@@ -29,9 +29,9 @@ namespace ZeroSigma.Application.Authentication.Queries
             {
                 return new InvalidResult<AuthenticationResponse>(email.CustomProblemDetails);
             }
-            User? existingUser=_userRepository.GetByEmail(email.Data);
+            User? existingUser=await _userRepository.GetByEmailAsync(email.Data);
             
-            return _loginValidationService.ValidateUser(existingUser,request.Password);          
+            return await _loginValidationService.ValidateUser(existingUser,request.Password);          
             
         }
     }

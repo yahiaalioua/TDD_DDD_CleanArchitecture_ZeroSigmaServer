@@ -15,14 +15,20 @@ namespace ZeroSigma.Infrastructure.Authentication.RefreshToken
         {
             _tokenValidation = parameters;
         }
-        public ClaimsPrincipal Validate(string refreshToken)
+        public JwtSecurityToken DecodeJwt(string token)
+        {
+            var handler = new JwtSecurityTokenHandler();
+            var decodedJwt = handler.ReadJwtToken(token);
+            return decodedJwt;
+        }
+        public ClaimsPrincipal Validate(string jwtToken)
         {
             var tokenValidationParameters = _tokenValidation.Parameters();
             JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
 
             try
             {
-                var principal = tokenHandler.ValidateToken(refreshToken, tokenValidationParameters, out var validatedToken);
+                var principal = tokenHandler.ValidateToken(jwtToken, tokenValidationParameters, out var validatedToken);
                 if (!_tokenValidation.ValidateJwtSecurityAlgorith(validatedToken))
                 {
                     return null;

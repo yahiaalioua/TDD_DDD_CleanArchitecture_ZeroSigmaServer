@@ -21,10 +21,10 @@ namespace ZeroSigma.Domain.Entities
             ExpiryDate = expiryDate;
             IsExpired = isExpired;
         }
-        public string AccessToken { get; set; } = null!;
-        public DateTime IssuedDate { get; set; }
-        public DateTime ExpiryDate { get; set;}
-        public string IsExpired { get; set; } = null!;
+        public string AccessToken { get;  set; } = null!;
+        public DateTime IssuedDate { get;  set; }
+        public DateTime ExpiryDate { get;  set;}
+        public string IsExpired { get;  set; } = null!;
 
         public static UserAccessToken Create(
             string accessToken, DateTime issuedDate,

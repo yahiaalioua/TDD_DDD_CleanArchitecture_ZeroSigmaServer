@@ -16,6 +16,10 @@ namespace ZeroSigma.Domain.ValueObjects.User
             return new(Guid.NewGuid());
         }
 
+        public static UserID Create(Guid value)
+        {
+            return new UserID(value);
+        }
         protected override IEnumerable<object> GetEqualityComponents()
         {
             yield return Value;

@@ -35,5 +35,13 @@ namespace ZeroSigma.Domain.Validation.LogicalValidation.Errors.Authentication
             Detail = "The given refresh token is expired",
             Code = "702"
         };
+        public static readonly CustomProblemDetails TokenReusedError = new()
+        {
+            Status = HttpStatusCode.BadRequest,
+            Title = "Token Reused",
+            Type = "Compromised Session",
+            Detail = "Warning the token might have been compromised",
+            Code = "703"
+        };
     }
 }

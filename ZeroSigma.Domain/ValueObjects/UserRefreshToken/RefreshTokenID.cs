@@ -21,6 +21,11 @@ namespace ZeroSigma.Domain.ValueObjects.UserRefreshToken
             return new(Guid.NewGuid());
         }
 
+        public static RefreshTokenID Create(Guid value)
+        {
+            return new RefreshTokenID(value);
+        }
+
         protected override IEnumerable<object> GetEqualityComponents()
         {
             yield return Value;

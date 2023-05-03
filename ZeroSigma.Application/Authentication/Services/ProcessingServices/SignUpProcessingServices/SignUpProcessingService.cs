@@ -24,14 +24,13 @@ namespace ZeroSigma.Application.Authentication.Services.ProcessingServices.SignU
             User createdUser = User.Create(fullname, email, password);
             return createdUser;
         }
-        public User? ProcessSignUpRequest(FullName fullname, UserEmail email, UserPassword password)
+        public async Task<User?> ProcessSignUpRequest(FullName fullname, UserEmail email, UserPassword password)
         {
-            var user = CreateUser(fullname, email, password);
+            string encryptedPassword = _encryptionService.EncryptPassword(password.Value);
+            var user = CreateUser(fullname, email, UserPassword.Create(encryptedPassword).Data);
             if (user is not null)
             {
-                string encryptedPassword = _encryptionService.EncryptPassword(user.Password.Value);
-                user.Password = UserPassword.Create(encryptedPassword).Data;
-                _userRepository.Add(user);
+                await _userRepository.AddUserAsync(user);
             }
             return user;
         }

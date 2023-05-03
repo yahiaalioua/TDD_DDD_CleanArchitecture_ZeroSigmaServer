@@ -8,6 +8,7 @@ namespace ZeroSigma.Domain.ValueObjects.User
     public sealed class UserPassword : ValueObject
     {
         public const int MinLength = 8;
+        public const int MaxLength = 70;
         public string Value { get; }
 
         private UserPassword(string value)
@@ -28,7 +29,7 @@ namespace ZeroSigma.Domain.ValueObjects.User
             {
                 return new InvalidResult<UserPassword>(DomainErrors.InvalidPasswordLengthError);
             }
-            if (password.Length > 9 && password.Length > 70)
+            if (password.Length > 9 && password.Length > MaxLength)
             {
                 return new InvalidResult<UserPassword>(DomainErrors.InvalidPasswordLengthError);
             }

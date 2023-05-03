@@ -13,5 +13,5 @@ namespace ZeroSigma.Application.Authentication.Queries.NewSession
     (       
         string accessToken,
         string refreshToken
-        ): IRequest<Result<string>>;
+        ): IRequest<Result<NewSessionResponse>>;
 }

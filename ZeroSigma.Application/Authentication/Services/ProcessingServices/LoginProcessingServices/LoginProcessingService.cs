@@ -41,7 +41,7 @@ namespace ZeroSigma.Application.Authentication.Services.ProcessingServices.Authe
         {
             return DecodeJwt(token).ValidFrom;
         }
-        public ProcessedAuthenticationResponse ProcessAuthentication(User user)
+        public async Task<ProcessedAuthenticationResponse> ProcessAuthentication(User user)
         {
             string accessToken = _accessTokenProvider.GenerateAccessToken(user.Id.Value, user.FullName.Value, user.Email.Value);
             var refreshToken = _refreshTokenProvider.GenerateRefreshToken(user.Id.Value, user.Email.Value);
@@ -52,13 +52,15 @@ namespace ZeroSigma.Application.Authentication.Services.ProcessingServices.Authe
             if (_userAccessRepository.GetUserAccessById(user.Id) is null)
             {
                 UserAccessToken userAccessToken = UserAccessToken.Create(accessToken, accesstokenIssuedDate,accesstokenExpirydate);
-                UserRefreshToken userRefreshToken=UserRefreshToken.Create(refreshToken, refreshTokenIssuedDate,refreshTokenExpirydate);
+                UserRefreshToken userRefreshToken=UserRefreshToken.Create(user.Id,refreshToken, refreshTokenIssuedDate,refreshTokenExpirydate);
                 UserAccess userAccess = UserAccess.Create(user.Id, userAccessToken.Id,userRefreshToken.Id);
-                var createdUserAccess = user.UserAccess.FirstOrDefault(x => x.UserID == user.Id);
+                UserAccessBlackList userAccessBlackList = UserAccessBlackList.Create(userRefreshToken.Id);
+                _userAccessRepository.AddUserAccessBlacklist(userAccessBlackList);
                 _userAccessRepository.AddUserAccess(userAccess);
                 _userAccessRepository.AddUserAccessToken(userAccessToken);
                 _userAccessRepository.AddUserRefreshToken(userRefreshToken);
-                _userRepository.Add(user);
+                await _userRepository.AddUserAsync(user);
+                
             }
             return new ProcessedAuthenticationResponse() { AccessToken=accessToken,RefreshToken=refreshToken};
         }
