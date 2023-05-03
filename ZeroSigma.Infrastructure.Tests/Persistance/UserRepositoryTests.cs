@@ -12,19 +12,12 @@ namespace ZeroSigma.Infrastructure.Persistance
 {
     public class UserRepositoryTests : TestBase
     {
-        private readonly FullName _fullname;
-        private readonly UserEmail _email;
-        private readonly UserPassword _password;
-        private readonly User _user;
         private readonly ApplicationDbContext _context;
-
+        private readonly TestData _testData;
         public UserRepositoryTests()
         {
-            _fullname = FullName.Create("Mike").Data;
-            _email = UserEmail.Create("test@mail.com").Data;
-            _password = UserPassword.Create("TestPass3459$%.").Data;
-            _user = User.Create(_fullname, _email, _password);
             _context = DbContext;
+            _testData = new TestData();
         }
 
         [Fact]
@@ -33,10 +26,10 @@ namespace ZeroSigma.Infrastructure.Persistance
             //arrange
             var repository = new UserRepository(_context);
             //act
-            await repository.AddUserAsync(_user);
+            await repository.AddUserAsync(_testData._user);
             var data=await _context.Users.ToListAsync();
             //assert
-            Assert.Contains(_user, data);
+            Assert.Contains(_testData._user, data);
         }
         [Fact]
         public async void GetByEmailAsyncShouldReturnUserWhenUserExistsInDatabase()
@@ -44,10 +37,10 @@ namespace ZeroSigma.Infrastructure.Persistance
             //arrange
             var repository = new UserRepository(_context);
             //act
-            await repository.AddUserAsync(_user);
-            var data=await repository.GetByEmailAsync(_email);
+            await repository.AddUserAsync(_testData._user);
+            var data=await repository.GetByEmailAsync(_testData._user.Email);
             //assert
-            Assert.Equal(_user, data);
+            Assert.Equal(_testData._user, data);
         }
         [Fact]
         public async void GetByIdAsyncShouldReturnUserWhenUserExistsInDatabase()
@@ -55,10 +48,10 @@ namespace ZeroSigma.Infrastructure.Persistance
             //arrange
             var repository = new UserRepository(_context);
             //act
-            await repository.AddUserAsync(_user);
-            var data = await repository.GetByIdAsync(_user.Id);
+            await repository.AddUserAsync(_testData._user);
+            var data = await repository.GetByIdAsync(_testData._user.Id);
             //assert
-            Assert.Equal(_user, data);
+            Assert.Equal(_testData._user, data);
         }
     }
 }
