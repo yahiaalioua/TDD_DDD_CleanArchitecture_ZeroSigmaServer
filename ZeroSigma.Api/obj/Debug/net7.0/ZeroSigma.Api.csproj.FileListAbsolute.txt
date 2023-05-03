@@ -42,7 +42,6 @@ C:\projects\TDD_DDD_CleanArchitecture_ZeroSigmaServer\ZeroSigma.Api\bin\Debug\ne
 C:\projects\TDD_DDD_CleanArchitecture_ZeroSigmaServer\ZeroSigma.Api\bin\Debug\net7.0\ZeroSigma.Contracts.pdb
 C:\projects\TDD_DDD_CleanArchitecture_ZeroSigmaServer\ZeroSigma.Api\bin\Debug\net7.0\ZeroSigma.Infrastructure.pdb
 C:\projects\TDD_DDD_CleanArchitecture_ZeroSigmaServer\ZeroSigma.Api\bin\Debug\net7.0\ZeroSigma.Domain.pdb
-C:\projects\TDD_DDD_CleanArchitecture_ZeroSigmaServer\ZeroSigma.Api\obj\Debug\net7.0\ZeroSigma.Api.MvcApplicationPartsAssemblyInfo.cs
 C:\projects\TDD_DDD_CleanArchitecture_ZeroSigmaServer\ZeroSigma.Api\obj\Debug\net7.0\staticwebassets\msbuild.ZeroSigma.Api.Microsoft.AspNetCore.StaticWebAssets.props
 C:\projects\TDD_DDD_CleanArchitecture_ZeroSigmaServer\ZeroSigma.Api\obj\Debug\net7.0\staticwebassets\msbuild.build.ZeroSigma.Api.props
 C:\projects\TDD_DDD_CleanArchitecture_ZeroSigmaServer\ZeroSigma.Api\obj\Debug\net7.0\staticwebassets\msbuild.buildMultiTargeting.ZeroSigma.Api.props

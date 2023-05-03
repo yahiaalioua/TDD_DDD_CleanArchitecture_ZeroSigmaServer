@@ -9,9 +9,9 @@ namespace ZeroSigma.Application.Authentication.Services.ProcessingServices.NewSe
     public interface INewSessionProcessingService
     {
         void RevokeRefreshTokenAndAddToBlackList(UserRefreshToken storedRefreshToken, UserAccessBlackList userAccessBlackList);
-        string RevokeAndRotateRefreshToken(UserRefreshToken storedRefreshToken, Guid id, string email, UserAccessBlackList userAccessBlackList);
+        Task<string> RevokeAndRotateRefreshToken(UserRefreshToken storedRefreshToken, Guid id, string email, UserAccessBlackList userAccessBlackList);
         void RemoveOldRefreshToken(UserAccessBlackList userAccessBlackList);
-        Result<NewSessionResponse> ProcessNewSession(NewSessionRequest request);
+        Task<Result<NewSessionResponse>> ProcessNewSession(NewSessionRequest request);
 
 
 

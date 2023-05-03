@@ -28,4 +28,8 @@
     <ProjectReference Include="..\ZeroSigma.Application\ZeroSigma.Application.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Persistance\UserAccess\" />
+  </ItemGroup>
+
 </Project>

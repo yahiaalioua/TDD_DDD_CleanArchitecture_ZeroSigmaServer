@@ -5,27 +5,28 @@ using ZeroSigma.Application.DTO.Authentication;
 using ZeroSigma.Application.Interfaces;
 using ZeroSigma.Domain.Common.Results;
 using ZeroSigma.Domain.Entities;
+using ZeroSigma.Infrastructure.Persistance.Repositories.IdentityAccess;
 
 namespace ZeroSigma.Application.Authentication.Services.ProcessingServices.AuthenticationProcessingServices
 {
     public class LoginProcessingService : ILoginProcessingService
     {
         private readonly IUserRepository _userRepository;
-        private readonly IUserAccessRepository _userAccessRepository;
+        private readonly IIdentityAccessRepository _identityAccessRepository;
         private readonly IAccessTokenProvider _accessTokenProvider;
         private readonly IRefreshTokenProvider _refreshTokenProvider;
 
         public LoginProcessingService(
             IUserRepository userRepository,
-            IUserAccessRepository userAccessRepository,
             IAccessTokenProvider accessTokenProvider,
-            IRefreshTokenProvider refreshTokenProvider)
+            IRefreshTokenProvider refreshTokenProvider,
+            IIdentityAccessRepository identityAccessRepository)
 
         {
             _userRepository = userRepository;
-            _userAccessRepository = userAccessRepository;
             _accessTokenProvider = accessTokenProvider;
             _refreshTokenProvider = refreshTokenProvider;
+            _identityAccessRepository = identityAccessRepository;
         }
         public JwtSecurityToken DecodeJwt(string token)
         {
@@ -49,16 +50,16 @@ namespace ZeroSigma.Application.Authentication.Services.ProcessingServices.Authe
             DateTime accesstokenExpirydate = GetTokenExpiryDate(accessToken);
             DateTime refreshTokenIssuedDate = GetTokenIssueDate(refreshToken);
             DateTime refreshTokenExpirydate = GetTokenExpiryDate(refreshToken);
-            if (_userAccessRepository.GetUserAccessById(user.Id) is null)
+            if (await _identityAccessRepository.GetUserAccessByUserId(user.Id) is null)
             {
                 UserAccessToken userAccessToken = UserAccessToken.Create(accessToken, accesstokenIssuedDate,accesstokenExpirydate);
                 UserRefreshToken userRefreshToken=UserRefreshToken.Create(user.Id,refreshToken, refreshTokenIssuedDate,refreshTokenExpirydate);
                 UserAccess userAccess = UserAccess.Create(user.Id, userAccessToken.Id,userRefreshToken.Id);
                 UserAccessBlackList userAccessBlackList = UserAccessBlackList.Create(userRefreshToken.Id);
-                _userAccessRepository.AddUserAccessBlacklist(userAccessBlackList);
-                _userAccessRepository.AddUserAccess(userAccess);
-                _userAccessRepository.AddUserAccessToken(userAccessToken);
-                _userAccessRepository.AddUserRefreshToken(userRefreshToken);
+                await _identityAccessRepository.AddUserAccessTokenAsync(userAccessToken);
+                await _identityAccessRepository.AddUserRefreshTokenAsync(userRefreshToken);
+                await _identityAccessRepository.AddUserAccessBlacklistAsync(userAccessBlackList);
+                await _identityAccessRepository.AddUserAccessAsync(userAccess);
                 await _userRepository.AddUserAsync(user);
                 
             }

@@ -12,7 +12,7 @@ using ZeroSigma.Domain.ValueObjects.UserRefreshToken;
 
 namespace ZeroSigma.Infrastructure.Persistance.Repositories.IdentityAccess
 {
-    public class IdentityAccessRepository
+    public class IdentityAccessRepository : IIdentityAccessRepository
     {
         private readonly ApplicationDbContext _ctx;
 
@@ -28,13 +28,22 @@ namespace ZeroSigma.Infrastructure.Persistance.Repositories.IdentityAccess
         }
         public async Task<UserAccessToken?> GetUserAccessTokenByIdAsync(AccessTokenID id)
         {
-           return await _ctx.UsersAccessToken.FirstOrDefaultAsync(x=> x.Id == id);
+            return await _ctx.UsersAccessToken.FirstOrDefaultAsync(x => x.Id == id);
         }
         //userRefreshToken table methods
         public async Task AddUserRefreshTokenAsync(UserRefreshToken userRefreshToken)
         {
             await _ctx.UsersRefreshToken.AddAsync(userRefreshToken);
             await _ctx.SaveChangesAsync();
+        }
+        public async Task DeleteRefreshTokenByIdAsync(RefreshTokenID refreshTokenID)
+        {
+            var userRefreshToken=await _ctx.UsersRefreshToken.FirstOrDefaultAsync(x=>x.Id== refreshTokenID);
+            if (userRefreshToken is not null)
+            {
+                _ctx.UsersRefreshToken.Remove(userRefreshToken);
+                await _ctx.SaveChangesAsync();
+            }
         }
         public async Task<UserRefreshToken?> GetUserRefreshTokenByIdAsync(RefreshTokenID id)
         {
@@ -48,7 +57,7 @@ namespace ZeroSigma.Infrastructure.Persistance.Repositories.IdentityAccess
         }
         public async Task<UserAccess?> GetUserAccessByUserId(UserID userID)
         {
-            return await _ctx.UsersAccess.FirstOrDefaultAsync(x => x.UserID ==userID);
+            return await _ctx.UsersAccess.FirstOrDefaultAsync(x => x.UserID == userID);
         }
         //userAccessBlacklist methods
         public async Task AddUserAccessBlacklistAsync(UserAccessBlackList userAccessBlackList)
@@ -58,7 +67,7 @@ namespace ZeroSigma.Infrastructure.Persistance.Repositories.IdentityAccess
         }
         public async Task<UserAccessBlackList?> GetUserAccessBlacklistAsync(RefreshTokenID refreshTokenID)
         {
-            return await _ctx.UsersAccessBlackLists.FirstOrDefaultAsync(x=>x.RefreshTokenID == refreshTokenID);
+            return await _ctx.UsersAccessBlackLists.FirstOrDefaultAsync(x => x.RefreshTokenID == refreshTokenID);
         }
 
     }

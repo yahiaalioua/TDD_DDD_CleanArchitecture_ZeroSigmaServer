@@ -13,6 +13,7 @@ using ZeroSigma.Infrastructure.Authentication.AccessToken;
 using ZeroSigma.Infrastructure.Authentication.Encryption;
 using ZeroSigma.Infrastructure.Authentication.RefreshToken;
 using ZeroSigma.Infrastructure.Persistance;
+using ZeroSigma.Infrastructure.Persistance.Repositories.IdentityAccess;
 using ZeroSigma.Infrastructure.Persistance.Repositories.Users;
 
 namespace ZeroSigma.Infrastructure.DependencyInjection
@@ -28,7 +29,7 @@ namespace ZeroSigma.Infrastructure.DependencyInjection
             services.AddScoped<IJwtGenerator, JwtGenrator>();
             services.AddScoped<IUserRepository,UserRepository>();
             services.AddScoped<IEncryptionService,EncryptionService>();
-            services.AddScoped<IUserAccessRepository,UserAccessRepository>();
+            services.AddScoped<IIdentityAccessRepository,IdentityAccessRepository>();
             services.AddScoped<IJwtTokenProcessingService,JwtTokenProcessingService>();
             services.AddScoped<IJwtTokenValidation, JwtTokenValidationService>();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options => {

@@ -22,7 +22,7 @@ namespace ZeroSigma.Application.Authentication.Queries.NewSession
         public async Task<Result<NewSessionResponse>> Handle(NewSessionQuery request, CancellationToken cancellationToken)
         {
             NewSessionRequest newSessionrequest = new(request.accessToken, request.refreshToken);
-            return _sessionProcessingService.ProcessNewSession(newSessionrequest);
+            return await _sessionProcessingService.ProcessNewSession(newSessionrequest);
         }
     }
 }

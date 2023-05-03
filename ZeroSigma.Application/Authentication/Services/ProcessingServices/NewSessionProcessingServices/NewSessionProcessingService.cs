@@ -7,32 +7,34 @@ using ZeroSigma.Application.DTO.Authentication;
 using ZeroSigma.Domain.Common.Results;
 using ZeroSigma.Domain.Entities;
 using ZeroSigma.Domain.Validation.LogicalValidation.Errors.Authentication;
+using ZeroSigma.Domain.ValueObjects.User;
+using ZeroSigma.Infrastructure.Persistance.Repositories.IdentityAccess;
 
 namespace ZeroSigma.Application.Authentication.Services.ProcessingServices.NewSessionProcessingServices
 {
     public class NewSessionProcessingService : INewSessionProcessingService
     {
         private readonly IJwtTokenProcessingService _JwtTokenProcessingService;
-        private readonly IUserAccessRepository _userAccessRepository;
+        private readonly IIdentityAccessRepository _identityAccessRepository;
         private readonly IAccessTokenProvider _accessTokenProvider;
         private readonly IRefreshTokenProvider _refreshTokenProvider;
         public NewSessionProcessingService(
             IJwtTokenProcessingService JwtTokenProcessingService,
-            IUserAccessRepository userAccessRepository,
             IAccessTokenProvider accessTokenProvider,
             IRefreshTokenProvider refreshTokenProvider
-            )
+,
+            IIdentityAccessRepository identityAccessRepository)
         {
             _JwtTokenProcessingService = JwtTokenProcessingService;
-            _userAccessRepository = userAccessRepository;
             _accessTokenProvider = accessTokenProvider;
             _refreshTokenProvider = refreshTokenProvider;
+            _identityAccessRepository = identityAccessRepository;
         }
 
         public void RevokeRefreshTokenAndAddToBlackList(UserRefreshToken storedRefreshToken,UserAccessBlackList userAccessBlackList)
         {
              userAccessBlackList.RevokedRefreshTokens.Add(storedRefreshToken.RefreshToken);
-            _userAccessRepository.AddUserAccessBlacklist(userAccessBlackList);
+            _identityAccessRepository.AddUserAccessBlacklistAsync(userAccessBlackList);
         }
 
         public void RemoveOldRefreshToken(UserAccessBlackList userAccessBlackList)
@@ -42,32 +44,33 @@ namespace ZeroSigma.Application.Authentication.Services.ProcessingServices.NewSe
                 userAccessBlackList.RevokedRefreshTokens.RemoveAt(-1);
             }
         }
-        public string RevokeAndRotateRefreshToken(UserRefreshToken storedRefreshToken,Guid id,string email, UserAccessBlackList userAccessBlackList)
+        public async Task<string> RevokeAndRotateRefreshToken(UserRefreshToken storedRefreshToken,Guid id,string email, UserAccessBlackList userAccessBlackList)
         {
             RevokeRefreshTokenAndAddToBlackList(storedRefreshToken,userAccessBlackList);
             RemoveOldRefreshToken(userAccessBlackList);
             var newRefreshToken = _refreshTokenProvider.GenerateRefreshToken(id, email);
-            _userAccessRepository.DeleteRefreshToken(storedRefreshToken.Id);
+            await _identityAccessRepository.DeleteRefreshTokenByIdAsync(storedRefreshToken.Id);
             var newUserSession = UserRefreshToken.Create(storedRefreshToken.userID, newRefreshToken, _JwtTokenProcessingService.DecodeJwt(newRefreshToken).ValidFrom, _JwtTokenProcessingService.DecodeJwt(newRefreshToken).ValidTo);
-            _userAccessRepository.AddUserRefreshToken(newUserSession);
+            await _identityAccessRepository.AddUserRefreshTokenAsync(newUserSession);
             return newRefreshToken;
         }
-        public Result<NewSessionResponse> ProcessSuccessNewSessionValidation(UserRefreshToken userRefreshToken,ClaimsPrincipal validatedToken,UserAccessBlackList userAccessBlackList)
+        public async Task<Result<NewSessionResponse>> ProcessSuccessNewSessionValidation(UserRefreshToken userRefreshToken,ClaimsPrincipal validatedToken,UserAccessBlackList userAccessBlackList)
         {
             Guid userId = Guid.Parse(_JwtTokenProcessingService.DecodeJwt(userRefreshToken.RefreshToken).Claims.Single(x => x.Type == ClaimTypes.NameIdentifier).Value);
             string userEmail = _JwtTokenProcessingService.DecodeJwt(userRefreshToken.RefreshToken).Claims.Single(x => x.Type == ClaimTypes.Email).Value;
             string userFullName = validatedToken.Claims.Single(x => x.Type == ClaimTypes.Name).Value;
-            var newRefreshToken=RevokeAndRotateRefreshToken(userRefreshToken, userId, userEmail,userAccessBlackList);
+            var newRefreshToken=await RevokeAndRotateRefreshToken(userRefreshToken, userId, userEmail,userAccessBlackList);
             var newAccessToken = _accessTokenProvider.GenerateAccessToken(userId, userFullName, userEmail);
             NewSessionResponse response = new(newAccessToken, newRefreshToken);
 
             return new SuccessResult<NewSessionResponse>(response);
         }
-        public Result<NewSessionResponse> ProcessNewSession(NewSessionRequest request)
+        public async Task<Result<NewSessionResponse>> ProcessNewSession(NewSessionRequest request)
         {           
-            Guid userId = Guid.Parse(_JwtTokenProcessingService.DecodeJwt(request.refreshToken).Claims.Single(x => x.Type == ClaimTypes.NameIdentifier).Value);
-            var storedNewSessionAccess= _userAccessRepository.GetUserRefreshTokenByUserID(userId);
-            var userAccessBlackList = _userAccessRepository.GetUserAccessBlackList(storedNewSessionAccess.Id);
+            UserID userId = UserID.Create(Guid.Parse(_JwtTokenProcessingService.DecodeJwt(request.refreshToken).Claims.Single(x => x.Type == ClaimTypes.NameIdentifier).Value));
+            var userAccess = await _identityAccessRepository.GetUserAccessByUserId(userId);
+            var storedNewSessionAccess= await _identityAccessRepository.GetUserRefreshTokenByIdAsync(userAccess.RefreshTokenID);
+            var userAccessBlackList = await _identityAccessRepository.GetUserAccessBlacklistAsync(storedNewSessionAccess.Id);
             if (userAccessBlackList is not null)
             {
                 if (userAccessBlackList.RevokedRefreshTokens.Contains(request.refreshToken))
@@ -94,7 +97,7 @@ namespace ZeroSigma.Application.Authentication.Services.ProcessingServices.NewSe
             {
                 return new InvalidResult<NewSessionResponse>(NewSessionLogicalValidationErrors.InvalidTokenError);
             }
-            return ProcessSuccessNewSessionValidation(storedNewSessionAccess, validatedToken, userAccessBlackList!);
+            return await ProcessSuccessNewSessionValidation(storedNewSessionAccess, validatedToken, userAccessBlackList!);
 
         }
     }
