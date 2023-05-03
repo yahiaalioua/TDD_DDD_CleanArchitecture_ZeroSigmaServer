@@ -23,7 +23,6 @@ namespace ZeroSigma.Domain.Common.Results
                         result.CustomProblemDetails.Type,
                         result.CustomProblemDetails.Detail,
                         result.CustomProblemDetails.Code,
-                        result.CustomProblemDetails.Errors
                     });
                 case ResultType.Invalid:
                     return controller.BadRequest(new
@@ -33,7 +32,6 @@ namespace ZeroSigma.Domain.Common.Results
                         result.CustomProblemDetails.Type,
                         result.CustomProblemDetails.Detail,
                         result.CustomProblemDetails.Code,
-                        result.CustomProblemDetails.Errors
                     });
                 case ResultType.Unexpected:
                     return controller.BadRequest(new
@@ -43,7 +41,6 @@ namespace ZeroSigma.Domain.Common.Results
                         result.CustomProblemDetails.Type,
                         result.CustomProblemDetails.Detail,
                         result.CustomProblemDetails.Code,
-                        result.CustomProblemDetails.Errors
                     });
                 case ResultType.Unauthorized:
                     return controller.Unauthorized(new
@@ -53,7 +50,6 @@ namespace ZeroSigma.Domain.Common.Results
                         result.CustomProblemDetails.Type,
                         result.CustomProblemDetails.Detail,
                         result.CustomProblemDetails.Code,
-                        result.CustomProblemDetails.Errors
                     });
                 default:
                     throw new Exception("An unhandled exception has occured");

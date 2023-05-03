@@ -16,7 +16,6 @@ namespace ZeroSigma.Domain.Common.Errors
         public string Title { get; set; } = null!;
         public string Detail { get; set; } = null!;
         public string Code { get; set; }=null!;
-        public Error? Errors { get; set; }
 
     }
 }
