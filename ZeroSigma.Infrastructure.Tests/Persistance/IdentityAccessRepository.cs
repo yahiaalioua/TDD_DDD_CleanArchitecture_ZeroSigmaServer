@@ -111,5 +111,20 @@ namespace ZeroSigma.Infrastructure.Persistance
             //assert
             Assert.Equal(_testData._userRefreshToken, data);
         }
+
+        [Fact]
+        public async void AddUserAccessBlacklistAsyncShouldAddUserAccessBlacklistToDatabase()
+        {
+            //arrange
+
+            var repository = new IdentityAccessRepository(_context);
+            //act
+            await repository.AddUserRefreshTokenAsync(_testData._userRefreshToken);
+            await repository.AddUserAccessBlacklistAsync(_testData._accessBlackList);
+            var data = await _context.UsersAccessBlackLists.ToListAsync();
+            await _context.SaveChangesAsync();
+            //assert
+            Assert.Contains(_testData._accessBlackList, data);
+        }
     }
 }
