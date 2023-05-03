@@ -9,6 +9,11 @@ namespace ZeroSigma.Application.Authentication.Services.ProcessingServices.Authe
         JwtSecurityToken DecodeJwt(string token);
         DateTime GetTokenExpiryDate(string token);
         DateTime GetTokenIssueDate(string token);
+        Task PersistIdentity(
+            User user, UserAccessToken userAccessToken,
+            UserRefreshToken userRefreshToken, UserAccessBlackList userAccessBlackList,
+            UserAccess userAccess
+            );
         Task<ProcessedAuthenticationResponse> ProcessAuthentication(User user);
     }
 }

@@ -30,6 +30,15 @@ namespace ZeroSigma.Infrastructure.Persistance.Repositories.IdentityAccess
         {
             return await _ctx.UsersAccessToken.FirstOrDefaultAsync(x => x.Id == id);
         }
+        public async Task UpdateUserAccessToken(UserAccessToken userAccessToken)
+        {
+            var data = await GetUserAccessTokenByIdAsync(userAccessToken.Id);
+            if (data is not null)
+            {
+                _ctx.UsersAccessToken.Update(data);
+                await _ctx.SaveChangesAsync();
+            }
+        }
         //userRefreshToken table methods
         public async Task AddUserRefreshTokenAsync(UserRefreshToken userRefreshToken)
         {
@@ -48,6 +57,15 @@ namespace ZeroSigma.Infrastructure.Persistance.Repositories.IdentityAccess
         public async Task<UserRefreshToken?> GetUserRefreshTokenByIdAsync(RefreshTokenID id)
         {
             return await _ctx.UsersRefreshToken.FirstOrDefaultAsync(x => x.Id == id);
+        }
+        public async Task UpdateUserRefreshToken(UserRefreshToken userRefreshToken)
+        {
+            var data=await GetUserRefreshTokenByIdAsync(userRefreshToken.Id);
+            if (data is not null)
+            {
+                _ctx.UsersRefreshToken.Update(data);
+                await _ctx.SaveChangesAsync();
+            }            
         }
         //userAccess table methods
         public async Task AddUserAccessAsync(UserAccess userAccess)

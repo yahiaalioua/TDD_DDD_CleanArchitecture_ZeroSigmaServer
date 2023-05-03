@@ -14,7 +14,9 @@ namespace ZeroSigma.Infrastructure.Persistance.Repositories.IdentityAccess
         Task<UserAccessBlackList?> GetUserAccessBlacklistAsync(RefreshTokenID refreshTokenID);
         Task<UserAccess?> GetUserAccessByUserId(UserID userID);
         Task<UserAccessToken?> GetUserAccessTokenByIdAsync(AccessTokenID id);
+        Task UpdateUserAccessToken(UserAccessToken userAccessToken);
         Task<UserRefreshToken?> GetUserRefreshTokenByIdAsync(RefreshTokenID id);
+        Task UpdateUserRefreshToken(UserRefreshToken userRefreshToken);
         Task DeleteRefreshTokenByIdAsync(RefreshTokenID refreshTokenID);
     }
 }
