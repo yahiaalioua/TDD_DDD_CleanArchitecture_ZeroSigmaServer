@@ -74,7 +74,7 @@ namespace ZeroSigma.Infrastructure.Persistance
         }
 
         [Fact]
-        public async void AddUserAccessTokenAsyncShoul()
+        public async void GetUserAccessTokenByIdAsyncShouldReturnUserAccessToken()
         {
             //arrange
 
@@ -84,6 +84,20 @@ namespace ZeroSigma.Infrastructure.Persistance
             var data = await repository.GetUserAccessTokenByIdAsync(_testData._userAccessToken.Id);            
             //assert
             Assert.Equal(_testData._userAccessToken, data);
+        }
+
+        [Fact]
+        public async void AddUserRefreshTokenAsyncShouldAddUserRefreshTokenToDatabase()
+        {
+            //arrange
+
+            var repository = new IdentityAccessRepository(_context);
+            //act
+            await repository.AddUserRefreshTokenAsync(_testData._userRefreshToken);
+            var data = await _context.UsersRefreshToken.ToListAsync();
+            await _context.SaveChangesAsync();
+            //assert
+            Assert.Contains(_testData._userRefreshToken, data);
         }
     }
 }
