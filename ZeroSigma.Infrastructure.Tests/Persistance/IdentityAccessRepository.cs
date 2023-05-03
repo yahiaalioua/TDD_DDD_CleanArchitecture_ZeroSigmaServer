@@ -99,5 +99,17 @@ namespace ZeroSigma.Infrastructure.Persistance
             //assert
             Assert.Contains(_testData._userRefreshToken, data);
         }
+        [Fact]
+        public async void GetUserRefreshTokenByIdAsyncShouldReturnUserRefreshToken()
+        {
+            //arrange
+
+            var repository = new IdentityAccessRepository(_context);
+            //act
+            await repository.AddUserRefreshTokenAsync(_testData._userRefreshToken);
+            var data = await repository.GetUserRefreshTokenByIdAsync(_testData._userRefreshToken.Id);
+            //assert
+            Assert.Equal(_testData._userRefreshToken, data);
+        }
     }
 }
