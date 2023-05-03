@@ -42,13 +42,13 @@ namespace ZeroSigma.Application.Authentication.Command
         {
             // arrange
             var command = new RegisterCommand(_mike.FullName.Value,_mike.Email.Value,_mike.Password.Value);
-            _userRepositoryMock.Setup(r => r.GetByEmail(It.IsAny<UserEmail>())).Returns(_mike);
+            _userRepositoryMock.Setup(r => r.GetByEmailAsync(It.IsAny<UserEmail>())).ReturnsAsync(_mike);
             var handler = new RegisterCommandHandler(_signUpValidationService);
             //act
             Result<SignUpResponse> result= await handler.Handle(command, default);
             //assert
-            _userRepositoryMock.Verify(r=>r.Add(_mike), Times.Never);
-            _userRepositoryMock.Verify(r=>r.GetByEmail(It.IsAny<UserEmail>()), Times.Once);
+            _userRepositoryMock.Verify(r=>r.AddUserAsync(_mike), Times.Never);
+            _userRepositoryMock.Verify(r=>r.GetByEmailAsync(It.IsAny<UserEmail>()), Times.Once);
             Assert.True(result.CustomProblemDetails==SignUpLogicalValidationErrors.DuplicateEmailError);
         }
 
@@ -59,9 +59,9 @@ namespace ZeroSigma.Application.Authentication.Command
             User? NonExistingUser = null;
             var command = new RegisterCommand(_mike.FullName.Value,_mike.Email.Value,_mike.Password.Value);
             string successMessage = "You successfully registered";
-            _userRepositoryMock.Setup(r => r.GetByEmail(It.IsAny<UserEmail>())).Returns(NonExistingUser);
+            _userRepositoryMock.Setup(r => r.GetByEmailAsync(It.IsAny<UserEmail>())).ReturnsAsync(NonExistingUser);
             _userProcessingserviceMock.Setup(x => x.CreateUser(It.IsAny<FullName>(), It.IsAny<UserEmail>(), It.IsAny<UserPassword>())).Returns(_mike);
-            _userProcessingserviceMock.Setup(x => x.ProcessSignUpRequest(It.IsAny<FullName>(), It.IsAny<UserEmail>(), It.IsAny<UserPassword>())).Returns(_mike);
+            _userProcessingserviceMock.Setup(x => x.ProcessSignUpRequest(It.IsAny<FullName>(), It.IsAny<UserEmail>(), It.IsAny<UserPassword>())).ReturnsAsync(_mike);
             
 
             var handler = new RegisterCommandHandler(_signUpValidationService);
@@ -69,7 +69,7 @@ namespace ZeroSigma.Application.Authentication.Command
             
             Result<SignUpResponse> result = await handler.Handle(command, default);
             //assert
-            _userRepositoryMock.Verify(r => r.GetByEmail(It.IsAny<UserEmail>()), Times.Once);
+            _userRepositoryMock.Verify(r => r.GetByEmailAsync(It.IsAny<UserEmail>()), Times.Once);
             Assert.Equal(result.Data.Message, successMessage);
             Assert.True(result.ResultType==ResultType.Ok);
             
@@ -80,12 +80,12 @@ namespace ZeroSigma.Application.Authentication.Command
             // arrange
             string lessThan8charsPassword = ">8char";
             var command = new RegisterCommand("username", "email@valid.com", lessThan8charsPassword);
-            _userRepositoryMock.Setup(r => r.Add(It.IsAny<User>()));
+            _userRepositoryMock.Setup(r => r.AddUserAsync(It.IsAny<User>()));
             var handler = new RegisterCommandHandler(_signUpValidationService);
             //act
             Result<SignUpResponse> result = await handler.Handle(command, default);
             //assert
-            _userRepositoryMock.Verify(r => r.Add(It.IsAny<User>()), Times.Never);
+            _userRepositoryMock.Verify(r => r.AddUserAsync(It.IsAny<User>()), Times.Never);
             Assert.IsAssignableFrom<Result<SignUpResponse>>(result);
             Assert.True(result.CustomProblemDetails == DomainErrors.InvalidPasswordLengthError);
 
@@ -96,12 +96,12 @@ namespace ZeroSigma.Application.Authentication.Command
             // arrange
             string notSecurePassword = "eightCharsPassword";
             var command = new RegisterCommand("username","email@valid.com",notSecurePassword);
-            _userRepositoryMock.Setup(r => r.Add(It.IsAny<User>()));
+            _userRepositoryMock.Setup(r => r.AddUserAsync(It.IsAny<User>()));
             var handler = new RegisterCommandHandler(_signUpValidationService);
             //act
             Result<SignUpResponse> result = await handler.Handle(command, default);
             //assert
-            _userRepositoryMock.Verify(r => r.Add(It.IsAny<User>()), Times.Never);
+            _userRepositoryMock.Verify(r => r.AddUserAsync(It.IsAny<User>()), Times.Never);
             Assert.IsAssignableFrom<Result<SignUpResponse>>(result);
             Assert.True(result.CustomProblemDetails == DomainErrors.InvalidPasswordError);
 
@@ -115,10 +115,10 @@ namespace ZeroSigma.Application.Authentication.Command
             var command = new RegisterCommand("username", "email@valid.com", passwordWithoutSpecialChar);
             var handler = new RegisterCommandHandler(_signUpValidationService);
             //act
-            _userRepositoryMock.Setup(r => r.Add(It.IsAny<User>()));
+            _userRepositoryMock.Setup(r => r.AddUserAsync(It.IsAny<User>()));
             Result<SignUpResponse> result = await handler.Handle(command, default);
             //assert
-            _userRepositoryMock.Verify(r => r.Add(It.IsAny<User>()), Times.Never);
+            _userRepositoryMock.Verify(r => r.AddUserAsync(It.IsAny<User>()), Times.Never);
             Assert.IsAssignableFrom<Result<SignUpResponse>>(result);
             Assert.True(result.CustomProblemDetails == DomainErrors.MissingSpecialCharacterError);
 
@@ -133,12 +133,12 @@ namespace ZeroSigma.Application.Authentication.Command
             var command = new RegisterCommand("userName",invalidEmail,"TestPassword4444.");
             var handler = new RegisterCommandHandler(_signUpValidationService);
             //act
-            _userRepositoryMock.Setup(r => r.GetByEmail(It.IsAny<UserEmail>())).Returns(user);
-            _userRepositoryMock.Setup(r => r.Add(It.IsAny<User>()));
+            _userRepositoryMock.Setup(r => r.GetByEmailAsync(It.IsAny<UserEmail>())).ReturnsAsync(user);
+            _userRepositoryMock.Setup(r => r.AddUserAsync(It.IsAny<User>()));
             Result<SignUpResponse> result = await handler.Handle(command, default);
             //assert
-            _userRepositoryMock.Verify(r => r.GetByEmail(It.IsAny<UserEmail>()), Times.Never);
-            _userRepositoryMock.Verify(r => r.Add(It.IsAny<User>()), Times.Never);
+            _userRepositoryMock.Verify(r => r.GetByEmailAsync(It.IsAny<UserEmail>()), Times.Never);
+            _userRepositoryMock.Verify(r => r.AddUserAsync(It.IsAny<User>()), Times.Never);
             Assert.IsAssignableFrom<Result<SignUpResponse>>(result);
             Assert.Equal(DomainErrors.InvalidEmailAddressError,result.CustomProblemDetails);
         }

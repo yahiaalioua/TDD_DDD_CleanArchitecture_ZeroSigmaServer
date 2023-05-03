@@ -45,7 +45,7 @@ namespace ZeroSigma.Application.Authentication.Queries
             // arrange
             var query = new LoginQuery(_mike.Email.Value, _mike.Password.Value);
             User? user = null;
-            _userRepositoryMock.Setup(r => r.GetByEmail(It.IsAny<UserEmail>())).Returns(user);
+            _userRepositoryMock.Setup(r => r.GetByEmailAsync(It.IsAny<UserEmail>())).ReturnsAsync(user);
            
             var handler = new LoginQueryHandler(
                 _userRepositoryMock.Object,
@@ -54,7 +54,7 @@ namespace ZeroSigma.Application.Authentication.Queries
             //act
             Result<AuthenticationResponse> result = await handler.Handle(query, default);
             //assert
-            _userRepositoryMock.Verify(r=>r.GetByEmail(It.IsAny<UserEmail>()), Times.Once());
+            _userRepositoryMock.Verify(r=>r.GetByEmailAsync(It.IsAny<UserEmail>()), Times.Once());
             Assert.True(result.CustomProblemDetails == LoginLogicalValidationErrors.NonExistentEmailError);
         }
         [Fact]
@@ -63,7 +63,7 @@ namespace ZeroSigma.Application.Authentication.Queries
             // arrange
             var query = new LoginQuery(_mike.Email.Value, "wrongPassword");
             User user = _mike;            
-            _userRepositoryMock.Setup(r => r.GetByEmail(_mike.Email)).Returns(user);
+            _userRepositoryMock.Setup(r => r.GetByEmailAsync(_mike.Email)).ReturnsAsync(user);
             var handler = new LoginQueryHandler(
                 _userRepositoryMock.Object,
                 _loginValidationService
@@ -71,7 +71,7 @@ namespace ZeroSigma.Application.Authentication.Queries
             //act
             Result<AuthenticationResponse> result = await handler.Handle(query, default);
             //assert
-            _userRepositoryMock.Verify(r => r.GetByEmail(_mike.Email), Times.Once());            
+            _userRepositoryMock.Verify(r => r.GetByEmailAsync(_mike.Email), Times.Once());            
             Assert.True(result.CustomProblemDetails == LoginLogicalValidationErrors.InvalidPasswordError);
         }
         [Fact]
@@ -83,8 +83,8 @@ namespace ZeroSigma.Application.Authentication.Queries
             };
             var query = new LoginQuery(_mike.Email.Value,_mike.Password.Value);
             User user = _mike;
-            _userRepositoryMock.Setup(r => r.GetByEmail(_mike.Email)).Returns(user);
-            _loginProcessingServiceMock.Setup(x => x.ProcessAuthentication(_mike)).Returns(processedAuthResponse);
+            _userRepositoryMock.Setup(r => r.GetByEmailAsync(_mike.Email)).ReturnsAsync(user);
+            _loginProcessingServiceMock.Setup(x => x.ProcessAuthentication(_mike)).ReturnsAsync(processedAuthResponse);
             _encryptionServiceMock.Setup(x => x.VerifyPassword(query.Password, _mike.Password.Value)).Returns(true);
             var handler = new LoginQueryHandler(
                 _userRepositoryMock.Object,
@@ -93,7 +93,7 @@ namespace ZeroSigma.Application.Authentication.Queries
             //act
             Result<AuthenticationResponse> result = await handler.Handle(query, default);
             //assert
-            _userRepositoryMock.Verify(r => r.GetByEmail(_mike.Email), Times.Once());
+            _userRepositoryMock.Verify(r => r.GetByEmailAsync(_mike.Email), Times.Once());
             _loginProcessingServiceMock.Verify(x => x.ProcessAuthentication(_mike));
             _encryptionServiceMock.Verify(x => x.VerifyPassword(query.Password, _mike.Password.Value));
             Assert.True(result.ResultType == ResultType.Ok);            
