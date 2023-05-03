@@ -27,7 +27,7 @@ namespace ZeroSigma.Infrastructure.Persistance.Configurations
                 value => UserID.Create(value)
                 );
             builder.Property(x => x.IsExpired).HasMaxLength(2);
-            builder.Property(x => x.RefreshToken).HasMaxLength(600);
+            builder.Property(x => x.RefreshToken).HasMaxLength(1000);
             builder.HasOne<UserAccess>().WithOne().HasForeignKey<UserAccess>(x => x.RefreshTokenID);
 
         }

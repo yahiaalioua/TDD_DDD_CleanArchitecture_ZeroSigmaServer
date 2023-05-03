@@ -100,8 +100,8 @@ namespace ZeroSigma.Infrastructure.Migrations
 
                     b.Property<string>("AccessToken")
                         .IsRequired()
-                        .HasMaxLength(600)
-                        .HasColumnType("varchar(600)");
+                        .HasMaxLength(1000)
+                        .HasColumnType("varchar(1000)");
 
                     b.Property<DateTime>("ExpiryDate")
                         .HasColumnType("datetime(6)");
@@ -137,8 +137,8 @@ namespace ZeroSigma.Infrastructure.Migrations
 
                     b.Property<string>("RefreshToken")
                         .IsRequired()
-                        .HasMaxLength(600)
-                        .HasColumnType("varchar(600)");
+                        .HasMaxLength(1000)
+                        .HasColumnType("varchar(1000)");
 
                     b.Property<Guid>("userID")
                         .HasColumnType("char(36)");
