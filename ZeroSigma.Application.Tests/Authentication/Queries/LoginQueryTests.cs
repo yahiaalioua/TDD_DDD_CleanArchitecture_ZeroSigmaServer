@@ -20,11 +20,14 @@ namespace ZeroSigma.Application.Authentication.Queries
         private Mock<IUserRepository> _userRepositoryMock;
         private Mock<IEncryptionService> _encryptionServiceMock;
         private Mock<ILoginProcessingService> _loginProcessingServiceMock;
+        private Mock<IAccessTokenProvider> _accessTokenProviderMock;
+        private Mock<IRefreshTokenProvider> _refreshTokenProviderMock;
         private readonly User _mike;
         private readonly FullName _fullName;
         private readonly UserEmail _email;
         private readonly UserPassword _password;
         private readonly ILoginValidationService _loginValidationService;
+
         public LoginQueryTests()
         {
             _userRepositoryMock = new Mock<IUserRepository>();
@@ -34,8 +37,11 @@ namespace ZeroSigma.Application.Authentication.Queries
             _mike = User.Create(_fullName, _email, _password);
             _encryptionServiceMock = new Mock<IEncryptionService>();
             _loginProcessingServiceMock = new Mock<ILoginProcessingService>();
+            _accessTokenProviderMock=new Mock<IAccessTokenProvider>();
+            _refreshTokenProviderMock = new Mock<IRefreshTokenProvider>();
             _loginValidationService = new LoginValidationService(
-                _encryptionServiceMock.Object, _loginProcessingServiceMock.Object
+                _encryptionServiceMock.Object, _loginProcessingServiceMock.Object,
+                _accessTokenProviderMock.Object,_refreshTokenProviderMock.Object
                 );
         }
 
@@ -78,13 +84,12 @@ namespace ZeroSigma.Application.Authentication.Queries
         public async Task Handle_ShouldReturnSuccessAuthenticationResponseWhenEmailAndPasswordIsCorrect()
         {
             // arrange
-            var processedAuthResponse = new ProcessedAuthenticationResponse() {
-                AccessToken = "accessToken", RefreshToken = "refreshToken" 
-            };
+            string accesToken = "fakeAccessToken";
+            string refreshToken = "fakeRefreshToken";
             var query = new LoginQuery(_mike.Email.Value,_mike.Password.Value);
             User user = _mike;
             _userRepositoryMock.Setup(r => r.GetByEmailAsync(_mike.Email)).ReturnsAsync(user);
-            _loginProcessingServiceMock.Setup(x => x.ProcessAuthentication(_mike)).ReturnsAsync(processedAuthResponse);
+            _loginProcessingServiceMock.Setup(x => x.ProcessAuthentication(_mike,accesToken,refreshToken));
             _encryptionServiceMock.Setup(x => x.VerifyPassword(query.Password, _mike.Password.Value)).Returns(true);
             var handler = new LoginQueryHandler(
                 _userRepositoryMock.Object,
@@ -94,7 +99,6 @@ namespace ZeroSigma.Application.Authentication.Queries
             Result<AuthenticationResponse> result = await handler.Handle(query, default);
             //assert
             _userRepositoryMock.Verify(r => r.GetByEmailAsync(_mike.Email), Times.Once());
-            _loginProcessingServiceMock.Verify(x => x.ProcessAuthentication(_mike));
             _encryptionServiceMock.Verify(x => x.VerifyPassword(query.Password, _mike.Password.Value));
             Assert.True(result.ResultType == ResultType.Ok);            
         }
