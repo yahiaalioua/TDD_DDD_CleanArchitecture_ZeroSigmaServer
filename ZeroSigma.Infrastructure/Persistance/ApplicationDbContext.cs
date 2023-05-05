@@ -1,10 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Org.BouncyCastle.Asn1.Crmf;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 using ZeroSigma.Domain.Entities;
 
 namespace ZeroSigma.Infrastructure.Persistance

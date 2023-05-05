@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using System.Configuration;
 using System.Text;
 using ZeroSigma.Application.Authentication.Services.Encryption;
 using ZeroSigma.Application.Common.Authentication;
@@ -49,7 +50,7 @@ namespace ZeroSigma.Infrastructure.DependencyInjection
                     ClockSkew = TimeSpan.Zero
                 };
             });
-            services.AddDbContext<ApplicationDbContext>(options => options.UseMySQL(configuration.GetConnectionString("ZeroSigmaMySqlDb")!));
+            services.AddDbContext<ApplicationDbContext>(options=>options.UseMySQL(configuration.GetConnectionString("ZeroSigmaMySqlDb")!));
             
             return services;
             

@@ -74,7 +74,7 @@ namespace ZeroSigma.Application.Authentication.Services.ProcessingServices.Authe
             DateTime refreshTokenIssuedDate = GetTokenIssueDate(refreshToken);
             DateTime refreshTokenExpirydate = GetTokenExpiryDate(refreshToken);
             UserAccessToken userAccessToken = UserAccessToken.Create(accessToken, accesstokenIssuedDate, accesstokenExpirydate);
-            UserRefreshToken userRefreshToken = UserRefreshToken.Create(user.Id, refreshToken, refreshTokenIssuedDate, refreshTokenExpirydate);
+            UserRefreshToken userRefreshToken = UserRefreshToken.Create(refreshToken, refreshTokenIssuedDate, refreshTokenExpirydate);
             UserAccess userAccess = UserAccess.Create(user.Id, userAccessToken.Id, userRefreshToken.Id);
             UserAccessBlackList userAccessBlackList = UserAccessBlackList.Create(userRefreshToken.Id);
             await PersistIdentity(user, userAccessToken, userRefreshToken, userAccessBlackList, userAccess);

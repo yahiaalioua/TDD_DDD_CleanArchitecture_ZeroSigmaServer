@@ -14,7 +14,6 @@ namespace ZeroSigma.Domain.Entities
     {
         public UserRefreshToken(
             RefreshTokenID id,
-            UserID userID,
             string refreshToken, DateTime issuedDate,
             DateTime expiryDate, string isExpired
             ) : base(id)
@@ -23,16 +22,13 @@ namespace ZeroSigma.Domain.Entities
             IssuedDate = issuedDate;
             ExpiryDate = expiryDate;
             IsExpired = isExpired;
-            this.userID = userID;
         }
-        public UserID userID { get;  set; }
         public string RefreshToken { get;  set; } = null!;
         public DateTime IssuedDate { get;  set; }
         public DateTime ExpiryDate { get;  set;}
         public string IsExpired { get;  set; } = null!;
 
         public static UserRefreshToken Create(
-            UserID userID,
             string refreshToken, DateTime issuedDate,
             DateTime expiryDate, string isExpired=null!
             )
@@ -42,7 +38,20 @@ namespace ZeroSigma.Domain.Entities
                 isExpired = "yes";
             }
             isExpired = "no";
-            return new UserRefreshToken(RefreshTokenID.CreateUnique(),userID, refreshToken, issuedDate, expiryDate, isExpired);
+            return new UserRefreshToken(RefreshTokenID.CreateUnique(), refreshToken, issuedDate, expiryDate, isExpired);
+        }
+        public static UserRefreshToken CreateWithSameId(
+            RefreshTokenID refreshTokenID,
+            string refreshToken, DateTime issuedDate,
+            DateTime expiryDate, string isExpired = null!
+            )
+        {
+            if (expiryDate > DateTime.UtcNow)
+            {
+                isExpired = "yes";
+            }
+            isExpired = "no";
+            return new UserRefreshToken(refreshTokenID, refreshToken, issuedDate, expiryDate, isExpired);
         }
     }
 }

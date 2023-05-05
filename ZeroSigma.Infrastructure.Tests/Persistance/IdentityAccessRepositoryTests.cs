@@ -116,6 +116,26 @@ namespace ZeroSigma.Infrastructure.Persistance
             //assert
             Assert.Equal(_testData._userRefreshToken, data);
         }
+        [Fact]
+        public async void UpdateUserRefreshTokenShouldUpdateUserRefreshTokenInDatabase()
+        {
+            var newRefreshToken= "newRefreshToken";
+            var newRefreshTokenIssuedDate = new DateTime(2023, 06, 09);
+            var newRefreshTokenExpiryDate = new DateTime(2023,06,10);
+            var repository = new IdentityAccessRepository(_context);
+            var newUserRefreshToken = UserRefreshToken.CreateWithSameId
+                (
+                _testData._userRefreshToken.Id, newRefreshToken, newRefreshTokenIssuedDate,
+                newRefreshTokenExpiryDate
+                );
+            await repository.AddUserRefreshTokenAsync(_testData._userRefreshToken);
+            await repository.UpdateUserRefreshToken(newUserRefreshToken);
+            await _unitOfWork.SaveChangesAsync();
+            var data = await repository.GetUserRefreshTokenByIdAsync(newUserRefreshToken.Id);
+            //assert
+            Assert.Equal(newUserRefreshToken, data);
+            
+        }
 
         [Fact]
         public async void AddUserAccessBlacklistAsyncShouldAddUserAccessBlacklistToDatabase()

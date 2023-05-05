@@ -32,8 +32,10 @@ namespace ZeroSigma.Infrastructure.Persistance.Repositories.IdentityAccess
         public async Task UpdateUserAccessToken(UserAccessToken userAccessToken)
         {
             var data = await GetUserAccessTokenByIdAsync(userAccessToken.Id);
+            
             if (data is not null)
             {
+                data = userAccessToken;
                 _ctx.UsersAccessToken.Update(data);
             }
         }
@@ -59,6 +61,7 @@ namespace ZeroSigma.Infrastructure.Persistance.Repositories.IdentityAccess
             var data=await GetUserRefreshTokenByIdAsync(userRefreshToken.Id);
             if (data is not null)
             {
+                data = userRefreshToken;
                 _ctx.UsersRefreshToken.Update(data);
             }            
         }

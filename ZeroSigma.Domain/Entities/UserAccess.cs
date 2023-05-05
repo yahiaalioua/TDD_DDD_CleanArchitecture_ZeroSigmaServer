@@ -11,7 +11,7 @@ using ZeroSigma.Domain.ValueObjects.UserRefreshToken;
 
 namespace ZeroSigma.Domain.Entities
 {
-    public sealed class UserAccess : AggregateRoot<UserAccessID>
+    public sealed class UserAccess : Entity<UserAccessID>
     {
         public UserAccess(UserAccessID id, UserID userID,
             AccessTokenID accessTokenID, RefreshTokenID refreshTokenID) : base(id)

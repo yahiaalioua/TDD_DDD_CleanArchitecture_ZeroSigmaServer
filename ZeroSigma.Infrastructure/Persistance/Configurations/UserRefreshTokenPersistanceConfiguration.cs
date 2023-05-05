@@ -21,11 +21,6 @@ namespace ZeroSigma.Infrastructure.Persistance.Configurations
                 refreshTokenId => refreshTokenId.Value,
                 value => RefreshTokenID.Create(value)
                 );
-            builder.Property(x => x.userID).HasConversion
-                (
-                userId => userId.Value,
-                value => UserID.Create(value)
-                );
             builder.Property(x => x.IsExpired).HasMaxLength(2);
             builder.Property(x => x.RefreshToken).HasMaxLength(1000);
             builder.HasOne<UserAccess>().WithOne().HasForeignKey<UserAccess>(x => x.RefreshTokenID);

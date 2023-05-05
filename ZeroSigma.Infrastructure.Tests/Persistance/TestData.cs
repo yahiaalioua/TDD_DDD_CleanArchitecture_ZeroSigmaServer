@@ -33,7 +33,7 @@ namespace ZeroSigma.Infrastructure.Persistance
             _accessTokenID = AccessTokenID.CreateUnique();
             _refreshTokenID = RefreshTokenID.CreateUnique();
             _userAccessToken = UserAccessToken.Create("accessTokenFake", new DateTime(2023, 01, 10), new DateTime(2023, 01, 10));
-            _userRefreshToken = UserRefreshToken.Create(_user.Id,"accessTokenFake", new DateTime(2023, 01, 10), new DateTime(2023, 01, 10));
+            _userRefreshToken = UserRefreshToken.Create("accessTokenFake", new DateTime(2023, 01, 10), new DateTime(2023, 01, 10));
             _accessBlackList = UserAccessBlackList.Create(_userRefreshToken.Id);
         }
     }

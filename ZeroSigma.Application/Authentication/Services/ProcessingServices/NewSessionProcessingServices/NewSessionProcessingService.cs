@@ -50,7 +50,7 @@ namespace ZeroSigma.Application.Authentication.Services.ProcessingServices.NewSe
             RemoveOldRefreshToken(userAccessBlackList);
             var newRefreshToken = _refreshTokenProvider.GenerateRefreshToken(id, email);
             await _identityAccessRepository.DeleteRefreshTokenByIdAsync(storedRefreshToken.Id);
-            var newUserSession = UserRefreshToken.Create(storedRefreshToken.userID, newRefreshToken, _JwtTokenProcessingService.DecodeJwt(newRefreshToken).ValidFrom, _JwtTokenProcessingService.DecodeJwt(newRefreshToken).ValidTo);
+            var newUserSession = UserRefreshToken.Create(newRefreshToken, _JwtTokenProcessingService.DecodeJwt(newRefreshToken).ValidFrom, _JwtTokenProcessingService.DecodeJwt(newRefreshToken).ValidTo);
             await _identityAccessRepository.AddUserRefreshTokenAsync(newUserSession);
             return newRefreshToken;
         }
