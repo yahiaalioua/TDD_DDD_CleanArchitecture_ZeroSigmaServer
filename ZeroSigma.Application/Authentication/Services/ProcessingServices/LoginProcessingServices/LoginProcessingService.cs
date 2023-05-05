@@ -44,8 +44,9 @@ namespace ZeroSigma.Application.Authentication.Services.ProcessingServices.Authe
             DateTime accesstokenIssuedDate = GetTokenIssueDate(accessToken);
             DateTime accesstokenExpirydate = GetTokenExpiryDate(accessToken);
             DateTime refreshTokenIssuedDate = GetTokenIssueDate(refreshToken);
-            DateTime refreshTokenExpirydate = GetTokenExpiryDate(refreshToken);            
-            if (await _identityAccessRepository.GetUserAccessByUserId(user.Id) is null)
+            DateTime refreshTokenExpirydate = GetTokenExpiryDate(refreshToken);
+            var userIdentityAccess = await _identityAccessRepository.GetUserAccessByUserId(user.Id);
+            if (userIdentityAccess is null)
             {
                 UserAccessToken newUserAccessToken = UserAccessToken.Create(accessToken, accesstokenIssuedDate, accesstokenExpirydate);
                 UserRefreshToken newUserRefreshToken = UserRefreshToken.Create(refreshToken, refreshTokenIssuedDate, refreshTokenExpirydate);
@@ -60,9 +61,8 @@ namespace ZeroSigma.Application.Authentication.Services.ProcessingServices.Authe
             }
             else
             {
-                var identityUserAccess=await _identityAccessRepository.GetUserAccessByUserId(user.Id);
-                var storedUserRefreshToken = await _identityAccessRepository.GetUserRefreshTokenByIdAsync(identityUserAccess?.RefreshTokenID!);
-                var storedUserAccessToken= await _identityAccessRepository.GetUserAccessTokenByIdAsync(identityUserAccess?.AccessTokenID!);
+                var storedUserRefreshToken = await _identityAccessRepository.GetUserRefreshTokenByIdAsync(userIdentityAccess?.RefreshTokenID!);
+                var storedUserAccessToken= await _identityAccessRepository.GetUserAccessTokenByIdAsync(userIdentityAccess?.AccessTokenID!);
                 var updatedUserAccessToken = UserAccessToken.Create(accessToken, accesstokenIssuedDate, accesstokenExpirydate);
                 var updatedUserRefreshToken=UserRefreshToken.Create(refreshToken,refreshTokenIssuedDate, refreshTokenExpirydate);
                 await _identityAccessRepository.UpdateUserAccessToken(storedUserAccessToken.Id,updatedUserAccessToken);
