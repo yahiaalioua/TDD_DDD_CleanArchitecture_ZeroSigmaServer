@@ -1,13 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ZeroSigma.Domain.Entities;
-using ZeroSigma.Domain.ValueObjects.User;
-using ZeroSigma.Domain.ValueObjects.UserAccessToken;
-using ZeroSigma.Domain.ValueObjects.UserRefreshToken;
 using ZeroSigma.Infrastructure.Persistance.Repositories.IdentityAccess;
 
 namespace ZeroSigma.Infrastructure.Persistance
@@ -90,25 +82,30 @@ namespace ZeroSigma.Infrastructure.Persistance
             Assert.Equal(_testData._userAccessToken, data);
         }
         [Fact]
-        public async void UpdateUserAccessTokenShouldUpdateUserRefreshTokenInDatabase()
+        public async void UpdateUserAccessTokenShouldUpdateUserAccessTokenInDatabase()
         {
             //arrange
             var newAccessToken = "newAccessToken";
             var newAccessTokenIssuedDate = new DateTime(2023, 06, 09);
             var newAccessTokenExpiryDate = new DateTime(2023, 06, 10);
             var repository = new IdentityAccessRepository(_context);
-            var newUserAccessToken = UserAccessToken.CreateWithSameId
+            var newUserAccessToken = UserAccessToken.Create
                 (
-                _testData._userAccessToken.Id,newAccessToken,
+                newAccessToken,
                 newAccessTokenIssuedDate,newAccessTokenExpiryDate
                 ); 
             //act
             await repository.AddUserAccessTokenAsync(_testData._userAccessToken);
-            await repository.UpdateUserAccessToken(newUserAccessToken);
             await _unitOfWork.SaveChangesAsync();
-            var data = await repository.GetUserAccessTokenByIdAsync(newUserAccessToken.Id);
+            await repository.UpdateUserAccessToken(_testData._userAccessToken.Id, newUserAccessToken);
+            await _unitOfWork.SaveChangesAsync();
+            var data = await repository.GetUserAccessTokenByIdAsync(_testData._userAccessToken.Id);
             //assert
-            Assert.Equal(newUserAccessToken, data);
+            Assert.Equal(newUserAccessToken.AccessToken, data?.AccessToken);
+            Assert.Equal(newUserAccessToken.IssuedDate, data?.IssuedDate);
+            Assert.Equal(newUserAccessToken.ExpiryDate, data?.ExpiryDate);
+            Assert.Equal(newUserAccessToken.IsExpired, data?.IsExpired);
+            Assert.NotEqual(newUserAccessToken.Id,data?.Id);
         }
 
         [Fact]
@@ -145,18 +142,23 @@ namespace ZeroSigma.Infrastructure.Persistance
             var newRefreshTokenIssuedDate = new DateTime(2023, 06, 09);
             var newRefreshTokenExpiryDate = new DateTime(2023,06,10);
             var repository = new IdentityAccessRepository(_context);
-            var newUserRefreshToken = UserRefreshToken.CreateWithSameId
+            var newUserRefreshToken = UserRefreshToken.Create
                 (
-                _testData._userRefreshToken.Id, newRefreshToken, newRefreshTokenIssuedDate,
+                newRefreshToken, newRefreshTokenIssuedDate,
                 newRefreshTokenExpiryDate
                 );
             //act
             await repository.AddUserRefreshTokenAsync(_testData._userRefreshToken);
-            await repository.UpdateUserRefreshToken(newUserRefreshToken);
             await _unitOfWork.SaveChangesAsync();
-            var data = await repository.GetUserRefreshTokenByIdAsync(newUserRefreshToken.Id);
+            await repository.UpdateUserRefreshToken(_testData._userRefreshToken.Id,newUserRefreshToken);
+            await _unitOfWork.SaveChangesAsync();
+            var data = await repository.GetUserRefreshTokenByIdAsync(_testData._userRefreshToken.Id);
             //assert
-            Assert.Equal(newUserRefreshToken, data);            
+            Assert.Equal(newUserRefreshToken.RefreshToken, data?.RefreshToken);
+            Assert.Equal(newUserRefreshToken.IssuedDate, data?.IssuedDate);
+            Assert.Equal(newUserRefreshToken.ExpiryDate, data?.ExpiryDate);
+            Assert.Equal(newUserRefreshToken.IsExpired, data?.IsExpired);
+            Assert.NotEqual(newUserRefreshToken.Id, data?.Id);
         }
 
         [Fact]

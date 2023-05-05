@@ -29,13 +29,16 @@ namespace ZeroSigma.Infrastructure.Persistance.Repositories.IdentityAccess
         {
             return await _ctx.UsersAccessToken.FirstOrDefaultAsync(x => x.Id == id);
         }
-        public async Task UpdateUserAccessToken(UserAccessToken userAccessToken)
+        public async Task UpdateUserAccessToken(AccessTokenID accessTokenID, UserAccessToken userAccessToken)
         {
-            var data = await GetUserAccessTokenByIdAsync(userAccessToken.Id);
+            var data = await GetUserAccessTokenByIdAsync(accessTokenID);
             
             if (data is not null)
             {
-                data = userAccessToken;
+                data.AccessToken = userAccessToken.AccessToken;
+                data.IssuedDate = userAccessToken.IssuedDate;
+                data.ExpiryDate = userAccessToken.ExpiryDate;
+                data.IsExpired = userAccessToken.IsExpired;
                 _ctx.UsersAccessToken.Update(data);
             }
         }
@@ -56,12 +59,15 @@ namespace ZeroSigma.Infrastructure.Persistance.Repositories.IdentityAccess
         {
             return await _ctx.UsersRefreshToken.FirstOrDefaultAsync(x => x.Id == id);
         }
-        public async Task UpdateUserRefreshToken(UserRefreshToken userRefreshToken)
+        public async Task UpdateUserRefreshToken(RefreshTokenID refreshTokenID, UserRefreshToken userRefreshToken)
         {
-            var data=await GetUserRefreshTokenByIdAsync(userRefreshToken.Id);
+            var data=await GetUserRefreshTokenByIdAsync(refreshTokenID);
             if (data is not null)
             {
-                data = userRefreshToken;
+                data.RefreshToken = userRefreshToken.RefreshToken;
+                data.IssuedDate= userRefreshToken.IssuedDate;
+                data.ExpiryDate= userRefreshToken.ExpiryDate;
+                data.IsExpired= userRefreshToken.IsExpired;
                 _ctx.UsersRefreshToken.Update(data);
             }            
         }

@@ -13,8 +13,6 @@ namespace ZeroSigma.Application.Authentication.Services.ProcessingServices.Authe
     public class LoginProcessingService : ILoginProcessingService
     {
         private readonly IIdentityAccessRepository _identityAccessRepository;
-        private readonly IAccessTokenProvider _accessTokenProvider;
-        private readonly IRefreshTokenProvider _refreshTokenProvider;
         private readonly IUnitOfWork _unitOfWork;
 
         public LoginProcessingService(
@@ -24,8 +22,6 @@ namespace ZeroSigma.Application.Authentication.Services.ProcessingServices.Authe
             IUnitOfWork unitOfWork)
 
         {
-            _accessTokenProvider = accessTokenProvider;
-            _refreshTokenProvider = refreshTokenProvider;
             _identityAccessRepository = identityAccessRepository;
             _unitOfWork = unitOfWork;
         }
@@ -44,14 +40,23 @@ namespace ZeroSigma.Application.Authentication.Services.ProcessingServices.Authe
             return DecodeJwt(token).ValidFrom;
         }
         public async Task PersistIdentity(
-            User user, UserAccessToken userAccessToken,
-            UserRefreshToken userRefreshToken,UserAccessBlackList userAccessBlackList,UserAccess userAccess
+            User user,string accessToken,string refreshToken
             )
         {
+            string newAccessToken = accessToken;
+            string newRefreshToken = refreshToken;
+            DateTime accesstokenIssuedDate = GetTokenIssueDate(accessToken);
+            DateTime accesstokenExpirydate = GetTokenExpiryDate(accessToken);
+            DateTime refreshTokenIssuedDate = GetTokenIssueDate(refreshToken);
+            DateTime refreshTokenExpirydate = GetTokenExpiryDate(refreshToken);            
             if (await _identityAccessRepository.GetUserAccessByUserId(user.Id) is null)
             {
-                await _identityAccessRepository.AddUserAccessTokenAsync(userAccessToken);
-                await _identityAccessRepository.AddUserRefreshTokenAsync(userRefreshToken);
+                UserAccessToken newUserAccessToken = UserAccessToken.Create(accessToken, accesstokenIssuedDate, accesstokenExpirydate);
+                UserRefreshToken newUserRefreshToken = UserRefreshToken.Create(refreshToken, refreshTokenIssuedDate, refreshTokenExpirydate);
+                UserAccess userAccess = UserAccess.Create(user.Id, newUserAccessToken.Id, newUserRefreshToken.Id);
+                UserAccessBlackList userAccessBlackList = UserAccessBlackList.Create(newUserRefreshToken.Id);
+                await _identityAccessRepository.AddUserAccessTokenAsync(newUserAccessToken);
+                await _identityAccessRepository.AddUserRefreshTokenAsync(newUserRefreshToken);
                 await _identityAccessRepository.AddUserAccessBlacklistAsync(userAccessBlackList);
                 await _identityAccessRepository.AddUserAccessAsync(userAccess);
                 await _unitOfWork.SaveChangesAsync();
@@ -59,27 +64,19 @@ namespace ZeroSigma.Application.Authentication.Services.ProcessingServices.Authe
             }
             if (await _identityAccessRepository.GetUserAccessByUserId(user.Id) is not null)
             {
-                await _identityAccessRepository.UpdateUserAccessToken(userAccessToken);
-                await _identityAccessRepository.UpdateUserRefreshToken(userRefreshToken);
+                var identityUserAccess=await _identityAccessRepository.GetUserAccessByUserId(user.Id);
+                var storedUserRefreshToken = await _identityAccessRepository.GetUserRefreshTokenByIdAsync(identityUserAccess?.RefreshTokenID!);
+                var storedUserAccessToken= await _identityAccessRepository.GetUserAccessTokenByIdAsync(identityUserAccess?.AccessTokenID!);
+                var updatedUserAccessToken = UserAccessToken.Create(accessToken, accesstokenIssuedDate, accesstokenExpirydate);
+                var updatedUserRefreshToken=UserRefreshToken.Create(refreshToken,refreshTokenIssuedDate, refreshTokenExpirydate);
+                await _identityAccessRepository.UpdateUserAccessToken(storedUserAccessToken.Id,updatedUserAccessToken);
+                await _identityAccessRepository.UpdateUserRefreshToken(storedUserRefreshToken.Id,updatedUserRefreshToken);
                 await _unitOfWork.SaveChangesAsync();
-
             }
         }
-        public async Task<ProcessedAuthenticationResponse> ProcessAuthentication(User user)
-        {
-            string accessToken = _accessTokenProvider.GenerateAccessToken(user.Id.Value, user.FullName.Value, user.Email.Value);
-            var refreshToken = _refreshTokenProvider.GenerateRefreshToken(user.Id.Value, user.Email.Value);
-            DateTime accesstokenIssuedDate = GetTokenIssueDate(accessToken);
-            DateTime accesstokenExpirydate = GetTokenExpiryDate(accessToken);
-            DateTime refreshTokenIssuedDate = GetTokenIssueDate(refreshToken);
-            DateTime refreshTokenExpirydate = GetTokenExpiryDate(refreshToken);
-            UserAccessToken userAccessToken = UserAccessToken.Create(accessToken, accesstokenIssuedDate, accesstokenExpirydate);
-            UserRefreshToken userRefreshToken = UserRefreshToken.Create(refreshToken, refreshTokenIssuedDate, refreshTokenExpirydate);
-            UserAccess userAccess = UserAccess.Create(user.Id, userAccessToken.Id, userRefreshToken.Id);
-            UserAccessBlackList userAccessBlackList = UserAccessBlackList.Create(userRefreshToken.Id);
-            await PersistIdentity(user, userAccessToken, userRefreshToken, userAccessBlackList, userAccess);
-            
-            return new ProcessedAuthenticationResponse() { AccessToken=accessToken,RefreshToken=refreshToken};
+        public async Task ProcessAuthentication(User user,string accessToken,string refreshToken)
+        {            
+            await PersistIdentity(user,accessToken,refreshToken);
         }
     }
 }
