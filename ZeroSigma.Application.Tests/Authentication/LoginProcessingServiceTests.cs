@@ -88,6 +88,24 @@ namespace ZeroSigma.Application.Authentication
             _identityAccessRepositoryMock.Verify(x => x.AddUserAccessAsync(It.IsAny<UserAccess>()), Times.Once);
             _IUnitOfWorkMock.Verify(x => x.SaveChangesAsync(), Times.Once);
         }
+        [Fact]
+        public void ShouldCallAddUserAccessBlacklistAsyncWhenUserHasNoIdentityAccessInDatabase()
+        {
+            //arrange
+            var user = _testData._user;
+            UserAccess? identityAccess = null;
+            var accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
+            var refreshToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
+            _identityAccessRepositoryMock.Setup(r => r.GetUserAccessByUserId(user.Id)).ReturnsAsync(identityAccess);
+            _identityAccessRepositoryMock.Setup(x => x.AddUserAccessBlacklistAsync(It.IsAny<UserAccessBlackList>()));
+            _IUnitOfWorkMock.Setup(x => x.SaveChangesAsync());
+            //act            
+            _loginProcessingService.ProcessAuthentication(user, accessToken, refreshToken);
+            //assert
+            _identityAccessRepositoryMock.Verify(x => x.GetUserAccessByUserId(user.Id), Times.Once);
+            _identityAccessRepositoryMock.Verify(x => x.AddUserAccessBlacklistAsync(It.IsAny<UserAccessBlackList>()), Times.Once);
+            _IUnitOfWorkMock.Verify(x => x.SaveChangesAsync(), Times.Once);
+        }
 
     }
 }
