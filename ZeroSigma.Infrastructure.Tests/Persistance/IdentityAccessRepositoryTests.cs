@@ -89,6 +89,27 @@ namespace ZeroSigma.Infrastructure.Persistance
             //assert
             Assert.Equal(_testData._userAccessToken, data);
         }
+        [Fact]
+        public async void UpdateUserAccessTokenShouldUpdateUserRefreshTokenInDatabase()
+        {
+            //arrange
+            var newAccessToken = "newAccessToken";
+            var newAccessTokenIssuedDate = new DateTime(2023, 06, 09);
+            var newAccessTokenExpiryDate = new DateTime(2023, 06, 10);
+            var repository = new IdentityAccessRepository(_context);
+            var newUserAccessToken = UserAccessToken.CreateWithSameId
+                (
+                _testData._userAccessToken.Id,newAccessToken,
+                newAccessTokenIssuedDate,newAccessTokenExpiryDate
+                ); 
+            //act
+            await repository.AddUserAccessTokenAsync(_testData._userAccessToken);
+            await repository.UpdateUserAccessToken(newUserAccessToken);
+            await _unitOfWork.SaveChangesAsync();
+            var data = await repository.GetUserAccessTokenByIdAsync(newUserAccessToken.Id);
+            //assert
+            Assert.Equal(newUserAccessToken, data);
+        }
 
         [Fact]
         public async void AddUserRefreshTokenAsyncShouldAddUserRefreshTokenToDatabase()
@@ -119,6 +140,7 @@ namespace ZeroSigma.Infrastructure.Persistance
         [Fact]
         public async void UpdateUserRefreshTokenShouldUpdateUserRefreshTokenInDatabase()
         {
+            //arrange
             var newRefreshToken= "newRefreshToken";
             var newRefreshTokenIssuedDate = new DateTime(2023, 06, 09);
             var newRefreshTokenExpiryDate = new DateTime(2023,06,10);
@@ -128,13 +150,13 @@ namespace ZeroSigma.Infrastructure.Persistance
                 _testData._userRefreshToken.Id, newRefreshToken, newRefreshTokenIssuedDate,
                 newRefreshTokenExpiryDate
                 );
+            //act
             await repository.AddUserRefreshTokenAsync(_testData._userRefreshToken);
             await repository.UpdateUserRefreshToken(newUserRefreshToken);
             await _unitOfWork.SaveChangesAsync();
             var data = await repository.GetUserRefreshTokenByIdAsync(newUserRefreshToken.Id);
             //assert
-            Assert.Equal(newUserRefreshToken, data);
-            
+            Assert.Equal(newUserRefreshToken, data);            
         }
 
         [Fact]
