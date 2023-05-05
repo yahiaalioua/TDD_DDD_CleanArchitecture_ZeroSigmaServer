@@ -16,8 +16,6 @@ namespace ZeroSigma.Application.Authentication.Services.ProcessingServices.Authe
         private readonly IUnitOfWork _unitOfWork;
 
         public LoginProcessingService(
-            IAccessTokenProvider accessTokenProvider,
-            IRefreshTokenProvider refreshTokenProvider,
             IIdentityAccessRepository identityAccessRepository,
             IUnitOfWork unitOfWork)
 
@@ -43,8 +41,6 @@ namespace ZeroSigma.Application.Authentication.Services.ProcessingServices.Authe
             User user,string accessToken,string refreshToken
             )
         {
-            string newAccessToken = accessToken;
-            string newRefreshToken = refreshToken;
             DateTime accesstokenIssuedDate = GetTokenIssueDate(accessToken);
             DateTime accesstokenExpirydate = GetTokenExpiryDate(accessToken);
             DateTime refreshTokenIssuedDate = GetTokenIssueDate(refreshToken);
@@ -62,7 +58,7 @@ namespace ZeroSigma.Application.Authentication.Services.ProcessingServices.Authe
                 await _unitOfWork.SaveChangesAsync();
 
             }
-            if (await _identityAccessRepository.GetUserAccessByUserId(user.Id) is not null)
+            else
             {
                 var identityUserAccess=await _identityAccessRepository.GetUserAccessByUserId(user.Id);
                 var storedUserRefreshToken = await _identityAccessRepository.GetUserRefreshTokenByIdAsync(identityUserAccess?.RefreshTokenID!);

@@ -102,5 +102,6 @@ namespace ZeroSigma.Application.Authentication.Queries
             _encryptionServiceMock.Verify(x => x.VerifyPassword(query.Password, _mike.Password.Value));
             Assert.True(result.ResultType == ResultType.Ok);            
         }
+        
     }
 }

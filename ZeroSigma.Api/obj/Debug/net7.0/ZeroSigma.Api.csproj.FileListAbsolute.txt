@@ -80,3 +80,4 @@ C:\projects\TDD_DDD_CleanArchitecture_ZeroSigmaServer\ZeroSigma.Api\bin\Debug\ne
 C:\projects\TDD_DDD_CleanArchitecture_ZeroSigmaServer\ZeroSigma.Api\bin\Debug\net7.0\Mono.TextTemplating.dll
 C:\projects\TDD_DDD_CleanArchitecture_ZeroSigmaServer\ZeroSigma.Api\bin\Debug\net7.0\System.CodeDom.dll
 C:\projects\TDD_DDD_CleanArchitecture_ZeroSigmaServer\ZeroSigma.Api\bin\Debug\net7.0\Newtonsoft.Json.dll
+C:\projects\TDD_DDD_CleanArchitecture_ZeroSigmaServer\ZeroSigma.Api\obj\Debug\net7.0\ZeroSigma.Api.MvcApplicationPartsAssemblyInfo.cs
