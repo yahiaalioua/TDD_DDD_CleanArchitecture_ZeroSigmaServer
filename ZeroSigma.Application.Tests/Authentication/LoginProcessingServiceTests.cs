@@ -160,5 +160,25 @@ namespace ZeroSigma.Application.Authentication
             _identityAccessRepositoryMock.Verify(x => x.GetUserAccessByUserId(user.Id), Times.Once);
             _identityAccessRepositoryMock.Verify(x => x.UpdateUserAccessToken(It.IsAny<AccessTokenID>(), It.IsAny<UserAccessToken>()),Times.Once);
         }
+        [Fact]
+        public void ShouldCallUpdateUserRefreshTokenWhenUserHasIdentityAccessInDatabase()
+        {
+            //arrange
+            var user = _testData._user;
+            UserAccess? identityAccess = UserAccess.Create(user.Id, _testData._accessTokenID, _testData._refreshTokenID);
+            var accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
+            var refreshToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
+
+            _identityAccessRepositoryMock.Setup(r => r.GetUserAccessByUserId(user.Id)).ReturnsAsync(identityAccess);
+            _identityAccessRepositoryMock.Setup(x => x.GetUserRefreshTokenByIdAsync(It.IsAny<RefreshTokenID>())).ReturnsAsync(_testData._userRefreshToken);
+            _identityAccessRepositoryMock.Setup(x => x.GetUserAccessTokenByIdAsync(It.IsAny<AccessTokenID>())).ReturnsAsync(_testData._userAccessToken);
+            _identityAccessRepositoryMock.Setup(x => x.UpdateUserRefreshToken(It.IsAny<RefreshTokenID>(), It.IsAny<UserRefreshToken>()));
+            //act            
+            _loginProcessingService.ProcessAuthentication(user, accessToken, refreshToken);
+            //assert
+            _identityAccessRepositoryMock.Verify(x => x.GetUserAccessByUserId(user.Id), Times.Once);
+            _identityAccessRepositoryMock.Verify(x => x.UpdateUserRefreshToken(It.IsAny<RefreshTokenID>(), It.IsAny<UserRefreshToken>()), Times.Once);
+        }
+
     }
 }
